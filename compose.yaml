@@ -1,0 +1,11 @@
+services:
+  spark:
+    build: .
+    working_dir: /app
+    volumes:
+      - .:/app
+      - ./data:/data
+      - ivy-cache:/opt/ivy
+
+volumes:
+  ivy-cache:

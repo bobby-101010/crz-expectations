@@ -1,0 +1,16 @@
+{
+  "name": "crz-expectations",
+  "dockerComposeFile": "../compose.yaml",
+  "service": "spark",
+  "workspaceFolder": "/app",
+  "overrideCommand": true,
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-python.python"],
+      "settings": {
+        "python.defaultInterpreterPath": "/opt/venv/bin/python",
+        "python.testing.pytestEnabled": true
+      }
+    }
+  }
+}
