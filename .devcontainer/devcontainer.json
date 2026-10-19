@@ -2,6 +2,7 @@
   "name": "crz-expectations",
   "dockerComposeFile": "../compose.yaml",
   "service": "spark",
+  "runServices": ["spark"],
   "workspaceFolder": "/app",
   "overrideCommand": true,
   "customizations": {

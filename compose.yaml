@@ -1,11 +1,38 @@
+x-common: &common
+  image: crz-expectations-spark
+  working_dir: /app
+  volumes:
+    - .:/app
+    - ./data:/data
+    - ivy-cache:/opt/ivy
+
 services:
   spark:
+    <<: *common
     build: .
-    working_dir: /app
-    volumes:
-      - .:/app
-      - ./data:/data
-      - ivy-cache:/opt/ivy
+
+  history:
+    <<: *common
+    profiles: [history]
+    command: spark-class org.apache.spark.deploy.history.HistoryServer
+    environment:
+      SPARK_HISTORY_OPTS: -Dspark.history.fs.logDirectory=file:/data/spark-events
+    ports:
+      - "18080:18080"
+
+  spark-master:
+    <<: *common
+    profiles: [cluster]
+    command: spark-class org.apache.spark.deploy.master.Master --host spark-master
+    ports:
+      - "8080:8080"
+
+  spark-worker:
+    <<: *common
+    profiles: [cluster]
+    command: spark-class org.apache.spark.deploy.worker.Worker --cores 2 --memory 3g spark://spark-master:7077
+    depends_on:
+      - spark-master
 
 volumes:
   ivy-cache:
