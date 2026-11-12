@@ -13,6 +13,7 @@ jobs:
     timeout-minutes: 20
     env:
       SPARK_DRIVER_MEMORY: 2g
+      PYTHONPATH: src
     steps:
       - uses: actions/checkout@v4
 
@@ -46,6 +47,21 @@ jobs:
 
       - name: Format check
         run: uv run --no-sync ruff format --check .
+
+      - name: Validate the registry and the metric catalog
+        run: uv run --no-sync python -m pipeline.registry validate
+
+      - name: Registry is append-only
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          git fetch --depth=1 origin "$BASE_REF"
+          if git show FETCH_HEAD:expectations/registry.yaml > "$RUNNER_TEMP/base_registry.yaml" 2>/dev/null; then
+            uv run --no-sync python -m pipeline.registry append-only --base "$RUNNER_TEMP/base_registry.yaml"
+          else
+            echo "No registry on $BASE_REF yet."
+          fi
 
       - name: Unit tests
         run: uv run --no-sync pytest -q -m "not integration"

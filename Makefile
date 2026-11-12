@@ -5,7 +5,7 @@ END ?= 2025-03
 RUN := docker compose run --rm spark
 CLUSTER := docker compose --profile cluster
 
-.PHONY: build test test-integration lint shell checks check-profile ingest-stats-backfill reference entries slices gold-backfill baselines download profile silver gold backfill history cluster-up cluster-down cluster-silver
+.PHONY: build test test-integration lint shell checks check-profile ingest-stats-backfill reference entries slices gold-backfill baselines validate score download profile silver gold backfill history cluster-up cluster-down cluster-silver
 
 build: ; docker compose build
 
@@ -45,6 +45,11 @@ slices: ; $(RUN) python -m pipeline.jobs.daily_trip_slices --month $(MONTH)
 gold-backfill: ; $(RUN) python -m pipeline.jobs.gold_backfill --start $(START) --end $(END)
 
 baselines: ; $(RUN) python -m pipeline.jobs.baselines
+
+validate: ; $(RUN) python -m pipeline.registry validate
+
+# The registry commit comes from the host, because git is not used inside the container.
+score: ; docker compose run --rm -e REGISTRY_COMMIT=$$(git rev-parse --short HEAD)$$(test -z "$$(git status --porcelain)" || echo -dirty) spark python -m pipeline.jobs.score
 
 history: ; mkdir -p data/spark-events && docker compose --profile history up -d history
 
