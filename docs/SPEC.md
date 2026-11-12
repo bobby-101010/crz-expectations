@@ -1,6 +1,6 @@
 # CRZ Expectations: design spec
 
-Version 1.4, November 12, 2026. Drafted with Claude and approved by the owner.
+Version 1.5, November 12, 2026. Drafted with Claude and approved by the owner.
 
 **Changes in 1.1:** expectations now come from a documented elicitation with a subject matter expert (an AI agent in this project), approved by the owner, instead of being written by the owner (sections 2, 7.5, 7.11, 9, Appendix A). The registry exists (13 entries). Ratio metrics support `change_vs_period`. Baselines use exact percentiles. Vehicle classes use canonical labels.
 
@@ -9,6 +9,8 @@ Version 1.4, November 12, 2026. Drafted with Claude and approved by the owner.
 **Changes in 1.3:** Phase 2 found what the sources actually hold, and the owner approved these in the Phase 2 plan. The metric catalog is written in Phase 2, not Phase 3, because the baselines job depends on it (section 10). Zone membership is joined by id, since the MTA's zone list uses TLC location ids (sections 6 and 13, decision 0008). The entries data keeps the source's repeated hour at the end of daylight saving, and all six vehicle classes have canonical names (sections 6 and 7.4, decision 0009). The open details of the baseline method are settled (section 6, decision 0010).
 
 **Changes in 1.4:** the scoring details section 7.6 left open are settled in decision 0011, approved by the owner in the Phase 3 plan: what "latest loaded date" means, which failing checks cause `data_issue`, and how a day with no baseline counts. The append-only rule also freezes `confidence` (section 7.5). The stopgap checker is gone; the registry model replaces it.
+
+**Changes in 1.5:** the driver details section 7.7 left open are settled in decision 0012, approved by the owner in the Phase 4 plan: `share_of_gap` is null only when the total gap is exactly zero, a slice with no value is labelled `(none)`, and each scoring run gets one set of driver rows.
 
 This spec is the source of truth for finishing the project. Claude Code implements it phase by phase. The owner reviews, decides, and verifies. Changes to the spec are made by editing this file in a commit, with a change note above saying what changed and why.
 
@@ -384,6 +386,8 @@ Drivers are computed for `change_vs_period` verdicts that are `held`, `violated_
 - For each slice `s`: `expected_s = comparison_s * (1 + m)` and `gap_s = observed_s - expected_s`.
 - The total gap is the sum of `gap_s`, which equals `observed_total - comparison_total * (1 + m)`.
 - `share_of_gap = gap_s / total gap`. Rank slices by the absolute size of `gap_s`.
+
+When an entry lands near the middle of its range the total gap is small, so shares are large and of both signs. The status page shows each gap in the metric's unit beside its share (decision 0012).
 
 The assumption that every slice was expected to move by the same percentage is stated on the status page. Drivers are always labeled "where the gap comes from", never "why". Other comparison types show "drivers not supported for this comparison".
 
