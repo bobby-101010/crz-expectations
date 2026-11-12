@@ -88,3 +88,47 @@ def daily_trips(trips: DataFrame, start: date, end: date) -> DataFrame:
         )
         .select("trip_date", "service", "trips", "cbd_fee_trips")
     )
+
+
+def daily_trip_slices(trips: DataFrame, zones: DataFrame, start: date, end: date) -> DataFrame:
+    """Silver trips + reference zones -> daily counts by service, operator, zone relation, hour.
+
+    `zone_relation` says which ends of the trip are in the toll zone: `both_in`,
+    `pickup_in`, `dropoff_in` or `neither`. A zone id that is null or not in the
+    reference table counts as outside.
+    """
+    in_cbd = zones.where("in_cbd").select("location_id")
+    pickup_in = F.broadcast(
+        in_cbd.select(F.col("location_id").alias("pickup_zone_id"), F.lit(True).alias("pickup_in"))
+    )
+    dropoff_in = F.broadcast(
+        in_cbd.select(
+            F.col("location_id").alias("dropoff_zone_id"), F.lit(True).alias("dropoff_in")
+        )
+    )
+    starts_in = F.coalesce("pickup_in", F.lit(False))
+    ends_in = F.coalesce("dropoff_in", F.lit(False))
+    relation = (
+        F.when(starts_in & ends_in, "both_in")
+        .when(starts_in, "pickup_in")
+        .when(ends_in, "dropoff_in")
+        .otherwise("neither")
+    )
+    return (
+        trips.where((F.col("pickup_at") >= F.lit(start)) & (F.col("pickup_at") < F.lit(end)))
+        .join(pickup_in, "pickup_zone_id", "left")
+        .join(dropoff_in, "dropoff_zone_id", "left")
+        .groupBy(
+            F.to_date("pickup_at").alias("trip_date"),
+            "service",
+            "operator_code",
+            relation.alias("zone_relation"),
+            F.hour("pickup_at").alias("pickup_hour"),
+        )
+        .agg(
+            F.count("*").alias("trips"),
+            F.sum(F.when(F.col("cbd_congestion_fee") > 0, 1).otherwise(0))
+            .cast("long")
+            .alias("fee_trips"),
+        )
+    )

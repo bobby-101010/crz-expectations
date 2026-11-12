@@ -1,15 +1,16 @@
 import argparse
+import json
 import urllib.error
 import urllib.request
 import uuid
 from collections import Counter
 from collections.abc import Callable
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
 
-from pipeline.checks import ingest_stats, trips
+from pipeline.checks import entries, ingest_stats, trips
 from pipeline.checks.core import CheckResult, append_results, ensure_results_table
 from pipeline.checks.profile import profile_trips, silver_partition_rows
 from pipeline.checks.thresholds import APPROVED, Thresholds
@@ -18,10 +19,26 @@ from pipeline.months import month_bounds, month_range, shift_month
 from pipeline.session import build_session
 
 SILVER = "local.silver.trips"
+ENTRIES = "local.silver.crz_entries"
+ZONES = "local.reference.cbd_zones"
+ENTRIES_LATEST_URL = (
+    "https://data.ny.gov/resource/t6yz-b64h.json?$select=max(toll_date)%20as%20latest"
+)
 LAUNCH = "2025-01-05 00:00:00"
 FRESHNESS_LOOKAHEAD_MONTHS = 6
 
 Probe = Callable[[str, str], bool]
+EntriesProbe = Callable[[], date | None]
+
+
+def entries_published() -> date | None:
+    """The latest toll date the entries source has. None if it cannot be reached."""
+    request = urllib.request.Request(ENTRIES_LATEST_URL, headers={"User-Agent": "crz-expectations"})
+    try:
+        with urllib.request.urlopen(request, timeout=60) as response:
+            return date.fromisoformat(json.load(response)[0]["latest"][:10])
+    except (OSError, KeyError, IndexError, ValueError):
+        return None
 
 
 def tlc_published(service: str, month: str) -> bool:
@@ -70,8 +87,55 @@ def month_profiles(spark: SparkSession, month: str | None) -> dict[tuple[str, st
     }
 
 
+def entries_results(
+    spark: SparkSession, month: str | None, entries_probe: EntriesProbe
+) -> list[CheckResult]:
+    """Checks on the entries data. Empty until `silver.crz_entries` exists and has rows."""
+    if not spark.catalog.tableExists(ENTRIES):
+        return []
+    dates = spark.table(ENTRIES).select("toll_date").distinct().collect()
+    loaded = {row["toll_date"] for row in dates}
+    if not loaded:
+        return []
+    latest = max(loaded)
+    months = sorted({f"{day.year}-{day.month:02d}" for day in loaded})
+    results = [
+        entries.entries_days_complete(m, loaded, latest)
+        for m in months
+        if month is None or m == month
+    ]
+    if month is None:
+        results.append(entries.entries_freshness(latest, entries_probe()))
+    return results
+
+
+def zone_membership_result(spark: SparkSession) -> list[CheckResult]:
+    """`cbd_zone_membership`, once the zone table exists. Scans the 2025 silver partitions."""
+    if not spark.catalog.tableExists(ZONES):
+        return []
+    in_cbd = F.broadcast(
+        spark.table(ZONES).where("in_cbd").select(F.col("location_id").alias("pickup_zone_id"))
+    )
+    row = (
+        spark.table(SILVER)
+        .where("pickup_at >= '2025-01-05' AND pickup_at < '2026-01-01'")
+        .where(F.col("pickup_zone_id") == F.col("dropoff_zone_id"))
+        .join(in_cbd, "pickup_zone_id")
+        .agg(
+            F.count("*").alias("trips"),
+            F.sum(F.when(F.col("cbd_congestion_fee") > 0, 1).otherwise(0)).alias("with_fee"),
+        )
+        .first()
+    )
+    return [entries.cbd_zone_membership(row["trips"], row["with_fee"] or 0)]
+
+
 def collect(
-    spark: SparkSession, month: str | None, t: Thresholds, probe: Probe
+    spark: SparkSession,
+    month: str | None,
+    t: Thresholds,
+    probe: Probe,
+    entries_probe: EntriesProbe = entries_published,
 ) -> list[CheckResult]:
     """Run the checks for one month, or for every loaded month plus the table-wide checks."""
     partition_rows = silver_partition_rows(spark, SILVER)
@@ -125,6 +189,9 @@ def collect(
                 trips.freshness(service, loaded, latest_published(service, loaded, probe))
             )
 
+        results.extend(zone_membership_result(spark))
+
+    results.extend(entries_results(spark, month, entries_probe))
     return results
 
 
@@ -133,6 +200,7 @@ def run(
     month: str | None = None,
     thresholds: Thresholds | None = APPROVED,
     probe: Probe = tlc_published,
+    entries_probe: EntriesProbe = entries_published,
 ) -> list[CheckResult]:
     """Run the checks and append their results to `checks.results`."""
     if thresholds is None:
@@ -140,7 +208,7 @@ def run(
             "No approved thresholds. See docs/decisions/0007 and pipeline/checks/thresholds.py."
         )
     ensure_results_table(spark)
-    results = collect(spark, month, thresholds, probe)
+    results = collect(spark, month, thresholds, probe, entries_probe)
     append_results(spark, uuid.uuid4().hex, datetime.now(UTC), results)
     return results
 
