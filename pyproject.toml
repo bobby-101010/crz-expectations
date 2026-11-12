@@ -24,6 +24,8 @@ markers = [
 line-length = 100
 target-version = "py312"
 src = ["src", "tests"]
+# The stopgap checker from the elicitation is kept as supplied. Phase 3 replaces it.
+extend-exclude = ["scripts/check_registry.py"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]

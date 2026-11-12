@@ -15,7 +15,7 @@ Expectation-driven data pipeline on NYC congestion pricing data: Spark 4.1 + Ice
 - Pinned versions (PySpark 4.1.3, Iceberg 1.12.0 for Spark 4.1/Scala 2.13, uv 0.11.7, Python 3.12): never change without asking.
 - Jobs are `run(spark, ...)` + `main()`; logic in pure, unit-tested DataFrame functions; one month of one source per unit of work; idempotent writes.
 - Read bronze one file at a time; explicit casts; fail loudly on missing required columns.
-- Never write `expected`, `rationale` or `statement` values in `expectations/registry.yaml`; use `TODO(human)`. Never change an existing entry's recorded values.
+- Never write or change `expected`, `confidence`, `rationale` or `statement` in `expectations/registry.yaml`. New expectations come only from an elicitation record in `docs/elicitation/` plus the owner's approval.
 - Never write essay prose (`docs/essay.md`). Outlines and fact checks are fine.
 - Never commit `~/Documents/Anki/` content to this repo.
 - One branch and PR per phase (`phase-N-name`). Plan first, in plan mode, and wait for approval.
