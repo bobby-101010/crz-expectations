@@ -1,0 +1,13 @@
+{
+ "calibration": {
+  "held": 0,
+  "mean_confidence": null,
+  "prospective": 7,
+  "scored": 0
+ },
+ "generated_at": "2026-11-12T05:55:38.804238+00:00",
+ "registry_commit": "0c59623",
+ "repo_url": "https://github.com/bobby-101010/crz-expectations",
+ "run_id": "b1e7c36844574a80a606a96e5b6ea845",
+ "scored_at": "2026-11-12T05:55:20.541396"
+}

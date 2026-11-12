@@ -215,3 +215,42 @@ def test_drivers_job_breaks_down_the_latest_scoring_run(lake, gold):
     # The same scoring run again writes nothing.
     assert drivers.run(lake, entries) == []
     assert stored.count() == 4
+
+
+def test_site_job_exports_the_latest_run_and_renders_a_page(lake, gold, tmp_path):
+    import json
+
+    from pipeline.jobs import drivers, site
+
+    wide = Entry.model_validate(
+        ENTRIES[0].model_dump()
+        | {
+            "id": "yellow-doubles-for-the-page",
+            "expected": {"low": 0.0, "high": 100.0, "unit": "percent"},
+            "drivers": ["zone_relation"],
+        }
+    )
+    entries = [wide, ENTRIES[1], ENTRIES[2], ENTRIES[3], ENTRIES[4]]
+    score.run(lake, "abc1234", entries)
+    drivers.run(lake, entries)
+
+    page = site.run(lake, entries, tmp_path)
+
+    exported = {p.stem: json.loads(p.read_text()) for p in (tmp_path / "data").glob("*.json")}
+    assert set(exported) == {"meta", "verdicts", "drivers", "checks", "freshness", "series"}
+    assert [v["id"] for v in exported["verdicts"]] == [e.id for e in entries]
+    assert exported["meta"]["registry_commit"] == "abc1234"
+    assert {d["expectation_id"] for d in exported["drivers"]} == {wide.id}
+    assert len(exported["series"][wide.id]["window"]) == 1
+    assert len(exported["series"][wide.id]["comparison"]) == 1
+    # The ratio entry's daily series is ride-hail over yellow for the day: 2 / 2.
+    assert exported["series"]["ratio-too-low"]["window"] == [["2025-01-05", 1.0]]
+    assert len(exported["series"]["ninth-monday-outside"]["band"]) == 1
+    assert "official-projection" not in exported["series"]
+    assert {c["check_id"] for c in exported["checks"]} >= {"required_nulls", "freshness"}
+
+    html = page.read_text()
+    for entry in entries:
+        assert f'id="{entry.id}"' in html
+    assert "Where the gap comes from" in html and "pickup_in" in html
+    assert html.count("<svg") >= 7

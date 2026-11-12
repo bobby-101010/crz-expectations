@@ -1,0 +1,20 @@
+[
+ {
+  "checked_at": "2026-11-12T04:12:18.690905",
+  "message": "loaded through 2026-10-31; published through 2026-10-31",
+  "partition_value": "crz_entries",
+  "status": "pass"
+ },
+ {
+  "checked_at": "2026-11-12T04:12:18.690905",
+  "message": "loaded through 2026-09; published through 2026-09",
+  "partition_value": "fhvhv",
+  "status": "pass"
+ },
+ {
+  "checked_at": "2026-11-12T04:12:18.690905",
+  "message": "loaded through 2026-09; published through 2026-09",
+  "partition_value": "yellow",
+  "status": "pass"
+ }
+]
