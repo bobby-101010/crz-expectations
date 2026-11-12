@@ -5,6 +5,7 @@ description = "Expectation-driven pipeline for congestion pricing data"
 requires-python = ">=3.12"
 dependencies = [
     "holidays>=0.108",
+    "pydantic>=2.14.3",
     "pyspark==4.1.3",
     "pyyaml>=6.0.3",
 ]
@@ -26,8 +27,6 @@ markers = [
 line-length = 100
 target-version = "py312"
 src = ["src", "tests"]
-# The stopgap checker from the elicitation is kept as supplied. Phase 3 replaces it.
-extend-exclude = ["scripts/check_registry.py"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]

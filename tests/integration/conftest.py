@@ -10,7 +10,7 @@ from datetime import datetime
 import pytest
 from pyspark.sql import SparkSession
 
-from pipeline.jobs import daily_trips, silver_trips
+from pipeline.jobs import daily_trips, reference, silver_trips
 from pipeline.jobs.ingest import bronze_path
 from pipeline.session import build_session
 
@@ -42,6 +42,21 @@ FHVHV_2024_12 = [
     ("HV0003", datetime(2024, 12, 30, 8, 0), datetime(2024, 12, 30, 8, 30), 79, 148, 3.1),
     ("HV0005", datetime(2024, 12, 31, 8, 0), datetime(2024, 12, 31, 8, 30), 7, 129, 4.0),
 ]
+
+
+LOOKUP_CSV = (
+    '"LocationID","Borough","Zone","service_zone"\n'
+    '7,"Queens","Astoria","Boro Zone"\n'
+    '132,"Queens","JFK Airport","Airports"\n'
+    '161,"Manhattan","Midtown Center","Yellow Zone"\n'
+    '162,"Manhattan","Midtown East","Yellow Zone"\n'
+    '236,"Manhattan","Upper East Side North","Yellow Zone"\n'
+)
+CBD_CSV = (
+    '"taxi_zone","polygon"\n'
+    '"161","MULTIPOLYGON (((-73.9 40.7, -73.9 40.8)))"\n'
+    '"162","MULTIPOLYGON (((-73.9 40.7)))"\n'
+)
 
 
 def write_bronze(spark, service, month, rows, schema):
@@ -91,3 +106,12 @@ def loaded(lake):
     daily_trips.run(lake, "2025-01")
     daily_trips.run(lake, "2024-12")
     return counts
+
+
+@pytest.fixture(scope="session")
+def reference_tables(lake):
+    for name, text in (("taxi_zone_lookup", LOOKUP_CSV), ("cbd_taxi_zones", CBD_CSV)):
+        folder = reference.snapshot_dir(name)
+        folder.mkdir(parents=True, exist_ok=True)
+        (folder / "pulled_2026-11-12.csv").write_text(text)
+    return reference.run(lake)

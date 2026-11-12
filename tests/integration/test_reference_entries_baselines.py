@@ -21,20 +21,6 @@ pytestmark = pytest.mark.integration
 
 T = Thresholds(0.5, 2.0, 0.5, 0.0, 0.0)
 
-LOOKUP_CSV = (
-    '"LocationID","Borough","Zone","service_zone"\n'
-    '7,"Queens","Astoria","Boro Zone"\n'
-    '132,"Queens","JFK Airport","Airports"\n'
-    '161,"Manhattan","Midtown Center","Yellow Zone"\n'
-    '162,"Manhattan","Midtown East","Yellow Zone"\n'
-    '236,"Manhattan","Upper East Side North","Yellow Zone"\n'
-)
-CBD_CSV = (
-    '"taxi_zone","polygon"\n'
-    '"161","MULTIPOLYGON (((-73.9 40.7, -73.9 40.8)))"\n'
-    '"162","MULTIPOLYGON (((-73.9 40.7)))"\n'
-)
-
 ENTRIES_HEADER = (
     '"toll_date","toll_hour","toll_10_minute_block","minute_of_hour","hour_of_day",'
     '"day_of_week_int","day_of_week","toll_week","time_period","vehicle_class",'
@@ -49,15 +35,6 @@ def entries_line(block, vehicle_class, entries, excluded):
         f'"{day}T00:00:00.000","Overnight","{vehicle_class}","Lincoln Tunnel","New Jersey",'
         f'"{entries}","{excluded}"\n'
     )
-
-
-@pytest.fixture(scope="module")
-def reference_tables(lake):
-    for name, text in (("taxi_zone_lookup", LOOKUP_CSV), ("cbd_taxi_zones", CBD_CSV)):
-        folder = reference.snapshot_dir(name)
-        folder.mkdir(parents=True, exist_ok=True)
-        (folder / "pulled_2026-11-12.csv").write_text(text)
-    return reference.run(lake)
 
 
 def test_reference_job_builds_zones_and_holidays(lake, reference_tables):
