@@ -1,6 +1,8 @@
 # CRZ Expectations: design spec
 
-Version 1.0, November 11, 2026. Drafted with Claude and approved by the owner.
+Version 1.1, November 11, 2026. Drafted with Claude and approved by the owner.
+
+**Changes in 1.1:** expectations now come from a documented elicitation with a subject matter expert (an AI agent in this project), approved by the owner, instead of being written by the owner (sections 2, 7.5, 7.11, 9, Appendix A). The registry exists (13 entries). Ratio metrics support `change_vs_period`. Baselines use exact percentiles. Vehicle classes use canonical labels.
 
 This spec is the source of truth for finishing the project. Claude Code implements it phase by phase. The owner reviews, decides, and verifies. Changes to the spec are made by editing this file in a commit, with a line in `docs/ai-log.md` saying what changed and why.
 
@@ -22,7 +24,7 @@ This spec is the source of truth for finishing the project. Claude Code implemen
 14. Sources
 - Appendix A: `CLAUDE.md`
 - Appendix B: AI log template
-- Appendix C: Registry example
+- Appendix C: Registry
 - Appendix D: Essay outline
 
 ---
@@ -33,7 +35,7 @@ A public portfolio project for data engineering roles. It has to show three thin
 
 1. **Engineering depth.** Spark and Iceberg at a scale of about a billion rows, a medallion layout, idempotent jobs, data checks, tests, and CI.
 2. **A point of view.** Expectation-driven data engineering: write down what should happen before the data arrives, then build pipelines that measure the gap and locate where it comes from.
-3. **Disciplined use of generative AI.** The project is finished with Claude Code, working from this spec, with a public log of what the AI did, what the owner decided, and what was checked.
+3. **Disciplined use of generative AI.** The project is finished with Claude Code, working from this spec, with a public log of what the AI did, what the owner decided, and what was checked. The expectations themselves come from an interview with an AI subject matter expert. It is run and checked by the engineer the way a real stakeholder interview would be, and recorded in full.
 
 The deadline is about two weeks from the date above. Every phase has a "done when" list, so scope can be cut cleanly if time runs short.
 
@@ -49,11 +51,13 @@ The deadline is about two weeks from the date above. Every phase has a "done whe
 
 **Data check versus expectation.** A data check is a claim about the data, such as "this column is never null". An expectation is a claim about the world, such as "trips touching the zone fall after tolling starts". Scoring depends on the checks: if a check on an expectation's inputs fails, the verdict is "data issue", not "violated".
 
+**Author.** Who supplied the expected values: `agency` for a published projection, `ai_sme` for an AI agent acting as subject matter expert, or `human` for a person. In a real deployment, stakeholders are the experts and the engineer's job is to elicit their expectations, make them machine-readable, and score them. This project simulates the stakeholder with an AI agent, says so on every entry, and keeps the interview (section 7.11).
+
 **Origin.** Every expectation records where it came from:
 
 - `official`: published by an agency before the outcome.
-- `derived`: the owner's translation of an official expectation onto a metric this project can measure.
-- `prospective`: written by the owner before the data was available to them. The git commit time is the evidence.
+- `derived`: an expert's translation of an official expectation onto a metric this project can measure.
+- `prospective`: written before the window's data was published. The git commit time is the evidence.
 - `retrospective`: written after seeing the data. These are allowed but always labeled, because they show what to watch rather than test a prediction.
 
 ## 3. Where the project stands
@@ -226,7 +230,7 @@ Partitioned by `months(entry_date)`.
 
 **`gold.baselines`** — one row per metric x slice x date.
 `metric STRING, slice_key STRING, slice_value STRING, baseline_date DATE, method STRING, p10 DOUBLE, p50 DOUBLE, p90 DOUBLE, n_obs INT`.
-Partitioned by `metric`, `months(baseline_date)`. The method is `same_weekday_trailing_8`: the same weekday over the previous 8 weeks, holidays excluded. A slice with fewer than 6 observations gets no row. `slice_key = 'all'` is the unsliced metric.
+Partitioned by `metric`, `months(baseline_date)`. The method is `same_weekday_trailing_8`: the same weekday over the previous 8 weeks, holidays excluded. Percentiles use Spark's exact `percentile`, which interpolates linearly, not `percentile_approx`. One registry entry's range depends on this. A slice with fewer than 6 observations gets no row. `slice_key = 'all'` is the unsliced metric.
 
 **`checks.results`** — one row per check execution.
 `run_id STRING, checked_at TIMESTAMP, check_id STRING, target_table STRING, partition_value STRING, status STRING, observed DOUBLE, threshold STRING, message STRING`.
@@ -299,26 +303,32 @@ Initial metrics:
 | `excluded_roadway_entries` | gold.daily_entries | excluded_roadway_entries | | vehicle_class, detection_group, time_period |
 | `fhvhv_per_yellow` | ratio | `tlc_trips[service=fhvhv]` / `tlc_trips[service=yellow]` | | |
 
+Vehicle classes use canonical labels, starting with `cars_pickups_vans` and `tlc_taxi_fhv`. The catalog maps them one-to-one to the source's labels, and the silver job fails on any source label it cannot map, so a class renamed partway through the series can't silently drop entries.
+
 Metrics marked `baseline: true` get baselines. Start with `tlc_trips`, `tlc_cbd_touch_trips`, and `crz_entries`.
 
 Metric code lives in `src/pipeline/metrics.py`: `load_catalog()`, `daily_series(spark, metric, start, end, by=None)`. A unit test checks that every metric in the catalog resolves.
 
 ### 7.5 Expectation registry (`expectations/registry.yaml`)
 
-Entries are validated by a pydantic model in `src/pipeline/registry.py`.
+The registry was created on November 11, 2026 through the elicitation in section 7.11, and holds 13 entries. Entries are validated by a pydantic model in `src/pipeline/registry.py`.
 
 | Field | Required | Meaning |
 | --- | --- | --- |
 | `id` | yes | Stable kebab-case id, never reused |
 | `statement` | yes | One sentence a non-engineer can read |
 | `origin` | yes | `official`, `derived`, `prospective`, or `retrospective` |
-| `author` | yes | Who wrote the expected values. Always `human` in this project. |
-| `recorded` | yes | Date the expectation was written |
+| `author` | yes | Who supplied the expected values: `agency`, `ai_sme`, or `human` |
+| `elicited_in` | for `ai_sme` | Path to the elicitation record |
+| `approved_by`, `approved_on` | yes | The owner's approval. Committing the entry to `main` is the approval. |
+| `recorded` | yes | Date the expectation was written, or for `official`, published. `recorded_note` explains an approximate date. |
 | `metric` | unless not measurable | A catalog metric name, with optional `filters` |
 | `comparison` | unless not measurable | `change_vs_period`, `within_baseline`, or `value_range` (7.6) |
 | `window` | yes | `start` and `end` dates, inclusive |
 | `comparison_window` | for `change_vs_period` | Defaults to `window` shifted back 364 days, which keeps weekdays aligned |
-| `expected` | unless not measurable | `low` and `high`, in the comparison's unit |
+| `expected` | unless not measurable | `low`, `high`, and `unit` (`percent`, `percent_of_days`, or the metric's unit, such as `ratio`) |
+| `confidence` | unless not measurable | The expert's stated probability, in whole percent, that the result lands in the range |
+| `note` | no | Context a reader of the status page needs, such as "a consistency check, not a forecast" |
 | `measurable` | no, default true | `false` with a `not_measurable_reason` |
 | `drivers` | no | Dimensions to break a gap down by |
 | `rationale` | yes | Why this range, in the owner's words |
@@ -329,12 +339,14 @@ Entries are validated by a pydantic model in `src/pipeline/registry.py`.
 Rules:
 
 - **Append-only.** Once an entry is on `main`, its `metric`, `filters`, `comparison`, `window`, `comparison_window`, `expected`, and `recorded` never change. A revision is a new entry with `supersedes`. A CI step compares the PR's registry with `origin/main` and fails on any such change.
-- **Values are the owner's.** Claude Code never writes `expected`, `rationale`, or `statement` values. It may add an entry skeleton with `TODO(human)` in those fields. Validation fails on `main` if any `TODO(human)` remains.
-- **Seed entries** (Appendix C has the YAML):
-  - `official-entries-phase1`: the 13.4% projection. Not measurable, because the entries data starts at launch and No Action is a modeled counterfactual. `reported_outcome` is the 11%.
-  - `derived-cbd-touch-2025`: trips touching the zone, first 52 weeks of tolling versus the same weeks a year earlier.
-  - `retrospective-fhvhv-per-yellow`: the ride-hail to yellow ratio, labeled retrospective because the 2025 shift was seen first.
-  - At least two `prospective-*` entries, written and pushed on day 1 (section 10, Phase 0). Candidates are the next weekly MTA entries update, and TLC October 2026, which publishes about two months after the month ends, so after the deadline. A pending verdict on the status page is a feature: it shows the system waiting for evidence.
+- **Values come only from an elicitation or a published source.** Claude Code, as the implementer, never writes or alters `expected`, `confidence`, `rationale`, or `statement`. A new expectation requires a new elicitation record in `docs/elicitation/` and the owner's approval. Validation fails on `main` if any field contains `TODO`.
+- **What the registry holds now:**
+  - 1 `official` entry: the 13.4% projection, marked not measurable, with the reported 11% as context.
+  - 7 `prospective` entries: MTA entries for November 8 to 14, November 15 to 21 (within baseline), and November 2026 by vehicle class; TLC trips for October 2026 by service; and the October ride-hail to yellow ratio.
+  - 1 `derived` entry: the projection translated to trips touching the zone in tolling's first year.
+  - 4 `retrospective` entries: the 2025 ratio as a consistency check, plus three that reproduce Table 3-2 of the MTA's First Evaluation Report (total, yellow, ride-hail). Those three validate the pipeline against a published figure, and they are Phase 3's most important acceptance test.
+- **Pending is a feature.** Entries whose data publishes after the deadline show `pending` on the status page, which shows the system waiting for evidence.
+- **Calibration.** The status page reports the expert's hit rate over `prospective` entries only, against their stated confidence. Derived and retrospective entries are excluded.
 
 ### 7.6 Scoring (`jobs/score.py`)
 
@@ -342,7 +354,7 @@ For each registry entry, scoring computes `observed` in the comparison's unit an
 
 | Comparison | Observed | Unit |
 | --- | --- | --- |
-| `change_vs_period` | `100 * (sum over window / sum over comparison window - 1)` | percent |
+| `change_vs_period` | `100 * (sum over window / sum over comparison window - 1)`. For a ratio metric: `100 * (window ratio / comparison ratio - 1)` | percent |
 | `within_baseline` | Share of days in the window whose daily value lies within that day's p10 to p90 baseline | percent of days |
 | `value_range` | Daily mean of the metric over the window (for ratios, the ratio of the window sums) | metric units |
 
@@ -399,6 +411,25 @@ If Phase 6 is skipped, the README says orchestration is Make plus idempotent mon
   - Setup: Python 3.12 with `astral-sh/setup-uv`, Java 21 with `actions/setup-java`, and `IVY_DIR`, `WAREHOUSE_DIR`, and `SPARK_EVENTS_DIR` pointed at temporary folders, `SPARK_DRIVER_MEMORY=2g`, and the Ivy cache cached between runs
 - `pages.yml`: deploys `site/` to Pages.
 
+### 7.11 Expectation elicitation (`docs/elicitation/`)
+
+Each elicitation is one Markdown file, named by date and topic, that keeps the whole exchange unedited. It holds:
+
+1. **Why, and who.** The expert's role and how it was simulated, the engineer, and the approver.
+2. **The protocol.** Briefing, draft, challenge, lock.
+3. **The engineer's checks.** Which facts were checked against which source, and the result.
+4. **Decisions made while building the registry.**
+5. **The verbatim transcript.**
+
+Rules for the briefing and challenge:
+
+- The briefing gives the expert the metric catalog with its dimensions, the comparison types, what data had been published as of the interview, and the known context. It asks for 80% intervals and sources.
+- No leakage: a prospective window must be unpublished when recorded, and the expert is told to stop if it finds such data.
+- The engineer checks at least the facts that the scored numbers depend on, and the arithmetic.
+- An expert's request the metrics can't express is listed in the record and becomes a backlog item, not a silent drop.
+
+The first elicitation is `docs/elicitation/2026-11-11-crz-expectations.md`.
+
 ## 8. Engineering conventions
 
 - **Jobs** have a pure `run(spark, ...)` and a thin `main()`. Logic lives in pure DataFrame functions with unit tests.
@@ -420,7 +451,7 @@ This section is part of what the project demonstrates. Follow it as closely as t
 
 | The owner | Claude Code |
 | --- | --- |
-| Writes every expected value, rationale, and statement in the registry | Builds the machinery that stores, validates, and scores them |
+| Runs each elicitation with the expert (an AI agent here, stakeholders in real work), challenges the values, and approves each entry | Builds the machinery that stores, validates, and scores expectations, and never writes or alters their values |
 | Approves each phase plan before work starts | Proposes the plan in plan mode, with files, tests, and acceptance steps |
 | Approves thresholds, destructive actions, and long runs | Computes threshold candidates from data and explains them |
 | Writes the essay prose | May outline and fact-check the essay against data and sources, but never drafts its prose |
@@ -447,6 +478,8 @@ The first entry covers checklists 1 and 2. Claude in chat planned them and draft
 - tracing the January 4 deviation, which led to a modeling change;
 - the full backfill and the four end-of-checklist expectations.
 
+The Phase 0 entry also records the expectation elicitation of November 11, 2026 (section 7.11): the change of approach, how the expert was briefed and challenged, and what was checked.
+
 ### `CLAUDE.md`
 
 Phase 0 creates `CLAUDE.md` from Appendix A. It is kept short and points to this spec for everything else.
@@ -462,14 +495,12 @@ The days are targets for a two-week window. If a phase runs long, cut its option
 - Add ruff and fix the lint findings.
 - Add `ci.yml` with unit tests, plus one integration test that runs the silver and gold jobs on fixtures with Iceberg.
 
-**The owner does first, before anything else:** write the prospective expectations as plain YAML in `expectations/registry.yaml`, with at least `id`, `statement`, `origin`, `author`, `recorded`, `metric`, `comparison`, `window`, `expected`, and `rationale`, using the metric names in 7.4. Commit and push them. Phase 3 may add fields but never changes those values.
-
-Check the entries dataset's latest date that morning. One workable choice is `crz_entries` for a week not yet published, compared with the same week of 2025 (`change_vs_period`).
+**Done before Phase 0 began:** the elicitation produced `expectations/registry.yaml` and `docs/elicitation/2026-11-11-crz-expectations.md`. The owner commits and pushes both, with this spec, before Claude Code starts. Phase 3 may add tooling around the entries but never changes their values.
 
 **Done when:**
 - [ ] CI is green on `main`
 - [ ] The integration test creates and writes both Iceberg tables in a temporary warehouse
-- [ ] The prospective expectations are on `main`, with commit times earlier than their data
+- [ ] The registry and the elicitation record are on `main`, with commit times earlier than the prospective windows' data
 - [ ] The first AI log entry is complete
 
 ### Phase 1: Data checks (days 2 and 3)
@@ -506,11 +537,12 @@ Check the entries dataset's latest date that morning. One workable choice is `cr
 ### Phase 3: Registry and scoring (days 5 to 7)
 
 **Do:**
-- Write the metric catalog, the registry model and validation, the append-only CI check, and the scoring job.
-- Add the seed entries from Appendix C. The owner fills every `TODO(human)`.
+- Write the metric catalog, the registry model and validation, the append-only CI check, and the scoring job. The pydantic model replaces `scripts/check_registry.py`, the stopgap checker written during the elicitation, and must accept the same 13 entries.
+- Validate the existing 13 entries without changing them. If the model and an entry disagree, the model changes, or the owner decides on a superseding entry.
 
 **Done when:**
 - [ ] Every entry gets a verdict
+- [ ] The three Table 3-2 reproduction entries hold, or each miss is traced to its cause and recorded
 - [ ] There is at least one each of `held` or violated, `pending`, and `not_scoreable`
 - [ ] A fixture test forces a `data_issue` verdict
 - [ ] CI rejects a PR that edits an existing entry's `expected`
@@ -570,7 +602,7 @@ Cards are written once, at the end, into the owner's existing ledger. **The ledg
   - How did you structure the spec and `CLAUDE.md`?
   - How did you keep context across sessions?
 
-  It also includes concept and pattern cards for the workflow itself: spec-driven development, plan mode, the append-only registry, and acceptance criteria per phase.
+  It also includes concept and pattern cards for the workflow itself: spec-driven development, plan mode, the append-only registry, and acceptance criteria per phase. It covers the expectation elicitation too, from `docs/elicitation/`: why an AI expert was used, how it was briefed and challenged, the facts checked, and the correction to the reproduction target.
 - **Fix card `F-06` in place**, keeping its id. Replace its back with this:
 
   - Projected: a 13.4% daily vehicle reduction for the $9 Phase 1 toll, relative to the No Action alternative (MTA Reevaluation 2, November 2024, Table 2.2, 2023 analysis year).
@@ -599,9 +631,10 @@ Cards are written once, at the end, into the owner's existing ledger. **The ledg
 | Full-history runs take hours on a fanless laptop | Get approval first. Run overnight on power. Build gold from silver only once. |
 | Iceberg DDL with `TIMESTAMP_NTZ` behaves differently in CI | The Phase 0 integration test catches it early |
 | Two weeks is tight | Phases have clear cut lines. Phase 6 is optional. Phase 4's driver method is deliberately simple. |
-| The AI writes expectation values or essay prose | Forbidden by `CLAUDE.md`, and `TODO(human)` validation blocks unfinished entries |
+| The implementer edits expectation values or writes essay prose | Forbidden by `CLAUDE.md`. The append-only CI check blocks edits to recorded values. |
+| The AI expert's research contains errors | The engineer checks the facts that scored numbers depend on. Its other sources support reasoning only. The status page shows the expert's calibration. |
 
-Open question for the owner: is a weekly MTA update between day 1 and the deadline enough to score at least one prospective expectation? Check the dataset's latest date on day 1 and choose windows to match.
+Open question: will the MTA publish the November 8 to 14 week before the deadline? If it does, at least one prospective entry gets scored before applications go out. If not, the reproduction entries still give scored verdicts.
 
 ## 14. Sources
 
@@ -635,7 +668,7 @@ Expectation-driven data pipeline on NYC congestion pricing data: Spark 4.1 + Ice
 - Pinned versions (PySpark 4.1.3, Iceberg 1.12.0 for Spark 4.1/Scala 2.13, uv 0.11.7, Python 3.12): never change without asking.
 - Jobs are `run(spark, ...)` + `main()`; logic in pure, unit-tested DataFrame functions; one month of one source per unit of work; idempotent writes.
 - Read bronze one file at a time; explicit casts; fail loudly on missing required columns.
-- Never write `expected`, `rationale` or `statement` values in `expectations/registry.yaml`; use `TODO(human)`. Never change an existing entry's recorded values.
+- Never write or change `expected`, `confidence`, `rationale` or `statement` in `expectations/registry.yaml`. New expectations come only from an elicitation record in `docs/elicitation/` plus the owner's approval.
 - Never write essay prose (`docs/essay.md`). Outlines and fact checks are fine.
 - Never commit `~/Documents/Anki/` content to this repo.
 - One branch and PR per phase (`phase-N-name`). Plan first, in plan mode, and wait for approval.
@@ -668,56 +701,9 @@ Expectation-driven data pipeline on NYC congestion pricing data: Spark 4.1 + Ice
 **Time:** about how long the owner spent, and how long the AI worked unattended.
 ```
 
-## Appendix C: Registry example
+## Appendix C: Registry
 
-Values marked `TODO(human)` are the owner's to write. The official entry's figures are verified (section 5).
-
-```yaml
-- id: official-entries-phase1
-  statement: The $9 Phase 1 toll reduces daily vehicles entering the Manhattan CBD by 13.4% relative to No Action.
-  origin: official
-  author: human
-  recorded: TODO(human)   # the document's publication date, November 2024
-  window: {start: 2025-01-05, end: 2026-01-04}
-  measurable: false
-  not_measurable_reason: >-
-    The public entries data begins at launch, and No Action is a modeled
-    counterfactual for a 2023 analysis year, so no observed series in this
-    project matches the projection's baseline.
-  rationale: Recorded as the program's own stated expectation, for comparison with derived entries.
-  sources:
-    - https://www.mta.info/document/158191   # Reevaluation 2, Table 2.2
-  reported_outcome:
-    value: -11
-    unit: percent
-    note: 27 million fewer vehicles in year one; the release does not name its baseline.
-    source: https://www.governor.ny.gov/news/less-traffic-better-transit-its-first-anniversary-governor-hochul-celebrates-transformational
-
-- id: derived-cbd-touch-2025
-  statement: TODO(human)
-  origin: derived
-  author: human
-  recorded: TODO(human)
-  metric: tlc_cbd_touch_trips
-  comparison: change_vs_period
-  window: {start: 2025-01-05, end: 2026-01-03}   # 52 weeks; comparison defaults to 364 days earlier
-  expected: {low: TODO(human), high: TODO(human)}
-  drivers: [service, operator_code, zone_relation, pickup_hour]
-  rationale: TODO(human)
-  sources:
-    - https://www.mta.info/document/158191
-
-- id: retrospective-fhvhv-per-yellow
-  statement: TODO(human)
-  origin: retrospective
-  author: human
-  recorded: TODO(human)
-  metric: fhvhv_per_yellow
-  comparison: value_range
-  window: {start: 2026-01-01, end: 2026-09-30}
-  expected: {low: TODO(human), high: TODO(human)}
-  rationale: TODO(human)   # note that the 2025 drop from 5.8 to 5.0 was seen before writing this
-```
+See `expectations/registry.yaml` (13 entries) and its elicitation record, `docs/elicitation/2026-11-11-crz-expectations.md`. The field reference is section 7.5.
 
 ## Appendix D: Essay outline
 
@@ -726,10 +712,11 @@ Working title: "Write it down first: expectation-driven data engineering". The o
 1. **Hook.** Football's analytics revolution began with counting situations before making decisions.
 2. **The problem.** "Data-driven" without stated expectations means looking at charts after the fact.
 3. **The idea.** Expectations recorded before outcomes, as versioned data in the pipeline. Name it, and why not "priors".
-4. **Expectations about the world versus checks on the data.** Why scoring waits on checks.
-5. **Grain, through the January 4 trace.** The expectation decides what the data model must keep.
-6. **Baselines and comparability.** 13.4% against a modeled No Action case versus 11% against an unstated baseline. Two true numbers that can't be compared directly.
-7. **Drivers, not causes.** Locating a gap is engineering. Explaining it needs more.
-8. **Honest labels.** Official, derived, prospective, and retrospective expectations, and why a "pending" verdict is a feature.
-9. **What it costs and where it breaks.**
-10. **How this transfers** to other domains, such as health care or finance.
+4. **Who writes expectations.** Stakeholders, through elicitation, often with AI help. How this project simulated an expert, and what the engineer checked.
+5. **Expectations about the world versus checks on the data.** Why scoring waits on checks.
+6. **Grain, through the January 4 trace.** The expectation decides what the data model must keep.
+7. **Baselines and comparability.** 13.4% against a modeled No Action case versus 11% against an unstated baseline. Two true numbers that can't be compared directly.
+8. **Drivers, not causes.** Locating a gap is engineering. Explaining it needs more.
+9. **Honest labels.** Official, derived, prospective, and retrospective expectations, and why a "pending" verdict is a feature.
+10. **What it costs and where it breaks.**
+11. **How this transfers** to other domains, such as health care or finance.

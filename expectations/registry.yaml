@@ -1,0 +1,337 @@
+# Expectation registry. Append-only: once an entry is on main, its metric, filters,
+# comparison, window, comparison_window, expected, confidence and recorded never change.
+# A revision is a new entry with `supersedes`. Field reference: docs/SPEC.md section 7.5.
+# Entries by `ai_sme` come from the elicitation in docs/elicitation/2026-11-11-crz-expectations.md.
+
+# ---------------------------------------------------------------- official
+
+- id: official-crz-entries-phase1-projection
+  statement: The $9 Phase 1 toll reduces daily vehicles entering the Manhattan CBD by 13.4% relative to No Action.
+  origin: official
+  author: agency
+  recorded: 2024-11-01
+  recorded_note: Reevaluation 2 is dated November 2024 with no day given; the first of the month is used.
+  approved_by: owner
+  approved_on: 2026-11-11
+  window: {start: 2025-01-05, end: 2026-01-04}
+  measurable: false
+  not_measurable_reason: >-
+    The public entries data begins at launch, and No Action is a modeled counterfactual
+    for a 2023 analysis year, so no series this project observes shares the projection's
+    baseline. The MTA's own headline counts also add excluded roadways to zone entries.
+  rationale: Recorded as the program's stated expectation, to set beside the derived and reproduction entries.
+  sources:
+    - https://www.mta.info/document/158191
+  reported_outcome:
+    value: -11
+    unit: percent
+    note: 27 million fewer vehicles entering the zone in year one. The release does not name its baseline.
+    source: https://www.governor.ny.gov/news/less-traffic-better-transit-its-first-anniversary-governor-hochul-celebrates-transformational
+
+# ---------------------------------------------------------------- prospective
+
+- id: prospective-crz-entries-2026-11-08-week
+  statement: In the week of November 8 to 14, 2026, about 4% fewer vehicles will enter the Congestion Relief Zone than in the matching week of 2025.
+  origin: prospective
+  author: ai_sme
+  elicited_in: docs/elicitation/2026-11-11-crz-expectations.md
+  recorded: 2026-11-11
+  approved_by: owner
+  approved_on: 2026-11-11
+  metric: crz_entries
+  comparison: change_vs_period
+  window: {start: 2026-11-08, end: 2026-11-14}
+  comparison_window: {start: 2025-11-09, end: 2025-11-15}
+  expected: {low: -7.5, high: -1.0, unit: percent}
+  confidence: 80
+  drivers: [vehicle_class, detection_group, time_period]
+  rationale: >-
+    The year-two gap was -3.0% from March to mid-October 2026 and widened to about -5% in
+    September as gas prices peaked. Gas has eased but is still well above a year earlier,
+    so the center is -4.3%. Veterans Day falls on a Tuesday in 2025 and a Wednesday in 2026;
+    a Tuesday holiday encourages a Monday off, lowering the 2025 week and adding about 0.3 to
+    0.5 points. Weekly noise of about 2 points and trend uncertainty set the width. Below the
+    range would suggest a storm or a counting outage; above it, a sharp fall in gas prices.
+  note: >-
+    November 8 to 10 had passed when this was recorded, but the MTA had not published them,
+    and the expert used no information from those days.
+  sources:
+    - https://www.recordinglaw.com/data-stories/nyc-congestion-pricing-traffic-data/
+    - https://www.mta.info/document/195631
+    - https://www.fingerlakes1.com/2026/10/02/new-york-gas-averages-4-48-as-national-prices-ease-after-record-september/
+
+- id: prospective-yellow-trips-2026-10
+  statement: Yellow taxis will make about 5% fewer trips in October 2026 than in October 2025.
+  origin: prospective
+  author: ai_sme
+  elicited_in: docs/elicitation/2026-11-11-crz-expectations.md
+  recorded: 2026-11-11
+  approved_by: owner
+  approved_on: 2026-11-11
+  metric: tlc_trips
+  filters: {service: yellow}
+  comparison: change_vs_period
+  window: {start: 2026-10-01, end: 2026-10-31}
+  comparison_window: {start: 2025-10-02, end: 2025-11-01}
+  expected: {low: -11.0, high: 1.0, unit: percent}
+  confidence: 80
+  drivers: [zone_relation, pickup_hour]
+  rationale: >-
+    Yellow growth accelerated through 2025 (about +10% in January, +20% in August), so October
+    2025 is a high base, reconstructed at about 4.5 to 4.6 million trips. January to August
+    2026 averaged 3.71 million a month; a typical October lift of about 1.16 times gives about
+    4.3 to 4.4 million. Pressure down comes from an unlicensed low-price competitor, fuel costs
+    for drivers, and the 2025 dispatch gains having been absorbed. The range is wide because no
+    monthly 2025 baseline was available to the expert.
+  sources:
+    - https://automarketplace.substack.com/p/nyc-tlc-market-update-yellow-cab
+    - https://www.nyc.gov/assets/tlc/downloads/pdf/testimony_preliminary_budget_3_17_26.pdf
+
+- id: prospective-fhvhv-trips-2026-10
+  statement: Uber and Lyft together will make about 3 to 4% more trips in October 2026 than in October 2025.
+  origin: prospective
+  author: ai_sme
+  elicited_in: docs/elicitation/2026-11-11-crz-expectations.md
+  recorded: 2026-11-11
+  approved_by: owner
+  approved_on: 2026-11-11
+  metric: tlc_trips
+  filters: {service: fhvhv}
+  comparison: change_vs_period
+  window: {start: 2026-10-01, end: 2026-10-31}
+  comparison_window: {start: 2025-10-02, end: 2025-11-01}
+  expected: {low: -0.5, high: 7.0, unit: percent}
+  confidence: 80
+  drivers: [operator_code, zone_relation]
+  rationale: >-
+    Ride-hail grew steadily through 2025. January to August 2026 averaged 21.02 million trips a
+    month against an estimated 20.1 million for the same months of 2025, about +4.5% even with
+    storm months included. The risks to the downside are riders moving to an unlicensed
+    competitor that TLC records don't capture, and fuel surcharges.
+  sources:
+    - https://www.axios.com/2026/05/20/new-york-rideshare-battle
+    - https://automarketplace.substack.com/p/nyc-tlc-market-update-yellow-cab
+
+- id: prospective-fhvhv-per-yellow-2026-10
+  statement: The number of ride-hail trips per yellow taxi trip will rise about 9% from October 2025 to October 2026.
+  origin: prospective
+  author: ai_sme
+  elicited_in: docs/elicitation/2026-11-11-crz-expectations.md
+  recorded: 2026-11-11
+  approved_by: owner
+  approved_on: 2026-11-11
+  metric: fhvhv_per_yellow
+  comparison: change_vs_period
+  window: {start: 2026-10-01, end: 2026-10-31}
+  comparison_window: {start: 2025-10-02, end: 2025-11-01}
+  expected: {low: 2.0, high: 16.5, unit: percent}
+  confidence: 80
+  rationale: >-
+    Implied by the two October trip expectations: ride-hail +3.5% over yellow -5% gives
+    1.035 / 0.95, about +9%. Treating their errors as independent gives an 80% band of about
+    +2% to +16.5%. The expert chose this form over a level for the ratio because it removes
+    its uncertainty about the October 2025 ratio.
+  note: Drivers are not broken down for a ratio metric; see the two trip entries for each service.
+  sources:
+    - https://automarketplace.substack.com/p/nyc-tlc-market-update-yellow-cab
+
+- id: prospective-car-entries-2026-11
+  statement: Private cars, pickups and vans entering the zone in November 2026 will be about 7 to 8% below November 2025.
+  origin: prospective
+  author: ai_sme
+  elicited_in: docs/elicitation/2026-11-11-crz-expectations.md
+  recorded: 2026-11-11
+  approved_by: owner
+  approved_on: 2026-11-11
+  metric: crz_entries
+  filters: {vehicle_class: cars_pickups_vans}
+  comparison: change_vs_period
+  window: {start: 2026-11-01, end: 2026-11-28}
+  comparison_window: {start: 2025-11-02, end: 2025-11-29}
+  expected: {low: -11.0, high: -4.0, unit: percent}
+  confidence: 80
+  drivers: [detection_group, time_period]
+  rationale: >-
+    Cars were -7.4% for January 5 to October 17, 2026 against 2025, storm months included, and
+    about -8 to -9% in September. Gas prices, January's bridge and tunnel toll increase, and the
+    $9 toll all push the same way. The windows line up the Marathon, the end of daylight saving
+    time, Veterans Day and Thanksgiving in both years. A possible artifact: cars falling while
+    taxi and for-hire entries rise could be partly a reclassification between classes.
+  sources:
+    - https://www.recordinglaw.com/data-stories/nyc-congestion-pricing-traffic-data/
+    - https://www.fingerlakes1.com/2026/10/02/new-york-gas-averages-4-48-as-national-prices-ease-after-record-september/
+
+- id: prospective-taxi-fhv-entries-2026-11
+  statement: Taxis and for-hire vehicles entering the zone in November 2026 will be roughly flat to slightly up on November 2025.
+  origin: prospective
+  author: ai_sme
+  elicited_in: docs/elicitation/2026-11-11-crz-expectations.md
+  recorded: 2026-11-11
+  approved_by: owner
+  approved_on: 2026-11-11
+  metric: crz_entries
+  filters: {vehicle_class: tlc_taxi_fhv}
+  comparison: change_vs_period
+  window: {start: 2026-11-01, end: 2026-11-28}
+  comparison_window: {start: 2025-11-02, end: 2025-11-29}
+  expected: {low: -2.0, high: 5.0, unit: percent}
+  confidence: 80
+  drivers: [detection_group, time_period]
+  rationale: >-
+    The year-to-date change was +1.6%: ride-hail growth roughly offsets yellow decline. High gas
+    prices both push some travelers to ride-hail and squeeze drivers. A result above +5% while
+    private cars land below -11% would point to the class-reclassification artifact.
+  sources:
+    - https://www.recordinglaw.com/data-stories/nyc-congestion-pricing-traffic-data/
+    - https://www.mta.info/document/195631
+
+- id: prospective-crz-entries-2026-11-15-week-normal
+  statement: The week of November 15 to 21, 2026 will look like a normal week, with 3 to 6 of its 7 days of zone entries inside their usual range.
+  origin: prospective
+  author: ai_sme
+  elicited_in: docs/elicitation/2026-11-11-crz-expectations.md
+  recorded: 2026-11-11
+  approved_by: owner
+  approved_on: 2026-11-11
+  metric: crz_entries
+  comparison: within_baseline
+  window: {start: 2026-11-15, end: 2026-11-21}
+  expected: {low: 42.8, high: 85.8, unit: percent_of_days}
+  confidence: 80
+  drivers: [vehicle_class]
+  rationale: >-
+    With holidays excluded, each weekday's baseline has 7 or 8 values, and a 10th to 90th
+    percentile band from linear interpolation holds only about 61% of ordinary days. A binomial
+    then gives 3 to 6 days inside about 88% of the time; correlated weather and seasonal drift
+    lower that to about 80%. The bounds sit just outside 3/7 and 6/7 so rounding cannot decide a
+    boundary case. No day in the window is a holiday.
+  note: Assumes baselines use Spark's exact percentile (linear interpolation), as the spec requires. Day of week was requested as a driver but is not a dimension.
+
+# ---------------------------------------------------------------- derived
+
+- id: derived-cbd-touch-trips-first-year
+  statement: If the official forecast's logic held, taxi and ride-hail trips to or from the zone in tolling's first year would be roughly flat against the year before.
+  origin: derived
+  author: ai_sme
+  elicited_in: docs/elicitation/2026-11-11-crz-expectations.md
+  recorded: 2026-11-11
+  approved_by: owner
+  approved_on: 2026-11-11
+  metric: tlc_cbd_touch_trips
+  comparison: change_vs_period
+  window: {start: 2025-01-05, end: 2026-01-03}
+  comparison_window: {start: 2024-01-07, end: 2025-01-04}
+  expected: {low: -2.5, high: 4.0, unit: percent}
+  confidence: 80
+  drivers: [service, zone_relation]
+  rationale: >-
+    The 13.4% projection covers all vehicles, and the cut was expected mostly from private cars.
+    Taxis and ride-hail pay per-trip charges ($0.75 and $1.50), roughly a 3 to 5% fare increase;
+    fare elasticities of -0.3 to -0.7 give about -1% to -3.5%, partly offset by some drivers
+    switching to taxis and by faster trips, so the toll's net effect is about -1.5% against an
+    underlying trend of +1% to +4%. This is the expert's translation of the projection, built
+    from elasticities, not a figure from Reevaluation 2.
+  note: >-
+    This window's data was loaded and largely published when this was recorded, so a hit says
+    nothing about forecasting skill. Score it as a test of the projection's logic. The expert's
+    own estimate, given published data, is +0.5% to +3.0%. Not counted toward calibration.
+  sources:
+    - https://www.mta.info/document/158191
+    - https://www.mta.info/document/195631
+
+# ---------------------------------------------------------------- retrospective
+
+- id: retrospective-fhvhv-per-yellow-first-year
+  statement: In tolling's first year there were about 5 ride-hail trips for every yellow taxi trip, down from 5.8 in 2024, because yellow trips surged.
+  origin: retrospective
+  author: ai_sme
+  elicited_in: docs/elicitation/2026-11-11-crz-expectations.md
+  recorded: 2026-11-11
+  approved_by: owner
+  approved_on: 2026-11-11
+  metric: fhvhv_per_yellow
+  comparison: value_range
+  window: {start: 2025-01-05, end: 2026-01-03}
+  expected: {low: 4.93, high: 5.07, unit: ratio}
+  confidence: 95
+  rationale: >-
+    Calendar 2025 gives 243.6 million over 48.7 million, 5.00. The fall came from yellow supply
+    returning and from app dispatch, not from ride-hail weakness. Moving the window from the
+    calendar year swaps four pre-toll days for three 2026 days, which is negligible.
+  note: A consistency check with no evidential weight, because the value was known when recorded.
+  sources:
+    - https://automarketplace.substack.com/p/nyc-tlc-market-update-yellow-cab
+
+- id: retrospective-reproduce-mta-table-3-2-total
+  statement: The pipeline reproduces the MTA's figure that yellow and ride-hail trips starting or ending in the zone rose about 0.8% from January to September 2024 to the same months of 2025.
+  origin: retrospective
+  author: ai_sme
+  elicited_in: docs/elicitation/2026-11-11-crz-expectations.md
+  recorded: 2026-11-11
+  approved_by: owner
+  approved_on: 2026-11-11
+  metric: tlc_cbd_touch_trips
+  comparison: change_vs_period
+  window: {start: 2025-01-01, end: 2025-09-30}
+  comparison_window: {start: 2024-01-01, end: 2024-09-30}
+  expected: {low: 0.3, high: 1.4, unit: percent}
+  confidence: 85
+  drivers: [service, zone_relation]
+  rationale: >-
+    Target +0.82% in totals: 309,603 x 273 / (305,961 x 274) - 1, from Table 3-2's average daily
+    trips for yellow and ride-hail only (the published total of +1.4% also includes green taxis
+    and other for-hire vehicles, which the pipeline does not load). The tolerance of about 0.5
+    points covers zones mapped differently, record cleaning, file revisions, and whether the
+    MTA's January starts on the 1st or the 5th. A larger miss points to the pipeline, not traffic.
+  note: >-
+    Reproduces a published figure to validate the pipeline; not a forecast. If the yellow and
+    ride-hail reproductions pass but this misses, check what the unfiltered metric includes.
+  sources:
+    - https://www.mta.info/document/195631
+
+- id: retrospective-reproduce-mta-table-3-2-yellow
+  statement: The pipeline reproduces the MTA's figure that yellow taxi trips starting or ending in the zone rose about 17% from January to September 2024 to the same months of 2025.
+  origin: retrospective
+  author: ai_sme
+  elicited_in: docs/elicitation/2026-11-11-crz-expectations.md
+  recorded: 2026-11-11
+  approved_by: owner
+  approved_on: 2026-11-11
+  metric: tlc_cbd_touch_trips
+  filters: {service: yellow}
+  comparison: change_vs_period
+  window: {start: 2025-01-01, end: 2025-09-30}
+  comparison_window: {start: 2024-01-01, end: 2024-09-30}
+  expected: {low: 15.9, high: 17.9, unit: percent}
+  confidence: 85
+  drivers: [zone_relation]
+  rationale: >-
+    Target +16.87% in totals: 93,794 x 273 / (79,963 x 274) - 1, from Table 3-2 (published as
+    +17.3% in average daily trips). Kept separate from the total because yellow and ride-hail
+    moved in opposite directions, so a mapping error could cancel out in the total.
+  note: Reproduces a published figure to validate the pipeline; not a forecast.
+  sources:
+    - https://www.mta.info/document/195631
+
+- id: retrospective-reproduce-mta-table-3-2-fhvhv
+  statement: The pipeline reproduces the MTA's figure that ride-hail trips starting or ending in the zone fell about 5% from January to September 2024 to the same months of 2025.
+  origin: retrospective
+  author: ai_sme
+  elicited_in: docs/elicitation/2026-11-11-crz-expectations.md
+  recorded: 2026-11-11
+  approved_by: owner
+  approved_on: 2026-11-11
+  metric: tlc_cbd_touch_trips
+  filters: {service: fhvhv}
+  comparison: change_vs_period
+  window: {start: 2025-01-01, end: 2025-09-30}
+  comparison_window: {start: 2024-01-01, end: 2024-09-30}
+  expected: {low: -5.6, high: -4.2, unit: percent}
+  confidence: 85
+  drivers: [operator_code, zone_relation]
+  rationale: >-
+    Target -4.86% in totals: 215,809 x 273 / (225,998 x 274) - 1, from Table 3-2 (published as
+    -4.5% in average daily trips). Kept separate from the total for the same reason as yellow.
+  note: Reproduces a published figure to validate the pipeline; not a forecast.
+  sources:
+    - https://www.mta.info/document/195631
