@@ -166,3 +166,52 @@ def test_a_failing_check_on_the_inputs_turns_the_verdict_into_data_issue(lake, g
     assert rows["yellow-doubles"]["verdict"] == "held"
 
     assert lake.table(score.TABLE).select("run_id").distinct().count() == 3
+
+
+def test_drivers_job_breaks_down_the_latest_scoring_run(lake, gold):
+    from pipeline.jobs import drivers
+
+    wide = Entry.model_validate(
+        ENTRIES[0].model_dump()
+        | {
+            "id": "yellow-doubles-with-drivers",
+            "expected": {"low": 0.0, "high": 100.0, "unit": "percent"},
+            "drivers": ["zone_relation", "operator_code"],
+        }
+    )
+    entries = [wide, ENTRIES[1], ENTRIES[3]]
+    scored = {row["expectation_id"]: row for row in score.run(lake, "abc1234", entries)}
+    assert scored[wide.id]["verdict"] == "held"
+
+    rows = drivers.run(lake, entries)
+
+    # Only the held change_vs_period entry gets drivers. The ratio and pending ones do not.
+    assert {row[1] for row in rows} == {wide.id}
+    assert {row[0] for row in rows} == {scored[wide.id]["run_id"]}
+
+    # January 4 has one yellow trip (pickup_in). January 5 has two (both_in and neither).
+    # The midpoint is +50%, so pickup_in was expected at 1.5 and the total at 1.5.
+    by_relation = {row[3]: row for row in rows if row[2] == "zone_relation"}
+    assert {name: row[4:8] for name, row in by_relation.items()} == {
+        "pickup_in": (1.0, 0.0, 1.5, -1.5),
+        "both_in": (0.0, 1.0, 0.0, 1.0),
+        "neither": (0.0, 1.0, 0.0, 1.0),
+    }
+    assert {name: (row[8], row[9]) for name, row in by_relation.items()} == {
+        "pickup_in": (-3.0, 1),
+        "both_in": (2.0, 2),
+        "neither": (2.0, 3),
+    }
+    assert sum(row[7] for row in by_relation.values()) == pytest.approx(2 - 1 * 1.5)
+
+    # Yellow taxis have no operator, so that breakdown is one slice with a stand-in label.
+    by_operator = [row for row in rows if row[2] == "operator_code"]
+    assert [(row[3], row[7], row[8]) for row in by_operator] == [("(none)", 0.5, 1.0)]
+
+    stored = lake.table(drivers.TABLE)
+    assert stored.count() == len(rows) == 4
+    assert dict(stored.dtypes)["gap_rank"] == "int"
+
+    # The same scoring run again writes nothing.
+    assert drivers.run(lake, entries) == []
+    assert stored.count() == 4
