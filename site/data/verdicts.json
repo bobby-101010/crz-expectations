@@ -1,0 +1,429 @@
+[
+ {
+  "author": "agency",
+  "comparison": null,
+  "comparison_window": null,
+  "confidence": null,
+  "driver_dimensions": [],
+  "elicited_in": null,
+  "entry_note": null,
+  "expected_high": null,
+  "expected_low": null,
+  "failing_checks": [],
+  "filters": {},
+  "id": "official-crz-entries-phase1-projection",
+  "metric": null,
+  "observed": null,
+  "origin": "official",
+  "recorded": "2024-11-01",
+  "reported_outcome": {
+   "note": "27 million fewer vehicles entering the zone in year one. The release does not name its baseline.",
+   "source": "https://www.governor.ny.gov/news/less-traffic-better-transit-its-first-anniversary-governor-hochul-celebrates-transformational",
+   "unit": "percent",
+   "value": -11.0
+  },
+  "statement": "The $9 Phase 1 toll reduces daily vehicles entering the Manhattan CBD by 13.4% relative to No Action.",
+  "unit": null,
+  "verdict": "not_scoreable",
+  "verdict_note": "The public entries data begins at launch, and No Action is a modeled counterfactual for a 2023 analysis year, so no series this project observes shares the projection's baseline. The MTA's own headline counts also add excluded roadways to zone entries.",
+  "window": [
+   "2025-01-05",
+   "2026-01-04"
+  ]
+ },
+ {
+  "author": "ai_sme",
+  "comparison": "change_vs_period",
+  "comparison_window": [
+   "2025-11-09",
+   "2025-11-15"
+  ],
+  "confidence": 80,
+  "driver_dimensions": [
+   "vehicle_class",
+   "detection_group",
+   "time_period"
+  ],
+  "elicited_in": "docs/elicitation/2026-11-11-crz-expectations.md",
+  "entry_note": "November 8 to 10 had passed when this was recorded, but the MTA had not published them, and the expert used no information from those days.",
+  "expected_high": -1.0,
+  "expected_low": -7.5,
+  "failing_checks": [],
+  "filters": {},
+  "id": "prospective-crz-entries-2026-11-08-week",
+  "metric": "crz_entries",
+  "observed": null,
+  "origin": "prospective",
+  "recorded": "2026-11-11",
+  "reported_outcome": null,
+  "statement": "In the week of November 8 to 14, 2026, about 4% fewer vehicles will enter the Congestion Relief Zone than in the matching week of 2025.",
+  "unit": "percent",
+  "verdict": "pending",
+  "verdict_note": "data is loaded through 2026-10-31",
+  "window": [
+   "2026-11-08",
+   "2026-11-14"
+  ]
+ },
+ {
+  "author": "ai_sme",
+  "comparison": "change_vs_period",
+  "comparison_window": [
+   "2025-10-02",
+   "2025-11-01"
+  ],
+  "confidence": 80,
+  "driver_dimensions": [
+   "zone_relation",
+   "pickup_hour"
+  ],
+  "elicited_in": "docs/elicitation/2026-11-11-crz-expectations.md",
+  "entry_note": null,
+  "expected_high": 1.0,
+  "expected_low": -11.0,
+  "failing_checks": [],
+  "filters": {
+   "service": "yellow"
+  },
+  "id": "prospective-yellow-trips-2026-10",
+  "metric": "tlc_trips",
+  "observed": null,
+  "origin": "prospective",
+  "recorded": "2026-11-11",
+  "reported_outcome": null,
+  "statement": "Yellow taxis will make about 5% fewer trips in October 2026 than in October 2025.",
+  "unit": "percent",
+  "verdict": "pending",
+  "verdict_note": "data is loaded through 2026-09-30",
+  "window": [
+   "2026-10-01",
+   "2026-10-31"
+  ]
+ },
+ {
+  "author": "ai_sme",
+  "comparison": "change_vs_period",
+  "comparison_window": [
+   "2025-10-02",
+   "2025-11-01"
+  ],
+  "confidence": 80,
+  "driver_dimensions": [
+   "operator_code",
+   "zone_relation"
+  ],
+  "elicited_in": "docs/elicitation/2026-11-11-crz-expectations.md",
+  "entry_note": null,
+  "expected_high": 7.0,
+  "expected_low": -0.5,
+  "failing_checks": [],
+  "filters": {
+   "service": "fhvhv"
+  },
+  "id": "prospective-fhvhv-trips-2026-10",
+  "metric": "tlc_trips",
+  "observed": null,
+  "origin": "prospective",
+  "recorded": "2026-11-11",
+  "reported_outcome": null,
+  "statement": "Uber and Lyft together will make about 3 to 4% more trips in October 2026 than in October 2025.",
+  "unit": "percent",
+  "verdict": "pending",
+  "verdict_note": "data is loaded through 2026-09-30",
+  "window": [
+   "2026-10-01",
+   "2026-10-31"
+  ]
+ },
+ {
+  "author": "ai_sme",
+  "comparison": "change_vs_period",
+  "comparison_window": [
+   "2025-10-02",
+   "2025-11-01"
+  ],
+  "confidence": 80,
+  "driver_dimensions": [],
+  "elicited_in": "docs/elicitation/2026-11-11-crz-expectations.md",
+  "entry_note": "Drivers are not broken down for a ratio metric; see the two trip entries for each service.",
+  "expected_high": 16.5,
+  "expected_low": 2.0,
+  "failing_checks": [],
+  "filters": {},
+  "id": "prospective-fhvhv-per-yellow-2026-10",
+  "metric": "fhvhv_per_yellow",
+  "observed": null,
+  "origin": "prospective",
+  "recorded": "2026-11-11",
+  "reported_outcome": null,
+  "statement": "The number of ride-hail trips per yellow taxi trip will rise about 9% from October 2025 to October 2026.",
+  "unit": "percent",
+  "verdict": "pending",
+  "verdict_note": "data is loaded through 2026-09-30",
+  "window": [
+   "2026-10-01",
+   "2026-10-31"
+  ]
+ },
+ {
+  "author": "ai_sme",
+  "comparison": "change_vs_period",
+  "comparison_window": [
+   "2025-11-02",
+   "2025-11-29"
+  ],
+  "confidence": 80,
+  "driver_dimensions": [
+   "detection_group",
+   "time_period"
+  ],
+  "elicited_in": "docs/elicitation/2026-11-11-crz-expectations.md",
+  "entry_note": null,
+  "expected_high": -4.0,
+  "expected_low": -11.0,
+  "failing_checks": [],
+  "filters": {
+   "vehicle_class": "cars_pickups_vans"
+  },
+  "id": "prospective-car-entries-2026-11",
+  "metric": "crz_entries",
+  "observed": null,
+  "origin": "prospective",
+  "recorded": "2026-11-11",
+  "reported_outcome": null,
+  "statement": "Private cars, pickups and vans entering the zone in November 2026 will be about 7 to 8% below November 2025.",
+  "unit": "percent",
+  "verdict": "pending",
+  "verdict_note": "data is loaded through 2026-10-31",
+  "window": [
+   "2026-11-01",
+   "2026-11-28"
+  ]
+ },
+ {
+  "author": "ai_sme",
+  "comparison": "change_vs_period",
+  "comparison_window": [
+   "2025-11-02",
+   "2025-11-29"
+  ],
+  "confidence": 80,
+  "driver_dimensions": [
+   "detection_group",
+   "time_period"
+  ],
+  "elicited_in": "docs/elicitation/2026-11-11-crz-expectations.md",
+  "entry_note": null,
+  "expected_high": 5.0,
+  "expected_low": -2.0,
+  "failing_checks": [],
+  "filters": {
+   "vehicle_class": "tlc_taxi_fhv"
+  },
+  "id": "prospective-taxi-fhv-entries-2026-11",
+  "metric": "crz_entries",
+  "observed": null,
+  "origin": "prospective",
+  "recorded": "2026-11-11",
+  "reported_outcome": null,
+  "statement": "Taxis and for-hire vehicles entering the zone in November 2026 will be roughly flat to slightly up on November 2025.",
+  "unit": "percent",
+  "verdict": "pending",
+  "verdict_note": "data is loaded through 2026-10-31",
+  "window": [
+   "2026-11-01",
+   "2026-11-28"
+  ]
+ },
+ {
+  "author": "ai_sme",
+  "comparison": "within_baseline",
+  "comparison_window": null,
+  "confidence": 80,
+  "driver_dimensions": [
+   "vehicle_class"
+  ],
+  "elicited_in": "docs/elicitation/2026-11-11-crz-expectations.md",
+  "entry_note": "Assumes baselines use Spark's exact percentile (linear interpolation), as the spec requires. Day of week was requested as a driver but is not a dimension.",
+  "expected_high": 85.8,
+  "expected_low": 42.8,
+  "failing_checks": [],
+  "filters": {},
+  "id": "prospective-crz-entries-2026-11-15-week-normal",
+  "metric": "crz_entries",
+  "observed": null,
+  "origin": "prospective",
+  "recorded": "2026-11-11",
+  "reported_outcome": null,
+  "statement": "The week of November 15 to 21, 2026 will look like a normal week, with 3 to 6 of its 7 days of zone entries inside their usual range.",
+  "unit": "percent_of_days",
+  "verdict": "pending",
+  "verdict_note": "data is loaded through 2026-10-31",
+  "window": [
+   "2026-11-15",
+   "2026-11-21"
+  ]
+ },
+ {
+  "author": "ai_sme",
+  "comparison": "change_vs_period",
+  "comparison_window": [
+   "2024-01-07",
+   "2025-01-04"
+  ],
+  "confidence": 80,
+  "driver_dimensions": [
+   "service",
+   "zone_relation"
+  ],
+  "elicited_in": "docs/elicitation/2026-11-11-crz-expectations.md",
+  "entry_note": "This window's data was loaded and largely published when this was recorded, so a hit says nothing about forecasting skill. Score it as a test of the projection's logic. The expert's own estimate, given published data, is +0.5% to +3.0%. Not counted toward calibration.",
+  "expected_high": 4.0,
+  "expected_low": -2.5,
+  "failing_checks": [],
+  "filters": {},
+  "id": "derived-cbd-touch-trips-first-year",
+  "metric": "tlc_cbd_touch_trips",
+  "observed": 1.7229557248682026,
+  "origin": "derived",
+  "recorded": "2026-11-11",
+  "reported_outcome": null,
+  "statement": "If the official forecast's logic held, taxi and ride-hail trips to or from the zone in tolling's first year would be roughly flat against the year before.",
+  "unit": "percent",
+  "verdict": "held",
+  "verdict_note": null,
+  "window": [
+   "2025-01-05",
+   "2026-01-03"
+  ]
+ },
+ {
+  "author": "ai_sme",
+  "comparison": "value_range",
+  "comparison_window": null,
+  "confidence": 95,
+  "driver_dimensions": [],
+  "elicited_in": "docs/elicitation/2026-11-11-crz-expectations.md",
+  "entry_note": "A consistency check with no evidential weight, because the value was known when recorded.",
+  "expected_high": 5.07,
+  "expected_low": 4.93,
+  "failing_checks": [],
+  "filters": {},
+  "id": "retrospective-fhvhv-per-yellow-first-year",
+  "metric": "fhvhv_per_yellow",
+  "observed": 4.993343996666,
+  "origin": "retrospective",
+  "recorded": "2026-11-11",
+  "reported_outcome": null,
+  "statement": "In tolling's first year there were about 5 ride-hail trips for every yellow taxi trip, down from 5.8 in 2024, because yellow trips surged.",
+  "unit": "ratio",
+  "verdict": "held",
+  "verdict_note": null,
+  "window": [
+   "2025-01-05",
+   "2026-01-03"
+  ]
+ },
+ {
+  "author": "ai_sme",
+  "comparison": "change_vs_period",
+  "comparison_window": [
+   "2024-01-01",
+   "2024-09-30"
+  ],
+  "confidence": 85,
+  "driver_dimensions": [
+   "service",
+   "zone_relation"
+  ],
+  "elicited_in": "docs/elicitation/2026-11-11-crz-expectations.md",
+  "entry_note": "Reproduces a published figure to validate the pipeline; not a forecast. If the yellow and ride-hail reproductions pass but this misses, check what the unfiltered metric includes.",
+  "expected_high": 1.4,
+  "expected_low": 0.3,
+  "failing_checks": [],
+  "filters": {},
+  "id": "retrospective-reproduce-mta-table-3-2-total",
+  "metric": "tlc_cbd_touch_trips",
+  "observed": 0.7937153047366863,
+  "origin": "retrospective",
+  "recorded": "2026-11-11",
+  "reported_outcome": null,
+  "statement": "The pipeline reproduces the MTA's figure that yellow and ride-hail trips starting or ending in the zone rose about 0.8% from January to September 2024 to the same months of 2025.",
+  "unit": "percent",
+  "verdict": "held",
+  "verdict_note": null,
+  "window": [
+   "2025-01-01",
+   "2025-09-30"
+  ]
+ },
+ {
+  "author": "ai_sme",
+  "comparison": "change_vs_period",
+  "comparison_window": [
+   "2024-01-01",
+   "2024-09-30"
+  ],
+  "confidence": 85,
+  "driver_dimensions": [
+   "zone_relation"
+  ],
+  "elicited_in": "docs/elicitation/2026-11-11-crz-expectations.md",
+  "entry_note": "Reproduces a published figure to validate the pipeline; not a forecast.",
+  "expected_high": 17.9,
+  "expected_low": 15.9,
+  "failing_checks": [],
+  "filters": {
+   "service": "yellow"
+  },
+  "id": "retrospective-reproduce-mta-table-3-2-yellow",
+  "metric": "tlc_cbd_touch_trips",
+  "observed": 16.712002426238094,
+  "origin": "retrospective",
+  "recorded": "2026-11-11",
+  "reported_outcome": null,
+  "statement": "The pipeline reproduces the MTA's figure that yellow taxi trips starting or ending in the zone rose about 17% from January to September 2024 to the same months of 2025.",
+  "unit": "percent",
+  "verdict": "held",
+  "verdict_note": null,
+  "window": [
+   "2025-01-01",
+   "2025-09-30"
+  ]
+ },
+ {
+  "author": "ai_sme",
+  "comparison": "change_vs_period",
+  "comparison_window": [
+   "2024-01-01",
+   "2024-09-30"
+  ],
+  "confidence": 85,
+  "driver_dimensions": [
+   "operator_code",
+   "zone_relation"
+  ],
+  "elicited_in": "docs/elicitation/2026-11-11-crz-expectations.md",
+  "entry_note": "Reproduces a published figure to validate the pipeline; not a forecast.",
+  "expected_high": -4.2,
+  "expected_low": -5.6,
+  "failing_checks": [],
+  "filters": {
+   "service": "fhvhv"
+  },
+  "id": "retrospective-reproduce-mta-table-3-2-fhvhv",
+  "metric": "tlc_cbd_touch_trips",
+  "observed": -4.8564541014505025,
+  "origin": "retrospective",
+  "recorded": "2026-11-11",
+  "reported_outcome": null,
+  "statement": "The pipeline reproduces the MTA's figure that ride-hail trips starting or ending in the zone fell about 5% from January to September 2024 to the same months of 2025.",
+  "unit": "percent",
+  "verdict": "held",
+  "verdict_note": null,
+  "window": [
+   "2025-01-01",
+   "2025-09-30"
+  ]
+ }
+]
