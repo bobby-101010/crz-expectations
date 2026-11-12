@@ -5,7 +5,7 @@ END ?= 2025-03
 RUN := docker compose run --rm spark
 CLUSTER := docker compose --profile cluster
 
-.PHONY: catalog-check catalog-comments catalog-export selection-reference selection-run selection-report build test test-integration lint shell checks check-profile ingest-stats-backfill reference entries slices gold-backfill baselines validate score drivers site airflow-build airflow-up airflow-down airflow-check download profile silver gold backfill history cluster-up cluster-down cluster-silver
+.PHONY: catalog-check catalog-comments catalog-export selection-reference selection-run selection-report staged-check staged-run staged-report build test test-integration lint shell checks check-profile ingest-stats-backfill reference entries slices gold-backfill baselines validate score drivers site airflow-build airflow-up airflow-down airflow-check download profile silver gold backfill history cluster-up cluster-down cluster-silver
 
 build: ; docker compose build
 
@@ -76,6 +76,17 @@ selection-run: ; docker compose run --rm -e REQUESTS_COMMIT=$$(git rev-parse --s
 
 # Rewrite the markdown summary of one results file. `make selection-report RUN_ID=<run_id>`.
 selection-report: ; $(RUN) python -m pipeline.selection.report selection/results/$(RUN_ID).json
+
+# Check the staged harness's inputs: narratives, the owner's request fields, predictions.
+# Calls no model.
+staged-check: ; $(RUN) python -m pipeline.jobs.staged_run --check
+
+# Run the four staged arms with the local models. Needs Ollama on the host, and the
+# narratives, held-out requests and predictions committed first.
+staged-run: ; docker compose run --rm -e REQUESTS_COMMIT=$$(git rev-parse --short HEAD)$$(test -z "$$(git status --porcelain -- . ':!selection/results')" || echo -dirty) spark python -m pipeline.jobs.staged_run $(if $(MODELS),--models $(MODELS))
+
+# Rewrite the markdown summary of one staged results file. `make staged-report RUN_ID=<run_id>`.
+staged-report: ; $(RUN) python -m pipeline.staged.report selection/results/staged-$(RUN_ID).json
 
 AIRFLOW := docker compose --profile airflow
 

@@ -515,7 +515,7 @@ def test_the_real_requests_file_is_well_formed():
 
     assert request_file.problems(raw, WAREHOUSE_TABLES) == []
     requests = request_file.parse(raw)
-    assert 10 <= len(requests) <= 14
+    assert len(requests) >= 12
     used = {t for r in requests for t in tables_in_sql(r.reference_sql, WAREHOUSE_TABLES)}
     assert used == set(WAREHOUSE_TABLES)
     assert all(rejection(r.reference_sql) is None for r in requests)
