@@ -1,6 +1,6 @@
 # 0014: A toy selection loop on local models, and the choices that keep it honest
 
-Status: accepted (Phase 8, 2026-11-12). The plan was approved by the owner before work began. The change of scope in spec section 12 still needs the owner's confirmation.
+Status: accepted (Phase 8, 2026-11-12). The plan was approved by the owner before work began. The owner confirmed the change of scope in spec section 12 on 2026-11-12.
 
 ## Context
 

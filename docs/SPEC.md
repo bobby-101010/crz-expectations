@@ -14,7 +14,7 @@ Version 1.7, November 12, 2026. Drafted with Claude and approved by the owner.
 
 **Changes in 1.6:** Phase 6 was built (section 7.9, decision 0013). Approved by the owner in the Phase 6 plan: a second DAG, `crz_entries_weekly`, follows the MTA's weekly update; `crz_monthly` processes the month two months before its run date and catches up from October 2026 only; orchestrated scoring reads the registry commit with git inside the task; and a tree counts as `-dirty` only when something other than the generated `site/` has uncommitted changes (section 7.6).
 
-**Changes in 1.7:** Phase 8 was added and built (sections 6, 7.12, 10 and 12, decision 0014). Every warehouse table and column now carries a plain-language comment, written from `catalog/tables.yaml`. A selection harness beside the pipeline asks small local models to pick the tables for a request and to write SQL from them, and scores the two steps separately. This touches the scope in section 12, which rules out an LLM feature inside the pipeline. The harness is not inside the pipeline: no job, check, verdict or page depends on a model, and the only thing it writes to the warehouse is comments. **The owner has seen this framing and has not yet confirmed it in writing; it needs the owner's confirmation before this version is merged.**
+**Changes in 1.7:** Phase 8 was added and built (sections 6, 7.12, 10 and 12, decision 0014). Every warehouse table and column now carries a plain-language comment, written from `catalog/tables.yaml`. A selection harness beside the pipeline asks small local models to pick the tables for a request and to write SQL from them, and scores the two steps separately. This touches the scope in section 12, which rules out an LLM feature inside the pipeline. The harness is not inside the pipeline: no job, check, verdict or page depends on a model, and the only thing it writes to the warehouse is comments. The owner confirmed this change of scope on 2026-11-12.
 
 This spec is the source of truth for finishing the project. Claude Code implements it phase by phase. The owner reviews, decides, and verifies. Changes to the spec are made by editing this file in a commit, with a change note above saying what changed and why.
 
@@ -630,7 +630,7 @@ See 7.12. Added after Phase 7 was planned, as evidence for a second essay on mak
 - [ ] `expected_tables` is committed before the first results file
 - [ ] Both models have run all 12 requests through all three arms, and the results and summary are committed
 - [ ] The summary reports failures, format breaks and discarded output as they happened
-- [ ] The owner has confirmed the change of scope in section 12
+- [x] The owner has confirmed the change of scope in section 12 (2026-11-12)
 
 ## 11. Anki cards (final phase)
 
@@ -673,7 +673,7 @@ Cards are written once, at the end, into the owner's existing ledger. **The ledg
 
 ## 12. Out of scope
 
-- An LLM feature inside the pipeline, such as generated narratives of verdicts. It is easy to make look good and hard to make reliable, and this project's credibility rests on its numbers. The Phase 8 selection harness (7.12) is a separate evaluation beside the pipeline: no number on the status page comes from a model. This sentence awaits the owner's confirmation.
+- An LLM feature inside the pipeline, such as generated narratives of verdicts. It is easy to make look good and hard to make reliable, and this project's credibility rests on its numbers. The Phase 8 selection harness (7.12) is a separate evaluation beside the pipeline: no number on the status page comes from a model. The owner confirmed this on 2026-11-12.
 - Selection at scale, reuse of saved precedents by the selector, hosted models, and agent frameworks. Phase 8 stops at a toy on 12 tables.
 - A second industry dataset (health care or finance). That is the next project, reusing the registry and scoring code.
 - Traffic speeds, vehicle miles traveled, and bus speeds datasets.
