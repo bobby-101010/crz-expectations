@@ -16,6 +16,13 @@
 #
 # Windows are fixed dates, so answers do not move when new months are loaded. The
 # requests about "the latest" run or load are the exception.
+#
+# Phase 9 adds three fields. `expected_lifecycle` is the lifecycle the owner would pick
+# for the request (the `staged_hand` arm uses it). `acceptable_table_sets` lists every set
+# of tables the request could be answered from. `held_out: true` marks a request written
+# without sight of the narratives. For all eighteen requests these two fields, and the
+# held-out requests' `expected_tables`, were drafted by the coordinating Claude session
+# and approved by the owner as drafted on 2026-11-12, before any model run.
 
 requests:
   - id: yellow-trips-one-day
@@ -25,6 +32,8 @@ requests:
       FROM gold.daily_trips
       WHERE service = 'yellow' AND trip_date = DATE '2025-01-05'
     expected_tables: [gold.daily_trips]
+    expected_lifecycle: trip
+    acceptable_table_sets: [[gold.daily_trips], [gold.daily_trip_slices], [silver.trips]]
 
   - id: uber-lyft-trips-2025
     request: How many trips did Uber make in 2025, and how many did Lyft make?
@@ -35,6 +44,8 @@ requests:
         AND trip_date >= DATE '2025-01-01' AND trip_date < DATE '2026-01-01'
       GROUP BY operator_code
     expected_tables: [gold.daily_trip_slices]
+    expected_lifecycle: trip
+    acceptable_table_sets: [[gold.daily_trip_slices]]
 
   - id: busiest-hour-yellow-from-zone
     request: >-
@@ -50,6 +61,8 @@ requests:
       ORDER BY trips DESC
       LIMIT 1
     expected_tables: [gold.daily_trip_slices]
+    expected_lifecycle: trip
+    acceptable_table_sets: [[gold.daily_trip_slices], [silver.trips, reference.cbd_zones]]
 
   - id: fee-trips-across-midnight
     request: >-
@@ -64,6 +77,8 @@ requests:
         AND dropoff_at >= TIMESTAMP_NTZ '2025-01-05 00:00:00'
         AND cbd_congestion_fee > 0
     expected_tables: [silver.trips]
+    expected_lifecycle: trip
+    acceptable_table_sets: [[silver.trips]]
 
   - id: entries-by-vehicle-class-june-2025
     request: How many vehicles entered the congestion relief zone in June 2025, for each vehicle class?
@@ -73,6 +88,8 @@ requests:
       WHERE entry_date >= DATE '2025-06-01' AND entry_date < DATE '2025-07-01'
       GROUP BY vehicle_class
     expected_tables: [gold.daily_entries]
+    expected_lifecycle: zone-entry
+    acceptable_table_sets: [[gold.daily_entries], [silver.crz_entries]]
 
   - id: busiest-ten-minutes-lincoln-tunnel
     request: >-
@@ -88,6 +105,8 @@ requests:
       ORDER BY entries DESC
       LIMIT 1
     expected_tables: [silver.crz_entries]
+    expected_lifecycle: zone-entry
+    acceptable_table_sets: [[silver.crz_entries]]
 
   - id: entries-outside-normal-sept-2026
     request: >-
@@ -106,6 +125,8 @@ requests:
        AND b.metric = 'crz_entries' AND b.slice_key = 'all'
       WHERE d.entries < b.p10 OR d.entries > b.p90
     expected_tables: [gold.daily_entries, gold.baselines]
+    expected_lifecycle: zone-entry
+    acceptable_table_sets: [[gold.daily_entries, gold.baselines], [silver.crz_entries, gold.baselines]]
 
   - id: zones-in-toll-zone-by-borough
     request: How many taxi zones does each borough have, and how many of them are inside the congestion toll zone?
@@ -114,6 +135,8 @@ requests:
       FROM reference.cbd_zones
       GROUP BY borough
     expected_tables: [reference.cbd_zones]
+    expected_lifecycle: trip
+    acceptable_table_sets: [[reference.cbd_zones]]
 
   - id: ride-hail-trips-on-holidays-2025
     request: For each public holiday in 2025, how many ride-hail trips were picked up that day?
@@ -124,6 +147,8 @@ requests:
         ON d.trip_date = h.holiday_date AND d.service = 'fhvhv'
       WHERE h.holiday_date >= DATE '2025-01-01' AND h.holiday_date < DATE '2026-01-01'
     expected_tables: [reference.holidays, gold.daily_trips]
+    expected_lifecycle: trip
+    acceptable_table_sets: [[reference.holidays, gold.daily_trips], [reference.holidays, gold.daily_trip_slices]]
 
   - id: largest-driver-latest-run
     request: >-
@@ -139,6 +164,8 @@ requests:
           SELECT run_id FROM expectations.verdicts ORDER BY scored_at DESC LIMIT 1
         )
     expected_tables: [expectations.drivers, expectations.verdicts]
+    expected_lifecycle: expectation
+    acceptable_table_sets: [[expectations.drivers, expectations.verdicts]]
 
   - id: checks-not-passing-now
     request: Which data checks are not passing right now, going by the latest result of each check?
@@ -154,6 +181,8 @@ requests:
       )
       WHERE position = 1 AND status <> 'pass'
     expected_tables: [checks.results]
+    expected_lifecycle: load-and-checks
+    acceptable_table_sets: [[checks.results]]
 
   - id: rows-dropped-yellow-2025-01
     request: >-
@@ -166,3 +195,149 @@ requests:
       ORDER BY loaded_at DESC
       LIMIT 1
     expected_tables: [checks.ingest_stats]
+    expected_lifecycle: load-and-checks
+    acceptable_table_sets: [[checks.ingest_stats]]
+
+  # ---- Held-out requests (Phase 9) ----
+  # Drafted on 2026-11-12 by a separate agent that saw only the described schema and the
+  # wording of the twelve requests above, not the narratives or any results. The
+  # coordinating Claude session removed columns the request does not ask for from four
+  # reference queries (marked below), so that a correct answer is not scored as wrong
+  # for leaving out an unasked total.
+
+  - id: ride-hail-zone-touch-share-by-operator
+    held_out: true
+    request: >-
+      In June 2025, what share of Uber trips and what share of Lyft trips started or
+      ended inside the congestion toll zone?
+    reference_sql: |
+      SELECT
+        operator_code,
+        SUM(CASE WHEN zone_relation <> 'neither' THEN trips ELSE 0 END) / SUM(trips) AS zone_touch_share
+      FROM gold.daily_trip_slices
+      WHERE service = 'fhvhv'
+        AND operator_code IN ('HV0003', 'HV0005')
+        AND trip_date BETWEEN DATE '2025-06-01' AND DATE '2025-06-30'
+      GROUP BY operator_code
+    reference_trimmed: true
+    expected_tables: [gold.daily_trip_slices]
+    expected_lifecycle: trip
+    acceptable_table_sets: [[gold.daily_trip_slices]]
+
+  - id: excluded-roadway-share-by-crossing
+    held_out: true
+    request: >-
+      For July 2025, at each crossing point, how many vehicles entered the central
+      business district but stayed on roads that are exempt from the toll, and what share
+      of all vehicles entering at that crossing was that?
+    reference_sql: |
+      SELECT
+        detection_group,
+        SUM(excluded_roadway_entries) AS excluded_entries,
+        SUM(excluded_roadway_entries) / (SUM(crz_entries) + SUM(excluded_roadway_entries)) AS excluded_share
+      FROM gold.daily_entries
+      WHERE entry_date BETWEEN DATE '2025-07-01' AND DATE '2025-07-31'
+      GROUP BY detection_group
+    reference_trimmed: true
+    expected_tables: [gold.daily_entries]
+    expected_lifecycle: zone-entry
+    acceptable_table_sets: [[gold.daily_entries], [silver.crz_entries]]
+
+  - id: crossing-days-above-normal
+    held_out: true
+    request: >-
+      For each crossing point into the congestion zone, on how many days in March 2026
+      was the number of vehicles entering there above the top of the normal range for
+      that crossing on that day?
+    reference_sql: |
+      WITH observed AS (
+        SELECT entry_date, detection_group, SUM(crz_entries) AS entries
+        FROM gold.daily_entries
+        WHERE entry_date BETWEEN DATE '2026-03-01' AND DATE '2026-03-31'
+        GROUP BY entry_date, detection_group
+      )
+      SELECT
+        o.detection_group,
+        SUM(CASE WHEN o.entries > b.p90 THEN 1 ELSE 0 END) AS days_above_normal
+      FROM observed o
+      JOIN gold.baselines b
+        ON b.baseline_date = o.entry_date
+       AND b.slice_value = o.detection_group
+      WHERE b.metric = 'crz_entries'
+        AND b.slice_key = 'detection_group'
+        AND b.baseline_date BETWEEN DATE '2026-03-01' AND DATE '2026-03-31'
+      GROUP BY o.detection_group
+    expected_tables: [gold.daily_entries, gold.baselines]
+    expected_lifecycle: zone-entry
+    acceptable_table_sets: [[gold.daily_entries, gold.baselines], [silver.crz_entries, gold.baselines]]
+
+  - id: yellow-reversal-records-first-week-june
+    held_out: true
+    request: >-
+      For each day from June 1 to June 7, 2025, how many yellow taxi trip records were
+      reversals that cancel an earlier trip, and what share of that day's yellow taxi
+      records were they?
+    reference_sql: |
+      SELECT
+        CAST(pickup_at AS DATE) AS pickup_date,
+        COUNT_IF(cbd_congestion_fee < 0) AS reversal_records,
+        COUNT_IF(cbd_congestion_fee < 0) / COUNT(*) AS reversal_share
+      FROM silver.trips
+      WHERE service = 'yellow'
+        AND pickup_at >= TIMESTAMP_NTZ '2025-06-01 00:00:00'
+        AND pickup_at <  TIMESTAMP_NTZ '2025-06-08 00:00:00'
+      GROUP BY CAST(pickup_at AS DATE)
+    reference_trimmed: true
+    expected_tables: [silver.trips]
+    expected_lifecycle: trip
+    acceptable_table_sets: [[silver.trips]]
+
+  - id: latest-run-outcome-counts
+    held_out: true
+    request: >-
+      As of the most recent scoring run, how many expectations ended up with each
+      outcome?
+    reference_sql: |
+      WITH latest AS (
+        SELECT MAX_BY(run_id, scored_at) AS run_id
+        FROM expectations.verdicts
+      )
+      SELECT v.verdict, COUNT(*) AS expectations
+      FROM expectations.verdicts v
+      JOIN latest l ON v.run_id = l.run_id
+      GROUP BY v.verdict
+    expected_tables: [expectations.verdicts]
+    expected_lifecycle: expectation
+    acceptable_table_sets: [[expectations.verdicts]]
+
+  - id: ride-hail-load-vs-warehouse-2025
+    held_out: true
+    request: >-
+      For each month of 2025, how many ride-hail rows did the most recent load of that
+      month keep, and how does that compare with the number of ride-hail trips the
+      warehouse's daily counts show for the month?
+    reference_sql: |
+      WITH latest_load AS (
+        SELECT source_month, rows_kept
+        FROM (
+          SELECT source_month, rows_kept,
+                 ROW_NUMBER() OVER (PARTITION BY source_month ORDER BY loaded_at DESC) AS rn
+          FROM checks.ingest_stats
+          WHERE service = 'fhvhv' AND source_month BETWEEN '2025-01' AND '2025-12'
+        ) ranked
+        WHERE rn = 1
+      ),
+      monthly_trips AS (
+        SELECT DATE_FORMAT(trip_date, 'yyyy-MM') AS trip_month, SUM(trips) AS trips
+        FROM gold.daily_trips
+        WHERE service = 'fhvhv'
+          AND trip_date BETWEEN DATE '2025-01-01' AND DATE '2025-12-31'
+        GROUP BY DATE_FORMAT(trip_date, 'yyyy-MM')
+      )
+      SELECT l.source_month, l.rows_kept, t.trips AS daily_table_trips
+      FROM latest_load l
+      JOIN monthly_trips t ON t.trip_month = l.source_month
+    reference_trimmed: true
+    expected_tables: [checks.ingest_stats, gold.daily_trips]
+    expected_lifecycle: load-and-checks
+    acceptable_table_sets: [[checks.ingest_stats, gold.daily_trips], [checks.ingest_stats, gold.daily_trip_slices]]
