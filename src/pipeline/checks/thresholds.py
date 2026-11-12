@@ -22,5 +22,11 @@ class Thresholds:
     fee_before_launch_max: int = 10
 
 
-# None until the owner approves the proposal in docs/decisions/0007.
-APPROVED: Thresholds | None = None
+# Approved by the owner on 2026-11-11 (docs/decisions/0007).
+APPROVED: Thresholds | None = Thresholds(
+    volume_low=0.75,
+    volume_high=1.35,
+    dropped_share_max=0.001,
+    required_null_share_max=0.0,
+    ends_before_start_share_max=0.001,
+)

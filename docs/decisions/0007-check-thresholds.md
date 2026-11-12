@@ -1,6 +1,6 @@
 # 0007: Thresholds for the trip data checks
 
-Status: proposed by Claude Code on 2026-11-11. Not in use until the owner approves.
+Status: accepted. Proposed by Claude Code and approved by the owner without changes on 2026-11-11.
 
 ## Context
 
@@ -23,9 +23,9 @@ Two things the numbers show:
 - **No required column has ever been null.** That is zero nulls in about 1.04 billion rows.
 - **Trips that end before they start are a daylight-saving effect.** The three highest months for both services are the three Novembers. In November 2025, 12,204 of 12,204 such ride-hail trips and 1,431 of 1,435 such yellow trips were picked up on November 2 between 1:00 and 2:00, the hour the clock repeats. The times are wall-clock values without a zone (decision 0005), so a trip that starts before the clock goes back and ends after it appears to end early. Outside November the ride-hail share is at most 0.00000005.
 
-## Proposal
+## Decision
 
-| Check | On breach | Proposed threshold | Why |
+| Check | On breach | Threshold | Why |
 | --- | --- | --- | --- |
 | `silver_volume` | warn | 0.75 to 1.35 times the median of the prior months | Every loaded month passes, with about 0.05 to 0.1 of margin beyond the extremes (0.806 and 1.256). A half-loaded or double-loaded file is far outside. |
 | `dropped_share` | warn | at most 0.001 | About 18 times the worst month (0.000056). A file holding the wrong month would be near 1. |
