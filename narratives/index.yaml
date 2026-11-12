@@ -31,3 +31,5 @@
     - checks.results
     - silver.trips
     - silver.crz_entries
+    - reference.cbd_zones
+    - expectations.verdicts

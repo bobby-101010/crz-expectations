@@ -1,8 +1,8 @@
 # Zone-entry lifecycle
 
-**Source.** The MTA detects vehicles entering the Congestion Relief Zone and publishes counts, not single vehicles. One source row is one 10-minute block, vehicle class and crossing point. Data starts on 2025-01-05, when tolling began, so no before-and-after comparison is possible.
+**Source.** The MTA detects vehicles entering the Congestion Relief Zone and publishes counts, not single vehicles. One source row is one 10-minute block, vehicle class and crossing point. Data starts on 2025-01-05, when tolling began, so no before-and-after comparison is possible. Entries are loaded through 2026-10-31.
 
-**Silver.** Each pull of a month replaces that month in `silver.crz_entries`, one row per source row. `interval_start` is the block's start in New York wall-clock time and `toll_date` its date. Nothing is merged: when daylight saving ends (2025-11-02) each block from 1:00 to 1:50 appears twice and both rows are real, so sum them.
+**Silver.** Each pull of a month replaces that month in `silver.crz_entries`, one row per source row. `interval_start` is the block's start in New York wall-clock time and `toll_date` its date. Nothing is merged: when daylight saving ends (2025-11-02) each block from 1:00 to 1:50 appears twice and both rows are real, so sum them. On the day it starts (2025-03-09 and 2026-03-08) one hour of blocks is missing.
 
 **Vehicle classes.** `vehicle_class` is 'cars_pickups_vans', 'single_unit_trucks', 'multi_unit_trucks', 'buses', 'motorcycles' or 'tlc_taxi_fhv'. 'tlc_taxi_fhv' is taxis and for-hire vehicles in the per-trip charge plan. These are vehicle entries, not trips.
 
