@@ -718,6 +718,8 @@ Expectation-driven data pipeline on NYC congestion pricing data: Spark 4.1 + Ice
 - `make test`: unit tests in the container. `make lint`: ruff.
 - `make silver|gold SERVICE= MONTH=`, `make backfill START= END=`, `make gold-backfill START= END=`
 - `make checks [MONTH=]`, `make score`, `make drivers`, `make site` (added as their phases land)
+- `make catalog-check`, `make catalog-comments`, `make catalog-export`: table and column descriptions from `catalog/tables.yaml`. Rerun `make catalog-comments` after `make reference`, which drops the comments on the reference tables.
+- `make selection-reference`, `make selection-run [MODELS=]`, `make selection-report RUN_ID=`: the selection harness. `selection-run` needs Ollama running on the host and took about 40 minutes for both models.
 - Develop on 1 to 3 months. Ask before any run likely to take more than 10 minutes.
 
 ## Rules
