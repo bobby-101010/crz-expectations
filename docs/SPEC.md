@@ -1,12 +1,14 @@
 # CRZ Expectations: design spec
 
-Version 1.3, November 12, 2026. Drafted with Claude and approved by the owner.
+Version 1.4, November 12, 2026. Drafted with Claude and approved by the owner.
 
 **Changes in 1.1:** expectations now come from a documented elicitation with a subject matter expert (an AI agent in this project), approved by the owner, instead of being written by the owner (sections 2, 7.5, 7.11, 9, Appendix A). The registry exists (13 entries). Ratio metrics support `change_vs_period`. Baselines use exact percentiles. Vehicle classes use canonical labels.
 
 **Changes in 1.2:** the AI log is private. It is the owner's working record, kept in `docs/ai-log.md` on the owner's machine and never committed, linked, or published (sections 1, 7.8, 9, 10, 11, Appendix A). Spec changes are recorded in these change notes instead of the log. Automated, statistically derived expectations are named as future work (section 12).
 
 **Changes in 1.3:** Phase 2 found what the sources actually hold, and the owner approved these in the Phase 2 plan. The metric catalog is written in Phase 2, not Phase 3, because the baselines job depends on it (section 10). Zone membership is joined by id, since the MTA's zone list uses TLC location ids (sections 6 and 13, decision 0008). The entries data keeps the source's repeated hour at the end of daylight saving, and all six vehicle classes have canonical names (sections 6 and 7.4, decision 0009). The open details of the baseline method are settled (section 6, decision 0010).
+
+**Changes in 1.4:** the scoring details section 7.6 left open are settled in decision 0011, approved by the owner in the Phase 3 plan: what "latest loaded date" means, which failing checks cause `data_issue`, and how a day with no baseline counts. The append-only rule also freezes `confidence` (section 7.5). The stopgap checker is gone; the registry model replaces it.
 
 This spec is the source of truth for finishing the project. Claude Code implements it phase by phase. The owner reviews, decides, and verifies. Changes to the spec are made by editing this file in a commit, with a change note above saying what changed and why.
 
@@ -342,7 +344,7 @@ The registry was created on November 11, 2026 through the elicitation in section
 
 Rules:
 
-- **Append-only.** Once an entry is on `main`, its `metric`, `filters`, `comparison`, `window`, `comparison_window`, `expected`, and `recorded` never change. A revision is a new entry with `supersedes`. A CI step compares the PR's registry with `origin/main` and fails on any such change.
+- **Append-only.** Once an entry is on `main`, its `metric`, `filters`, `comparison`, `window`, `comparison_window`, `expected`, `confidence`, and `recorded` never change. A revision is a new entry with `supersedes`. A CI step compares the PR's registry with `origin/main` and fails on any such change.
 - **Values come only from an elicitation or a published source.** Claude Code, as the implementer, never writes or alters `expected`, `confidence`, `rationale`, or `statement`. A new expectation requires a new elicitation record in `docs/elicitation/` and the owner's approval. Validation fails on `main` if any field contains `TODO`.
 - **What the registry holds now:**
   - 1 `official` entry: the 13.4% projection, marked not measurable, with the reported 11% as context.
@@ -369,6 +371,8 @@ Verdicts, in order of precedence:
 3. `data_issue` if any `fail` result in `checks.results`, from the latest run for each check, overlaps the window or comparison window on the metric's source tables. List those check ids in `failing_checks`.
 4. `held` if `low <= observed <= high`.
 5. `violated_low` or `violated_high` otherwise.
+
+The details of rules 2 and 3, and of days without a baseline, are in decision 0011.
 
 The registry commit comes from the host, through the Makefile: `-e REGISTRY_COMMIT=$$(git rev-parse --short HEAD)`. Record it, suffixed `-dirty` if the tree has uncommitted changes. Git inside the container is avoided because of ownership checks on the mounted repo.
 
