@@ -6,7 +6,7 @@
 
 Rows read from each source file and rows kept, one row each time a month of a source was loaded into silver. Use for how many rows a load read, kept or dropped. It is append-only: take the newest row per service and month.
 Grain: one silver load (service x source month x load).
-Details: 122 rows. A month loaded more than once has several rows; the latest loaded_at is the current one. Rows dropped are rows_read minus rows_kept: rows whose date was outside the file's month.
+Details: A month loaded more than once has several rows; the latest loaded_at is the current one. Rows dropped are rows_read minus rows_kept: rows whose date was outside the file's month.
 Do not use for: counting trips or entries (the gold tables), or check outcomes (checks.results).
 
 | Column | Type | Description |
@@ -22,7 +22,7 @@ Do not use for: counting trips or entries (the gold tables), or check outcomes (
 
 Results of the pipeline's data quality checks (pass, warn or fail), one row each time a check ran on a table and partition. Use for the health of the data. It is append-only, so take the newest row per check, target and partition for the current state.
 Grain: one check execution (check x target x partition x run).
-Details: 1,149 rows. A check and partition appear once per run, so the same check has several rows over time. The current result is the row with the latest checked_at for each check_id, target_table and partition_value.
+Details: A check and partition appear once per run, so the same check has several rows over time. The current result is the row with the latest checked_at for each check_id, target_table and partition_value.
 Do not use for: row counts of the loads themselves (checks.ingest_stats), or whether an expectation about the world held (expectations.verdicts).
 
 | Column | Type | Description |
@@ -41,14 +41,14 @@ Do not use for: row counts of the loads themselves (checks.ingest_stats), or whe
 
 For scored expectations, how much each slice (a service, an operator, a zone relation) contributes to the gap between observed and expected, one row per expectation, dimension and slice per scoring run. It has no timestamp: join to expectations.verdicts on run_id to find the latest run.
 Grain: one scoring run x expectation x dimension x slice.
-Details: 108 rows. Only expectations that compare a period with an earlier one and were held or violated have rows. Every slice is assumed to move by the midpoint of the expected range, so the gaps of one dimension add up to the total gap. Values are totals over the whole period, in the metric's unit (trips). A driver says where a gap comes from, not why.
+Details: Only expectations that compare a period with an earlier one and were held or violated have rows. Every slice is assumed to move by the midpoint of the expected range, so the gaps of one dimension add up to the total gap. Values are totals over the whole period, in the unit of the expectation's metric: trips for a trips metric, vehicle entries for an entries metric. A driver says where a gap comes from, not why.
 Do not use for: the verdict itself or the expected range (expectations.verdicts), or daily counts (the gold tables).
 
 | Column | Type | Description |
 | --- | --- | --- |
 | run_id | string | Identifier of the scoring run. Joins to expectations.verdicts.run_id. |
 | expectation_id | string | Identifier of the expectation. |
-| dimension | string | The dimension the gap is broken down by: 'service', 'operator_code' or 'zone_relation'. |
+| dimension | string | The dimension the gap is broken down by, from the ones the expectation lists. So far 'service', 'operator_code' and 'zone_relation'; expectations still pending will add 'pickup_hour', 'vehicle_class', 'detection_group' and 'time_period'. |
 | slice_value | string | One value of that dimension, such as 'yellow', 'HV0003' or 'pickup_in'. '(none)' stands for no value. |
 | comparison_value | double | The slice's total over the earlier comparison period. |
 | observed_value | double | The slice's total over the expectation's period. |
@@ -61,18 +61,18 @@ Do not use for: the verdict itself or the expected range (expectations.verdicts)
 
 The outcome of scoring each written-down expectation (held, violated, pending and so on) with the observed value and expected range, one row per expectation per scoring run. Append-only: use the run with the latest scored_at for the current state.
 Grain: one expectation x scoring run.
-Details: 91 rows: 13 expectations in each of 7 runs. The expectation's sentence and reasoning are not in the warehouse; they are in expectations/registry.yaml, keyed by expectation_id.
+Details: Every run scores every expectation. The expectation's sentence and reasoning are not in the warehouse; they are in expectations/registry.yaml, keyed by expectation_id.
 Do not use for: where a gap comes from (expectations.drivers), data quality (checks.results), or the statistical normal range (gold.baselines).
 
 | Column | Type | Description |
 | --- | --- | --- |
 | run_id | string | Identifier of the scoring run. Joins to expectations.drivers.run_id. |
 | scored_at | timestamp | When the run scored the expectations (UTC). The latest value marks the current run. |
-| registry_commit | string | Git commit of the expectation registry the run used, with '-dirty' added if there were uncommitted changes. |
+| registry_commit | string | Git commit of the expectation registry the run used, with '-dirty' added if there were uncommitted changes. Changes under the generated site/ folder do not count. |
 | expectation_id | string | Identifier of the expectation, such as 'derived-cbd-touch-trips-first-year'. |
 | window_start | date | First date of the period the expectation is about. |
 | window_end | date | Last date of the period the expectation is about, inclusive. |
-| observed | double | What was measured, in the unit given by unit. Null when the verdict is 'pending' or 'not_scoreable'. |
+| observed | double | What was measured, in the unit given by unit. Null when the verdict is 'pending' or 'not_scoreable', and for a 'data_issue' whose period has no data. |
 | expected_low | double | Low end of the expected range, in the same unit. Null for 'not_scoreable'. |
 | expected_high | double | High end of the expected range, in the same unit. Null for 'not_scoreable'. |
 | unit | string | 'percent' (change against a comparison period), 'percent_of_days' (share of days inside the baseline band) or 'ratio'. Null for 'not_scoreable'. |
@@ -111,11 +111,11 @@ Partitioned by: months(entry_date)
 | Column | Type | Description |
 | --- | --- | --- |
 | entry_date | date | Date of the entries. |
-| vehicle_class | string | One of cars_pickups_vans, single_unit_trucks, multi_unit_trucks, buses, motorcycles, tlc_taxi_fhv (taxis and for-hire vehicles). |
+| vehicle_class | string | One of cars_pickups_vans, single_unit_trucks, multi_unit_trucks, buses, motorcycles, tlc_taxi_fhv. tlc_taxi_fhv is taxis and for-hire vehicles in the per-trip charge plan; those outside the plan are counted in the other classes. |
 | detection_group | string | Crossing point where the vehicle was first detected entering the zone. 12 values, such as 'Lincoln Tunnel', 'Brooklyn Bridge', 'East 60th St'. |
-| time_period | string | 'Peak' or 'Overnight', as the source labels each 10-minute block. In the data, Peak is 05:00 to 20:59 on weekdays and 09:00 to 20:59 on weekends. |
-| crz_entries | bigint | Number of vehicles detected entering the Congestion Relief Zone. |
-| excluded_roadway_entries | bigint | Number of entries onto excluded roadways, counted by the source separately from crz_entries. |
+| time_period | string | 'Peak' or 'Overnight': whether the hour would receive peak or overnight tolls. Peak is 5 AM to 9 PM on weekdays and 9 AM to 9 PM on weekends. The MTA calls this the current schedule, so it could change. |
+| crz_entries | bigint | Number of vehicles detected entering the Congestion Relief Zone. It leaves out vehicles that stayed on excluded roadways, which are counted in excluded_roadway_entries. The two never overlap, and their sum is all entries into the Central Business District. |
+| excluded_roadway_entries | bigint | Number of vehicles that entered the Central Business District but stayed on excluded roadways: the FDR Drive, the West Side Highway/West Street, or the Hugh L. Carey Tunnel connections to West Street. These vehicles are not charged and are not in crz_entries. Non-zero only at four crossings: FDR Drive at 60th St, West Side Highway at 60th St, Brooklyn Bridge and Hugh L. Carey Tunnel. |
 
 ## gold.daily_trip_slices
 
@@ -132,7 +132,7 @@ Partitioned by: months(trip_date)
 | operator_code | string | Ride-hail company: 'HV0003' is Uber, 'HV0005' is Lyft. Null for yellow taxis. |
 | zone_relation | string | Which ends of the trip are inside the congestion toll zone: 'both_in', 'pickup_in' (only the pickup), 'dropoff_in' (only the dropoff), or 'neither'. A trip touches the zone when this is not 'neither'. |
 | pickup_hour | int | Hour of the day the trips were picked up, 0 to 23, New York time. |
-| trips | bigint | Number of trips in this slice. |
+| trips | bigint | Number of trips in this slice. It counts every row of silver.trips, so a reversed trip counts twice (see silver.trips.cbd_congestion_fee). |
 | fee_trips | bigint | Number of those trips with a congestion fee greater than 0. Always 0 before 2025. The same count is called cbd_fee_trips in gold.daily_trips. |
 
 ## gold.daily_trips
@@ -147,7 +147,7 @@ Partitioned by: months(trip_date)
 | --- | --- | --- |
 | trip_date | date | Date the trips were picked up, New York time. |
 | service | string | 'yellow' for yellow taxis, 'fhvhv' for ride-hail (Uber and Lyft). |
-| trips | bigint | Number of trips picked up that day. |
+| trips | bigint | Number of trips picked up that day. It counts every row of silver.trips, so a reversed trip counts twice (see silver.trips.cbd_congestion_fee). |
 | cbd_fee_trips | bigint | Number of those trips with a congestion fee greater than 0. Always 0 before 2025, when no fee was recorded. The same count is called fee_trips in gold.daily_trip_slices. |
 
 ## reference.cbd_zones
@@ -190,19 +190,19 @@ Partitioned by: months(interval_start)
 | --- | --- | --- |
 | toll_date | date | Date of the 10-minute block. |
 | interval_start | timestamp_ntz | Start of the 10-minute block, New York wall-clock time. |
-| time_period | string | 'Peak' or 'Overnight', as the source labels the block. In the data, Peak is 05:00 to 20:59 on weekdays and 09:00 to 20:59 on weekends. |
-| vehicle_class | string | One of cars_pickups_vans, single_unit_trucks, multi_unit_trucks, buses, motorcycles, tlc_taxi_fhv (taxis and for-hire vehicles). |
+| time_period | string | 'Peak' or 'Overnight': whether the block's hour would receive peak or overnight tolls. Peak is 5 AM to 9 PM on weekdays and 9 AM to 9 PM on weekends. The MTA calls this the current schedule, so it could change. |
+| vehicle_class | string | One of cars_pickups_vans, single_unit_trucks, multi_unit_trucks, buses, motorcycles, tlc_taxi_fhv. tlc_taxi_fhv is taxis and for-hire vehicles in the per-trip charge plan; those outside the plan are counted in the other classes. |
 | detection_group | string | Crossing point where the vehicle was first detected entering the zone. 12 values, such as 'Lincoln Tunnel', 'Brooklyn Bridge', 'East 60th St'. |
 | detection_region | string | Wider area the detection group belongs to. 7 values: Brooklyn, Queens, New Jersey, East 60th St, West 60th St, FDR Drive, West Side Highway. |
-| crz_entries | bigint | Number of vehicles detected entering the Congestion Relief Zone in the block. |
-| excluded_roadway_entries | bigint | Number of entries onto excluded roadways in the block, counted by the source separately from crz_entries. |
+| crz_entries | bigint | Number of vehicles detected entering the Congestion Relief Zone in the block. It leaves out vehicles that stayed on excluded roadways, which are counted in excluded_roadway_entries. The two never overlap, and their sum is all entries into the Central Business District. |
+| excluded_roadway_entries | bigint | Number of vehicles that entered the Central Business District but stayed on excluded roadways: the FDR Drive, the West Side Highway/West Street, or the Hugh L. Carey Tunnel connections to West Street. These vehicles are not charged and are not in crz_entries. Non-zero only at four crossings: FDR Drive at 60th St, West Side Highway at 60th St, Brooklyn Bridge and Hugh L. Carey Tunnel. |
 | source_pull_date | date | Date the source file this row was built from was downloaded. |
 
 ## silver.trips
 
 Every yellow taxi and ride-hail (Uber, Lyft) trip, one row per trip, about 1.07 billion rows. Use only when a question needs single trips, exact times, dropoff, zones, miles or the fee amount. For counts per day use gold.daily_trips or gold.daily_trip_slices.
 Grain: one trip.
-Details: Pickups from 2023-01-01 to 2026-09-30. Partitioned by service and by month of pickup_at, so always filter on service and on a pickup_at range (on the raw column, not on an expression of it). Times are New York wall-clock time with no time zone. Congestion tolling began on 2025-01-05 at 00:00.
+Details: Pickups from 2023-01-01 to 2026-09-30. Partitioned by service and by month of pickup_at, so always filter on service and on a pickup_at range (on the raw column, not on an expression of it). Times are New York wall-clock time with no time zone. Congestion tolling began on 2025-01-05 at 00:00. A reversed trip is kept as two rows, the original and its reversal (see cbd_congestion_fee), so row counts include both: about 1.2% of yellow rows in June 2025.
 Do not use for: daily, monthly or yearly trip counts (gold.daily_trips), or counts by operator, hour, or whether the trip touched the toll zone (gold.daily_trip_slices). A query without a pickup_at filter scans a billion rows.
 Partitioned by: service, months(pickup_at)
 
@@ -211,9 +211,9 @@ Partitioned by: service, months(pickup_at)
 | service | string | 'yellow' for yellow taxis, 'fhvhv' for high-volume for-hire vehicles (ride-hail: Uber and Lyft). |
 | operator_code | string | Ride-hail company, as the TLC licence number: 'HV0003' is Uber, 'HV0005' is Lyft. Null for yellow taxis. |
 | pickup_at | timestamp_ntz | When the trip started, New York wall-clock time. Each row's pickup falls inside its source_month. |
-| dropoff_at | timestamp_ntz | When the trip ended, New York wall-clock time. It can fall on the day or month after pickup_at. |
+| dropoff_at | timestamp_ntz | When the trip ended, New York wall-clock time. It can fall on the day or month after pickup_at. A few rows have a dropoff before the pickup, and some hold junk dates (the earliest is 1970-01-20). |
 | pickup_zone_id | int | TLC taxi zone where the trip started. Joins to reference.cbd_zones.location_id. 264 is unknown and 265 is outside New York City. |
 | dropoff_zone_id | int | TLC taxi zone where the trip ended. Joins to reference.cbd_zones.location_id. 264 is unknown and 265 is outside New York City. |
-| trip_miles | double | Trip distance in miles, as the source reports it. Some trips record zero. |
-| cbd_congestion_fee | double | Congestion fee recorded on the trip. Null for every trip before 2025-01, when the source had no such column, and filled for every trip from 2025-01. Zero means recorded as no fee. A 'fee trip' is one where this is greater than 0. |
+| trip_miles | double | Trip distance in miles, as the source reports it. Some trips record zero, and some hold impossible values (the largest is 398,608.62). |
+| cbd_congestion_fee | double | Congestion fee recorded on the trip, in dollars. Null for every trip before 2025-01, when the source had no such column, and filled for every trip from 2025-01. Zero means recorded as no fee. The usual values are the MTA's per-trip charge: 0.75 for yellow taxis and 1.5 for ride-hail. Rare other values exist (3.0, 1.25, up to 4.5). A negative value such as -0.75 marks a reversal record: a second row that cancels an earlier trip row, which usually is also present with a positive fee. That reading comes from the June 2025 yellow source file, not from TLC's data dictionary. A 'fee trip' is one where this is greater than 0. |
 | source_month | string | Month of the source file the row came from, as 'YYYY-MM'. Equal to the month of pickup_at. |
