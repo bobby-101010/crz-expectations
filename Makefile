@@ -5,7 +5,7 @@ END ?= 2025-03
 RUN := docker compose run --rm spark
 CLUSTER := docker compose --profile cluster
 
-.PHONY: build test test-integration lint shell checks check-profile ingest-stats-backfill reference entries slices gold-backfill baselines validate score drivers download profile silver gold backfill history cluster-up cluster-down cluster-silver
+.PHONY: build test test-integration lint shell checks check-profile ingest-stats-backfill reference entries slices gold-backfill baselines validate score drivers site download profile silver gold backfill history cluster-up cluster-down cluster-silver
 
 build: ; docker compose build
 
@@ -53,6 +53,9 @@ score: ; docker compose run --rm -e REGISTRY_COMMIT=$$(git rev-parse --short HEA
 
 # Drivers for the latest scoring run. Run `make score` first.
 drivers: ; $(RUN) python -m pipeline.jobs.drivers
+
+# Export the status page's data and render site/index.html. Run score and drivers first.
+site: ; $(RUN) python -m pipeline.jobs.site
 
 history: ; mkdir -p data/spark-events && docker compose --profile history up -d history
 

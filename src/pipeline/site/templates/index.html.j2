@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CRZ Expectations: status</title>
+<meta name="description" content="Expectations about New York City's congestion pricing program, recorded before the data and scored against it.">
+<style>
+:root {
+  --bg: #fbfaf7; --surface: #ffffff; --text: #1d2126; --muted: #5b6470; --line: #d9d6ce;
+  --accent: #1f5f8b; --band: #cfe2f0; --held: #1e6b3a; --violated: #a3361f; --pending: #6b5300;
+  --issue: #8a2be2; --neutral: #4a5361;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14171b; --surface: #1c2026; --text: #e8e6e1; --muted: #a3abb6; --line: #343a43;
+    --accent: #7db8de; --band: #2c4a60; --held: #6fcf97; --violated: #f0907a; --pending: #e6c35c;
+    --issue: #c9a2f5; --neutral: #b4bcc8;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 62rem; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+h1 { font-size: 1.7rem; line-height: 1.2; margin: 0 0 .4rem; }
+h2 { font-size: 1.25rem; margin: 2.6rem 0 .3rem; }
+h3 { font-size: 1.02rem; line-height: 1.4; margin: 0 0 .6rem; font-weight: 600; }
+p { margin: .5rem 0; }
+a { color: var(--accent); }
+code { font: .86em ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere; }
+.lede { font-size: 1.08rem; max-width: 46rem; }
+.muted { color: var(--muted); font-size: .92rem; }
+.counts { display: flex; flex-wrap: wrap; gap: .6rem; padding: 0; margin: 1.1rem 0 .4rem; list-style: none; }
+.counts li { background: var(--surface); border: 1px solid var(--line); border-radius: .5rem;
+  padding: .5rem .8rem; min-width: 7.5rem; }
+.counts b { display: block; font-size: 1.5rem; line-height: 1.1; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 27rem), 1fr)); gap: 1rem;
+  margin-top: .9rem; }
+.card { background: var(--surface); border: 1px solid var(--line); border-left: .3rem solid var(--neutral);
+  border-radius: .5rem; padding: 1rem 1rem .9rem; min-width: 0; }
+.card.held { border-left-color: var(--held); }
+.card.violated_low, .card.violated_high { border-left-color: var(--violated); }
+.card.pending { border-left-color: var(--pending); }
+.card.data_issue { border-left-color: var(--issue); }
+.badges { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: .6rem; }
+.badge { font-size: .78rem; font-weight: 600; letter-spacing: .02em; border: 1px solid currentColor;
+  border-radius: 1rem; padding: .08rem .55rem; color: var(--neutral); }
+.badge.held { color: var(--held); }
+.badge.violated_low, .badge.violated_high, .badge.fail { color: var(--violated); }
+.badge.pending, .badge.warn { color: var(--pending); }
+.badge.data_issue { color: var(--issue); }
+.badge.pass { color: var(--held); }
+dl.facts { display: grid; grid-template-columns: max-content 1fr; gap: .15rem .8rem; margin: .7rem 0; font-size: .92rem; }
+dl.facts dt { color: var(--muted); }
+dl.facts dd { margin: 0; min-width: 0; }
+.result { font-size: 1.02rem; margin: .6rem 0 .1rem; }
+.result b { font-size: 1.2rem; }
+svg { display: block; width: 100%; height: auto; max-width: 26rem; }
+.range-bar .axis { stroke: var(--line); stroke-width: 2; }
+.range-bar .band { fill: var(--band); stroke: var(--accent); stroke-width: 1; }
+.range-bar .marker { stroke: var(--text); stroke-width: 2; }
+.range-bar .marker-dot { fill: var(--text); }
+.range-bar .tick { fill: var(--muted); font-size: 11px; }
+.series { margin-top: .5rem; border: 1px solid var(--line); border-radius: .3rem; }
+.series polyline { fill: none; stroke-linejoin: round; }
+.series .window { stroke: var(--accent); stroke-width: 1.6; }
+.series .comparison { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 3; }
+.series .window-dot { fill: var(--accent); } .series .comparison-dot { fill: var(--muted); }
+.series .baseline-band { fill: var(--band); }
+.legend { font-size: .8rem; color: var(--muted); margin: .2rem 0 0; }
+.drivers { margin-top: .8rem; font-size: .9rem; }
+.drivers h4 { font-size: .9rem; margin: .7rem 0 .2rem; }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { text-align: left; padding: .35rem .6rem .35rem 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 600; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.scroll { overflow-x: auto; }
+.note { border-top: 1px solid var(--line); margin-top: .8rem; padding-top: .6rem; font-size: .9rem; }
+.read dt { font-weight: 600; margin-top: .6rem; }
+.read dd { margin: 0; color: var(--muted); }
+.columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr)); gap: 0 2rem; }
+footer { margin-top: 3rem; border-top: 1px solid var(--line); padding-top: 1rem; }
+footer ul { padding-left: 1.1rem; margin: .4rem 0; }
+</style>
+</head>
+<body>
+<main>
+<header>
+  <h1>CRZ Expectations</h1>
+  <p class="lede">Expectations about New York City's congestion pricing program, written down before the data arrived and scored automatically once it did.</p>
+  <p class="muted">Scored {{ scored }}. Page built {{ generated }}.
+  {% if commit %}Registry at commit <a href="{{ repo_url }}/commit/{{ commit }}"><code>{{ commit }}</code></a>{% if dirty %} (with uncommitted changes){% endif %}.{% endif %}</p>
+  <ul class="counts" aria-label="Verdicts across {{ total }} expectations">
+  {% for count in counts if count.count %}
+    <li><b>{{ count.count }}</b>{{ count.label }}</li>
+  {% endfor %}
+  </ul>
+  <p class="muted">
+  {% if calibration.scored %}
+    Expert's record on prospective expectations: {{ calibration.held }} of {{ calibration.scored }} held, against a stated confidence of {{ "%.0f"|format(calibration.mean_confidence) }}% on average. {{ calibration.prospective - calibration.scored }} more are pending.
+  {% else %}
+    Expert's record on prospective expectations: none of the {{ calibration.prospective }} has been scored yet. Their data is not published. This line will report how many held against the confidence the expert stated.
+  {% endif %}
+  </p>
+</header>
+
+<section aria-labelledby="read">
+  <h2 id="read">How to read this</h2>
+  <p>An expectation is a written statement of what a metric should do over a set of dates, with a range. It is recorded in a <a href="{{ repo_url }}/blob/main/expectations/registry.yaml">registry</a> that can only be added to. When the data for its dates is loaded, the pipeline computes the observed value and gives a verdict.</p>
+  <p>The expected ranges here come from an AI agent acting as a subject matter expert, interviewed and checked by the engineer. The <a href="{{ repo_url }}/blob/main/docs/elicitation/2026-11-11-crz-expectations.md">full interview</a> is public. In real use the experts would be people.</p>
+  <div class="columns">
+    <dl class="read">
+      {% for count in counts %}
+      <dt><span class="badge {{ count.key }}">{{ count.label }}</span></dt><dd>{{ count.meaning }}</dd>
+      {% endfor %}
+    </dl>
+    <dl class="read">
+      {% for group in groups %}
+      <dt>{{ group.label }}</dt><dd>{{ group.meaning }}</dd>
+      {% endfor %}
+      <dt>Where the gap comes from</dt>
+      <dd>For expectations about a change between two periods, the gap between observed and expected is split by slices such as service or entry point. Every slice is assumed to have been expected to move by the same percentage. This shows where a gap sits. It does not say why.</dd>
+    </dl>
+  </div>
+</section>
+
+{% for group in groups %}
+<section aria-labelledby="group-{{ group.origin }}">
+  <h2 id="group-{{ group.origin }}">{{ group.label }} expectations</h2>
+  <p class="muted">{{ group.meaning }}</p>
+  <div class="grid">
+  {% for item in group['items'] %}
+    <article class="card {{ item.verdict }}" id="{{ item.id }}">
+      <div class="badges">
+        <span class="badge {{ item.verdict }}">{{ item.verdict_label }}</span>
+        <span class="badge">{{ item.origin_label }}</span>
+      </div>
+      <h3>{{ item.statement }}</h3>
+      {% if item.bar %}
+        <p class="result">{% if item.observed_text %}Observed <b>{{ item.observed_text }}</b>, expected {{ item.expected_text }}{% else %}Expected {{ item.expected_text }}{% endif %}</p>
+        {{ item.bar }}
+      {% endif %}
+      <p class="muted">{{ item.verdict_meaning }}{% if item.failing_checks %} Failing checks: {{ item.failing_checks|join(", ") }}.{% endif %}{% if item.verdict_note %} {{ item.verdict_note|capitalize }}.{% endif %}</p>
+      {% if item.chart %}
+        {{ item.chart }}
+        <p class="legend">{{ item.chart_text }}{% if item.comparison_text %} Solid line: the window. Dashed line: the comparison window.{% endif %}</p>
+      {% endif %}
+      <dl class="facts">
+        <dt>Recorded</dt>
+        <dd>{% if item.registry_url %}<a href="{{ item.registry_url }}">{{ item.recorded_text }}</a>{% else %}{{ item.recorded_text }}{% endif %} by {{ item.author_text }}{% if item.elicitation_url %} (<a href="{{ item.elicitation_url }}">interview</a>){% endif %}</dd>
+        <dt>Window</dt><dd>{{ item.window_text }}</dd>
+        {% if item.comparison_text %}<dt>Compared with</dt><dd>{{ item.comparison_text }}</dd>{% endif %}
+        {% if item.metric %}<dt>Metric</dt><dd><code>{{ item.metric }}</code>{% if item.filters_text %}, {{ item.filters_text }}{% endif %}</dd>{% endif %}
+        {% if item.confidence %}<dt>Stated confidence</dt><dd>{{ item.confidence }}%</dd>{% endif %}
+        {% if item.reported_outcome %}<dt>Reported elsewhere</dt><dd><a href="{{ item.reported_outcome.source }}">{{ item.reported_outcome.value }} {{ item.reported_outcome.unit }}</a>. {{ item.reported_outcome.note }}</dd>{% endif %}
+      </dl>
+      {% if item.drivers %}
+      <div class="drivers">
+        <strong>Where the gap comes from</strong>
+        {% for dimension, rows in item.drivers.items() %}
+        <h4>By <code>{{ dimension }}</code></h4>
+        <div class="scroll"><table>
+          <thead><tr><th scope="col">Slice</th><th scope="col" class="num">Gap</th><th scope="col" class="num">Share of gap</th></tr></thead>
+          <tbody>
+          {% for row in rows %}
+            <tr><td>{{ row.slice }}</td><td class="num">{{ row.gap }}</td><td class="num">{{ row.share or "n/a" }}</td></tr>
+          {% endfor %}
+          </tbody>
+        </table></div>
+        {% endfor %}
+        <p class="legend">Gaps are in the metric's unit over the whole window. When the result lands near the middle of its range the total gap is small, so shares are large and can have opposite signs.</p>
+      </div>
+      {% elif item.metric and item.verdict in ["held", "violated_low", "violated_high"] %}
+        <p class="legend">{% if item.drivers_supported %}No driver dimensions are listed for this expectation.{% else %}Drivers are not supported for this comparison.{% endif %}</p>
+      {% endif %}
+      {% if item.entry_note %}<p class="note">{{ item.entry_note }}</p>{% endif %}
+    </article>
+  {% endfor %}
+  </div>
+</section>
+{% endfor %}
+
+<section aria-labelledby="health">
+  <h2 id="health">Data health</h2>
+  <p class="muted">The latest result of each data check. A check is a claim about the data, such as "this column is never empty". A failing check on an expectation's inputs turns its verdict into a data issue.</p>
+  <div class="scroll"><table>
+    <thead><tr><th scope="col">Check</th><th scope="col">Status</th><th scope="col" class="num">Pass</th><th scope="col" class="num">Warn</th><th scope="col" class="num">Fail</th><th scope="col">Detail</th></tr></thead>
+    <tbody>
+    {% for check in checks %}
+      <tr><td><code>{{ check.check_id }}</code></td><td><span class="badge {{ check.status }}">{{ check.status_label }}</span></td>
+      <td class="num">{{ check.pass }}</td><td class="num">{{ check.warn }}</td><td class="num">{{ check.fail }}</td>
+      <td>{% if check.detail %}{{ check.detail_scope }}: {{ check.detail }}{% endif %}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+</section>
+
+<section aria-labelledby="freshness">
+  <h2 id="freshness">Freshness</h2>
+  <p class="muted">How far each source is loaded against what it has published.</p>
+  <div class="scroll"><table>
+    <thead><tr><th scope="col">Source</th><th scope="col">Status</th><th scope="col">Detail</th></tr></thead>
+    <tbody>
+    {% for row in freshness %}
+      <tr><td><code>{{ row.partition_value }}</code></td><td><span class="badge {{ row.status }}">{{ row.status_label }}</span></td><td>{{ row.message|capitalize }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+</section>
+
+<footer>
+  <p>More about this project:</p>
+  <ul>
+    <li><a href="{{ repo_url }}#readme">README</a>: what it is and how to run it</li>
+    {% if essay_exists %}<li><a href="{{ repo_url }}/blob/main/docs/essay.md">Essay</a>: the idea behind it</li>{% endif %}
+    <li><a href="{{ repo_url }}/blob/main/docs/SPEC.md">Design spec</a></li>
+    <li><a href="{{ repo_url }}/tree/main/docs/decisions">Decision records</a></li>
+    <li><a href="{{ repo_url }}/blob/main/docs/sources.md">Data sources</a></li>
+  </ul>
+  <p class="muted">Sources: NYC Taxi and Limousine Commission trip records, and the MTA's Congestion Relief Zone vehicle entries on NYS Open Data. This is a personal project and is not affiliated with either agency.</p>
+</footer>
+</main>
+</body>
+</html>
