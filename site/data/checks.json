@@ -13,7 +13,7 @@
  },
  {
   "check_id": "dropoff_before_pickup",
-  "checked_at": "2026-11-12T04:12:18.690905",
+  "checked_at": "2026-11-12T06:26:22.021843",
   "detail": "",
   "detail_scope": "",
   "fail": 0,
@@ -25,7 +25,7 @@
  },
  {
   "check_id": "dropped_share",
-  "checked_at": "2026-11-12T04:12:18.690905",
+  "checked_at": "2026-11-12T06:26:22.021843",
   "detail": "",
   "detail_scope": "",
   "fail": 0,
@@ -37,7 +37,7 @@
  },
  {
   "check_id": "entries_days_complete",
-  "checked_at": "2026-11-12T04:12:18.690905",
+  "checked_at": "2026-11-12T06:26:22.021843",
   "detail": "",
   "detail_scope": "",
   "fail": 0,
@@ -61,7 +61,7 @@
  },
  {
   "check_id": "fee_presence",
-  "checked_at": "2026-11-12T04:12:18.690905",
+  "checked_at": "2026-11-12T06:26:22.021843",
   "detail": "",
   "detail_scope": "",
   "fail": 0,
@@ -97,7 +97,7 @@
  },
  {
   "check_id": "required_nulls",
-  "checked_at": "2026-11-12T04:12:18.690905",
+  "checked_at": "2026-11-12T06:26:22.021843",
   "detail": "",
   "detail_scope": "",
   "fail": 0,
@@ -109,7 +109,7 @@
  },
  {
   "check_id": "schema_required_columns",
-  "checked_at": "2026-11-12T04:12:18.690905",
+  "checked_at": "2026-11-12T06:26:22.021843",
   "detail": "",
   "detail_scope": "",
   "fail": 0,
@@ -121,7 +121,7 @@
  },
  {
   "check_id": "silver_volume",
-  "checked_at": "2026-11-12T04:12:18.690905",
+  "checked_at": "2026-11-12T06:26:22.021843",
   "detail": "",
   "detail_scope": "",
   "fail": 0,

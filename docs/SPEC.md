@@ -1,6 +1,6 @@
 # CRZ Expectations: design spec
 
-Version 1.5, November 12, 2026. Drafted with Claude and approved by the owner.
+Version 1.6, November 12, 2026. Drafted with Claude and approved by the owner.
 
 **Changes in 1.1:** expectations now come from a documented elicitation with a subject matter expert (an AI agent in this project), approved by the owner, instead of being written by the owner (sections 2, 7.5, 7.11, 9, Appendix A). The registry exists (13 entries). Ratio metrics support `change_vs_period`. Baselines use exact percentiles. Vehicle classes use canonical labels.
 
@@ -11,6 +11,8 @@ Version 1.5, November 12, 2026. Drafted with Claude and approved by the owner.
 **Changes in 1.4:** the scoring details section 7.6 left open are settled in decision 0011, approved by the owner in the Phase 3 plan: what "latest loaded date" means, which failing checks cause `data_issue`, and how a day with no baseline counts. The append-only rule also freezes `confidence` (section 7.5). The stopgap checker is gone; the registry model replaces it.
 
 **Changes in 1.5:** the driver details section 7.7 left open are settled in decision 0012, approved by the owner in the Phase 4 plan: `share_of_gap` is null only when the total gap is exactly zero, a slice with no value is labelled `(none)`, and each scoring run gets one set of driver rows.
+
+**Changes in 1.6:** Phase 6 was built (section 7.9, decision 0013). Approved by the owner in the Phase 6 plan: a second DAG, `crz_entries_weekly`, follows the MTA's weekly update; `crz_monthly` processes the month two months before its run date and catches up from October 2026 only; orchestrated scoring reads the registry commit with git inside the task; and a tree counts as `-dirty` only when something other than the generated `site/` has uncommitted changes (section 7.6).
 
 This spec is the source of truth for finishing the project. Claude Code implements it phase by phase. The owner reviews, decides, and verifies. Changes to the spec are made by editing this file in a commit, with a change note above saying what changed and why.
 
@@ -376,7 +378,7 @@ Verdicts, in order of precedence:
 
 The details of rules 2 and 3, and of days without a baseline, are in decision 0011.
 
-The registry commit comes from the host, through the Makefile: `-e REGISTRY_COMMIT=$$(git rev-parse --short HEAD)`. Record it, suffixed `-dirty` if the tree has uncommitted changes. Git inside the container is avoided because of ownership checks on the mounted repo.
+The registry commit comes from the host, through the Makefile: `-e REGISTRY_COMMIT=$$(git rev-parse --short HEAD)`. Record it, suffixed `-dirty` if anything but the generated `site/` has uncommitted changes. Under Make, git inside the container is avoided because of ownership checks on the mounted repo. Under Airflow there is no host shell, so the score task runs git with the repo marked safe for that command (decision 0013).
 
 ### 7.7 Drivers (`jobs/drivers.py`)
 
@@ -409,6 +411,8 @@ Do this only if Phases 0 through 5 are done by about day 11.
 - Airflow, latest stable 3.x, in standalone mode under a Compose profile `airflow`. Airflow gets its own virtual environment inside an image built from the project image, so its dependencies never touch `/opt/venv`.
 - A DAG named `crz_monthly`, one run per month. Tasks call the existing jobs with `/opt/venv/bin/python -m ...` through `BashOperator`, in this order: ingest for each service, silver for each service, checks, gold, slices, baselines, score, drivers, site export.
 - Done when: a run for one month reproduces what `make` produces for that month, and a missed month is caught up by the scheduler.
+
+As built: Airflow 3.4.0. Each run processes the month two months before its run date, when TLC has published it. The steps are listed in `src/pipeline/orchestration.py` and include the entries data. Catch-up starts at October 2026, and older months stay with `make backfill`. A second DAG, `crz_entries_weekly`, reruns the entries pull and everything after gold each Friday. No DAG commits or pushes. Details and the acceptance results are in decision 0013.
 
 If Phase 6 is skipped, the README says orchestration is Make plus idempotent monthly jobs, and that the jobs are already shaped as `run(spark, month)` functions ready for an orchestrator.
 
