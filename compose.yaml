@@ -34,5 +34,23 @@ services:
     depends_on:
       - spark-master
 
+  # Airflow in standalone mode, for local orchestration. UI on http://localhost:8081.
+  airflow:
+    <<: *common
+    profiles: [airflow]
+    image: crz-expectations-airflow
+    build:
+      context: .
+      dockerfile: Dockerfile.airflow
+    command: airflow standalone
+    volumes:
+      - .:/app
+      - ./data:/data
+      - ivy-cache:/opt/ivy
+      - airflow-home:/opt/airflow
+    ports:
+      - "8081:8080"
+
 volumes:
   ivy-cache:
+  airflow-home:
