@@ -26,6 +26,7 @@ from pipeline.selection.evaluate import (
     summarize,
 )
 from pipeline.selection.ollama import Reply
+from pipeline.selection.report import outcome, render_report
 from pipeline.selection.request_file import Request
 from pipeline.selection.runner import run_all, run_arm, tables_in_sql
 from pipeline.selection.sql import OK, QueryResult, execute, rejection
@@ -535,3 +536,44 @@ def test_request_problems_and_the_wait_for_expected_tables():
         "request 3: `expected_tables` must be a list",
     ]
     assert request_file.without_expected_tables(request_file.parse(raw[:1])) == ["a"]
+
+
+# --- the report ------------------------------------------------------------------------
+
+
+def test_report_shows_outcomes_selection_and_every_failure():
+    def failing(sql):
+        return QueryResult("error", error="AnalysisException: no such column `trip_date`")
+
+    good = run_all([REQUEST], ["small"], TABLES, {REQUEST.id: REFERENCE}, FakeModel(), fake_execute)
+    model = FakeModel(selection="I think silver.trips", sql="SELECT 1 FROM gold.daily_trips")
+    bad = run_all([REQUEST], ["tiny"], TABLES, {REQUEST.id: REFERENCE}, model, failing)
+    records = good + bad
+    result = {
+        "run_id": "run-1",
+        "requests_commit": "abc1234",
+        "arms": ["full", "selector", "hand"],
+        "models": {"small": "a" * 64, "tiny": "b" * 64},
+        "ollama_options": {"temperature": 0, "seed": 0, "num_ctx": 16384},
+        "started_at": "t0",
+        "finished_at": "t1",
+        "sql_time_limit_seconds": 120,
+        "sql_max_rows": 1000,
+        "summary": summarize(records),
+        "records": records,
+    }
+
+    report = render_report(result)
+
+    assert [outcome(r) for r in records] == ["match"] * 3 + ["error"] * 3
+    assert "| yellow-one-day | match | match | match | error | error | error |" in report
+    assert "| tiny | yellow-one-day | gold.daily_trips | silver.trips | gold.daily_trips " in report
+    assert "| silver.trips | NO |" in report
+    assert (
+        "- `tiny` / `yellow-one-day` / `hand`: error. AnalysisException: no such column" in report
+    )
+    assert (
+        "- `tiny` / `yellow-one-day` / `selector`: used gold.daily_trips; was given silver.trips."
+        in report
+    )
+    assert "`small` (`aaaaaaaaaaaa`)" in report

@@ -20,6 +20,7 @@ from pipeline.jobs import selection_reference
 from pipeline.selection import ollama, precedents, request_file
 from pipeline.selection.catalog import read_tables
 from pipeline.selection.evaluate import render_summary, summarize
+from pipeline.selection.report import render_report
 from pipeline.selection.request_file import Request
 from pipeline.selection.runner import ARMS, Generate, run_all
 from pipeline.selection.sql import MAX_ROWS, TIME_LIMIT_SECONDS, execute
@@ -126,14 +127,8 @@ def main() -> None:
     }
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     Path(RESULTS_DIR / f"{run_id}.json").write_text(json.dumps(result, indent=2) + "\n")
-    header = (
-        f"# Selection run {run_id}\n\n"
-        f"Requests at commit `{result['requests_commit']}`. Models: "
-        + ", ".join(f"`{model}` (`{digest[:12]}`)" for model, digest in digests.items())
-        + f". Temperature 0. {len(requests)} requests."
-    )
-    summary = render_summary(result["summary"], header)
-    Path(RESULTS_DIR / f"{run_id}.md").write_text(summary)
+    Path(RESULTS_DIR / f"{run_id}.md").write_text(render_report(result))
+    summary = render_summary(result["summary"], f"# Selection run {run_id}")
     # A pilot is a timing run on a few requests. It saves no precedents.
     saved = 0 if pilot else precedents.append(records, started.isoformat())
     print("\n" + summary)

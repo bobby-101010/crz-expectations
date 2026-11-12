@@ -5,7 +5,7 @@ END ?= 2025-03
 RUN := docker compose run --rm spark
 CLUSTER := docker compose --profile cluster
 
-.PHONY: catalog-check catalog-comments catalog-export selection-reference selection-run build test test-integration lint shell checks check-profile ingest-stats-backfill reference entries slices gold-backfill baselines validate score drivers site airflow-build airflow-up airflow-down airflow-check download profile silver gold backfill history cluster-up cluster-down cluster-silver
+.PHONY: catalog-check catalog-comments catalog-export selection-reference selection-run selection-report build test test-integration lint shell checks check-profile ingest-stats-backfill reference entries slices gold-backfill baselines validate score drivers site airflow-build airflow-up airflow-down airflow-check download profile silver gold backfill history cluster-up cluster-down cluster-silver
 
 build: ; docker compose build
 
@@ -73,6 +73,9 @@ selection-reference: ; $(RUN) python -m pipeline.jobs.selection_reference
 # Run the three arms with the local models. Needs Ollama on the host, and the owner's
 # expected_tables committed first. `make selection-run MODELS=llama3.2:3b` runs one model.
 selection-run: ; docker compose run --rm -e REQUESTS_COMMIT=$$(git rev-parse --short HEAD)$$(test -z "$$(git status --porcelain -- . ':!selection/results' ':!selection/precedents.jsonl')" || echo -dirty) spark python -m pipeline.jobs.selection_run $(if $(MODELS),--models $(MODELS))
+
+# Rewrite the markdown summary of one results file. `make selection-report RUN_ID=<run_id>`.
+selection-report: ; $(RUN) python -m pipeline.selection.report selection/results/$(RUN_ID).json
 
 AIRFLOW := docker compose --profile airflow
 
