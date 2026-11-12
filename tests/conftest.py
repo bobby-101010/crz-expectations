@@ -14,4 +14,3 @@ def spark():
     )
     yield session
     session.stop()
-    

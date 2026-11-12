@@ -41,9 +41,7 @@ SOURCE_COLUMNS = {
 OPTIONAL_SOURCES = {"cbd_congestion_fee"}
 
 
-def conform_trips(
-    bronze: DataFrame, service: str, month: str, start: date, end: date
-) -> DataFrame:
+def conform_trips(bronze: DataFrame, service: str, month: str, start: date, end: date) -> DataFrame:
     """Bronze trips of one service and month -> the silver schema.
 
     Keeps only trips picked up in [start, end). A missing optional column

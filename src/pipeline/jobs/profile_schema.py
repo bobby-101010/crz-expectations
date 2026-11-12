@@ -15,7 +15,10 @@ def main() -> None:
             continue
         months = [path.stem.rsplit("_", 1)[-1] for path in files]
         schemas = [
-            {field.name: field.dataType.simpleString() for field in spark.read.parquet(str(path)).schema}
+            {
+                field.name: field.dataType.simpleString()
+                for field in spark.read.parquet(str(path)).schema
+            }
             for path in files
         ]
         columns = list(dict.fromkeys(name for schema in schemas for name in schema))
@@ -31,4 +34,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-    

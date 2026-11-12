@@ -18,9 +18,7 @@ def download(service: str, month: str) -> Path:
     if target.exists():
         return target
 
-    base = os.environ.get(
-        "TLC_BASE_URL", "https://d37ci6vzurychx.cloudfront.net/trip-data"
-    )
+    base = os.environ.get("TLC_BASE_URL", "https://d37ci6vzurychx.cloudfront.net/trip-data")
     url = f"{base}/{target.name}"
     target.parent.mkdir(parents=True, exist_ok=True)
     partial = target.with_name(target.name + ".part")
@@ -46,4 +44,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-    
