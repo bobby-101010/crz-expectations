@@ -1,0 +1,33 @@
+- id: trip
+  title: Trip lifecycle
+  one_line: Taxi and ride-hail (Uber, Lyft) trip counts, congestion fee trips, reversals, pickup hours, and trips starting or ending inside the toll zone.
+  tables:
+    - silver.trips
+    - gold.daily_trips
+    - gold.daily_trip_slices
+    - reference.cbd_zones
+    - gold.baselines
+- id: zone-entry
+  title: Zone-entry lifecycle
+  one_line: Vehicles entering the toll zone by vehicle class, crossing point, peak or overnight period, excluded roadways, and the normal range for a day.
+  tables:
+    - silver.crz_entries
+    - gold.daily_entries
+    - gold.baselines
+    - reference.holidays
+- id: expectation
+  title: Expectation lifecycle
+  one_line: Written expectations and their scoring, such as which held, were violated or are pending, the latest scoring run, and which slices drive a gap.
+  tables:
+    - expectations.verdicts
+    - expectations.drivers
+    - gold.baselines
+    - checks.results
+- id: load-and-checks
+  title: Load-and-checks lifecycle
+  one_line: Source file loads and data quality, such as rows read, kept or dropped per load, and the latest pass, warn or fail of each check.
+  tables:
+    - checks.ingest_stats
+    - checks.results
+    - silver.trips
+    - silver.crz_entries
