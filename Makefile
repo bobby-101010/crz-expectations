@@ -5,7 +5,7 @@ END ?= 2025-03
 RUN := docker compose run --rm spark
 CLUSTER := docker compose --profile cluster
 
-.PHONY: build test test-integration lint shell download profile silver gold backfill history cluster-up cluster-down cluster-silver
+.PHONY: build test test-integration lint shell checks check-profile ingest-stats-backfill download profile silver gold backfill history cluster-up cluster-down cluster-silver
 
 build: ; docker compose build
 
@@ -26,6 +26,13 @@ silver: ; $(RUN) python -m pipeline.jobs.silver_trips --service $(SERVICE) --mon
 gold: ; $(RUN) python -m pipeline.jobs.daily_trips --month $(MONTH)
 
 backfill: ; $(RUN) python -m pipeline.jobs.backfill --start $(START) --end $(END)
+
+# `make checks` covers every loaded month. `make checks MONTH=2025-01` covers one.
+checks: ; $(RUN) python -m pipeline.jobs.checks $(if $(filter command,$(origin MONTH)),--month $(MONTH))
+
+check-profile: ; $(RUN) python -m pipeline.jobs.checks --profile
+
+ingest-stats-backfill: ; $(RUN) python -m pipeline.jobs.backfill_ingest_stats
 
 history: ; mkdir -p data/spark-events && docker compose --profile history up -d history
 

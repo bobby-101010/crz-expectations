@@ -1,7 +1,10 @@
 import argparse
+import uuid
+from datetime import UTC, datetime
 
 from pyspark.sql import SparkSession
 
+from pipeline.checks import ingest_stats
 from pipeline.jobs.ingest import FILE_PREFIX, bronze_path
 from pipeline.months import month_bounds
 from pipeline.session import build_session
@@ -31,7 +34,10 @@ def ensure_table(spark: SparkSession) -> None:
 
 
 def run(spark: SparkSession, service: str, month: str) -> tuple[int, int]:
-    """Bronze file of one service and month -> silver. Returns (rows read, rows kept)."""
+    """Bronze file of one service and month -> silver. Returns (rows read, rows kept).
+
+    The two counts are also appended to `checks.ingest_stats`.
+    """
     start, end = month_bounds(month)
     ensure_table(spark)
 
@@ -44,6 +50,7 @@ def run(spark: SparkSession, service: str, month: str) -> tuple[int, int]:
         .where(f"service = '{service}' AND pickup_at >= '{start}' AND pickup_at < '{end}'")
         .count()
     )
+    ingest_stats.append(spark, uuid.uuid4().hex, datetime.now(UTC), [(service, month, read, kept)])
     return read, kept
 
 
