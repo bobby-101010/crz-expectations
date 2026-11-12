@@ -68,7 +68,7 @@ airflow-up: ; $(AIRFLOW) up -d airflow
 airflow-down: ; $(AIRFLOW) rm -sf airflow
 
 # Lists the DAGs and fails if either does not load.
-airflow-check: ; $(AIRFLOW) run --rm airflow sh -c 'airflow dags list && test -z "$$(airflow dags list-import-errors -o plain | tail -n +2)"'
+airflow-check: ; $(AIRFLOW) run --rm airflow sh /app/dags/check.sh
 
 history: ; mkdir -p data/spark-events && docker compose --profile history up -d history
 
