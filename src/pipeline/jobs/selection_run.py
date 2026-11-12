@@ -81,9 +81,16 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--models", nargs="+", default=MODELS)
     parser.add_argument("--arms", nargs="+", default=list(ARMS), choices=ARMS)
+    parser.add_argument("--only", nargs="+", default=None, help="request ids, for a pilot")
     args = parser.parse_args()
+    pilot = args.only is not None
 
     requests = request_file.parse(request_file.read_raw())
+    if pilot:
+        unknown = sorted(set(args.only) - {request.id for request in requests})
+        if unknown:
+            sys.exit(f"no such request: {unknown}")
+        requests = [request for request in requests if request.id in args.only]
     waiting = request_file.without_expected_tables(requests)
     if waiting:
         print(f"expected_tables is empty for {len(waiting)} requests: {waiting}")
@@ -92,7 +99,7 @@ def main() -> None:
 
     digests = {model: ollama.model_digest(model) for model in args.models}
     started = datetime.now(UTC)
-    run_id = started.strftime("%Y%m%dT%H%M%SZ")
+    run_id = ("pilot-" if pilot else "") + started.strftime("%Y%m%dT%H%M%SZ")
 
     spark = build_session("selection_run")
     records, references = run(
@@ -127,7 +134,8 @@ def main() -> None:
     )
     summary = render_summary(result["summary"], header)
     Path(RESULTS_DIR / f"{run_id}.md").write_text(summary)
-    saved = precedents.append(records, started.isoformat())
+    # A pilot is a timing run on a few requests. It saves no precedents.
+    saved = 0 if pilot else precedents.append(records, started.isoformat())
     print("\n" + summary)
     print(f"{len(records)} records in {RESULTS_DIR / (run_id + '.json')}; {saved} precedents saved")
 

@@ -8,6 +8,7 @@ The model call and the query execution are passed in, so tests need neither.
 """
 
 import re
+import time
 from collections.abc import Callable
 from dataclasses import asdict
 
@@ -52,15 +53,33 @@ def run_arm(
     execute: Execute,
 ) -> dict:
     """One request through one arm with one model -> its record."""
+    started = time.monotonic()
+    record = _run_arm(arm, model, request, tables, reference, generate, execute)
+    record["seconds"] = round(time.monotonic() - started, 3)
+    return record
+
+
+def _run_arm(
+    arm: str,
+    model: str,
+    request: Request,
+    tables: dict[str, Table],
+    reference: QueryResult,
+    generate: Generate,
+    execute: Execute,
+) -> dict:
     known = list(tables)
+    reference_tables = tables_in_sql(request.reference_sql, known)
     record = {
         "model": model,
         "arm": arm,
         "request_id": request.id,
         "request": request.request,
         "expected_tables": request.expected_tables,
+        "reference_tables": reference_tables,  # the tables the reference query reads
         "selector": None,
-        "selection": None,
+        "selection": None,  # the selector's tables against the owner's
+        "selection_reference": None,  # and against the reference query's
         "builder": None,
         "sql": None,
         "sql_status": None,
@@ -88,6 +107,7 @@ def run_arm(
         given = [name for name in known if name in chosen.tables]
         record["selector"] = _call(reply) | asdict(chosen)
         record["selection"] = asdict(score_selection(request.expected_tables, chosen.tables))
+        record["selection_reference"] = asdict(score_selection(reference_tables, chosen.tables))
     else:
         raise ValueError(f"unknown arm {arm}")
     record["tables_given"] = given

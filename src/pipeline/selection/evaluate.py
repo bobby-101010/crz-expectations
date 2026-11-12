@@ -112,6 +112,8 @@ def summarize(records: list[dict]) -> list[dict]:
     lines = []
     for (model, arm), group in sorted(groups.items()):
         selections = [r["selection"] for r in group if r.get("selection")]
+        by_reference = [r["selection_reference"] for r in group if r.get("selection_reference")]
+        format_broken = [r for r in group if r.get("selector") and not r["selector"]["format_ok"]]
         lines.append(
             {
                 "model": model,
@@ -123,29 +125,43 @@ def summarize(records: list[dict]) -> list[dict]:
                 "selection_mean_extra": sum(len(s["extra"]) for s in selections) / len(selections)
                 if selections
                 else None,
+                "selection_reference_all_included": sum(s["all_included"] for s in by_reference)
+                if by_reference
+                else None,
+                "selector_format_broken": len(format_broken) if selections else None,
                 "sql_ran": sum(r["sql_status"] == "ok" for r in group),
                 "answer_matched": sum(bool(r["answer_matched"]) for r in group),
+                "used_tables_not_given": sum(bool(r["tables_not_given"]) for r in group),
+                "seconds": round(sum(r.get("seconds") or 0 for r in group), 1),
             }
         )
     return lines
 
 
 def render_summary(lines: list[dict], header: str) -> str:
-    """The summary as a short markdown table."""
+    """The summary as a markdown table. Selection columns are empty outside the selector arm."""
+
+    def shown(value, digits: int | None = None) -> str:
+        if value is None:
+            return ""
+        return f"{value:.{digits}f}" if digits is not None else str(value)
+
     out = [
         header,
         "",
-        "| Model | Arm | Requests | Expected tables all included | Mean extra tables "
-        "| SQL ran | Answer matched |",
-        "| --- | --- | --- | --- | --- | --- | --- |",
+        "| Model | Arm | Requests | Owner's tables all included | Reference query's tables "
+        "all included | Mean extra tables | Selector broke the format | SQL ran "
+        "| Answer matched | Used a table not given | Seconds |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
     for line in lines:
-        included = "" if line["selection_all_included"] is None else line["selection_all_included"]
-        extra = (
-            "" if line["selection_mean_extra"] is None else f"{line['selection_mean_extra']:.1f}"
-        )
         out.append(
-            f"| {line['model']} | {line['arm']} | {line['requests']} | {included} | {extra} "
-            f"| {line['sql_ran']} | {line['answer_matched']} |"
+            f"| {line['model']} | {line['arm']} | {line['requests']} "
+            f"| {shown(line['selection_all_included'])} "
+            f"| {shown(line['selection_reference_all_included'])} "
+            f"| {shown(line['selection_mean_extra'], 1)} "
+            f"| {shown(line['selector_format_broken'])} "
+            f"| {line['sql_ran']} | {line['answer_matched']} "
+            f"| {line['used_tables_not_given']} | {shown(line['seconds'], 0)} |"
         )
     return "\n".join(out) + "\n"

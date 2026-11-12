@@ -434,6 +434,9 @@ def test_selector_arm_selects_first_and_scores_the_selection_on_its_own():
         "missing": ["gold.daily_trips"],
         "extra": ["silver.trips"],
     }
+    assert record["reference_tables"] == ["gold.daily_trips"]
+    assert record["selection_reference"] == record["selection"]
+    assert record["seconds"] >= 0
     assert record["tables_in_sql"] == ["silver.trips"]
     assert (record["sql_status"], record["answer_matched"]) == ("ok", False)
 
@@ -474,17 +477,24 @@ def test_run_all_summary_and_precedents(tmp_path):
         ("large", "hand"),
     ]
     lines = summarize(records)
-    assert lines[2] == {
+    assert lines[2] | {"seconds": 0} == {
         "model": "large",
         "arm": "selector",
         "requests": 1,
         "selection_all_included": 1,
         "selection_mean_extra": 1.0,
+        "selection_reference_all_included": 1,
+        "selector_format_broken": 0,
         "sql_ran": 1,
         "answer_matched": 1,
+        "used_tables_not_given": 0,
+        "seconds": 0,
     }
     assert lines[0]["selection_all_included"] is None
-    assert "| large | selector | 1 | 1 | 1.0 | 1 | 1 |" in render_summary(lines, "# Run")
+    assert "| large | selector | 1 | 1 | 1 | 1.0 | 0 | 1 | 1 | 0 |" in render_summary(
+        lines, "# Run"
+    )
+    assert "| large | full | 1 |  |  |  |  | 1 | 1 | 0 |" in render_summary(lines, "# Run")
 
     path = tmp_path / "precedents.jsonl"
     assert precedents.append(records, "2026-11-12T00:00:00+00:00", path) == 2

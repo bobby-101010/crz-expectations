@@ -1,4 +1,4 @@
-# Requests the selection harness is run on. DRAFT: waiting for the owner.
+# Requests the selection harness is run on.
 #
 # `request` is what an analyst would ask, with no table names in it.
 # `reference_sql` gives the expected answer. `make selection-reference` runs them all
