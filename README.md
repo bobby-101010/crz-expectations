@@ -118,6 +118,22 @@ make site                                    # export and render the status page
 
 Three months of data is enough to try it. The full history is about 25 GB of source files.
 
+## Orchestration
+
+Make runs any step by hand. Airflow runs them on a schedule, in a separate image with its own virtual environment so its dependencies never touch Spark's.
+
+```bash
+make airflow-build   # Airflow 3.4 on top of the project image
+make airflow-check   # confirm both DAGs load
+make airflow-up      # scheduler and UI at http://localhost:8081
+make airflow-down
+```
+
+- `crz_monthly` runs on the 1st of each month and processes the month TLC has just published, two months back: download, silver, checks, gold, baselines, scoring, drivers, and the page export. Catch-up is on, so a month missed while the laptop was off runs when the scheduler returns.
+- `crz_entries_weekly` follows the MTA's weekly update.
+
+Both are thin. The steps are an ordered list in `src/pipeline/orchestration.py`, each one a job that already overwrites only its own month. Running September 2026 through the DAG left every table and every verdict identical to what Make had produced. New DAGs start paused, and none of them commits or pushes.
+
 ## Repository
 
 ```text
@@ -127,6 +143,8 @@ src/pipeline/jobs/             one job per step, each a run(spark, ...) plus a t
 src/pipeline/checks/           data checks as pure functions
 src/pipeline/                  transforms, baselines, scoring, drivers, the registry model
 src/pipeline/site/             export and rendering for the status page
+src/pipeline/orchestration.py  the pipeline's steps as an ordered list
+dags/                          Airflow DAGs built from that list
 tests/                         unit tests, and integration tests under tests/integration/
 docs/SPEC.md                   the design spec the project was built from
 docs/decisions/                one short record per decision a reviewer could question

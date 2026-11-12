@@ -1,0 +1,18 @@
+# Airflow for local orchestration, on top of the project image.
+# Airflow lives in its own virtual environment, so its dependencies never touch
+# /opt/venv, where Spark and the pipeline run. Tasks call /opt/venv/bin/python.
+FROM crz-expectations-spark
+
+ARG AIRFLOW_VERSION=3.4.0
+ARG AIRFLOW_PYTHON=3.12
+
+ENV AIRFLOW_HOME=/opt/airflow \
+    AIRFLOW__CORE__DAGS_FOLDER=/app/dags \
+    AIRFLOW__CORE__LOAD_EXAMPLES=False
+
+RUN uv venv /opt/airflow-venv --python ${AIRFLOW_PYTHON} \
+    && uv pip install --python /opt/airflow-venv/bin/python \
+        "apache-airflow==${AIRFLOW_VERSION}" \
+        --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-${AIRFLOW_VERSION}/constraints-${AIRFLOW_PYTHON}.txt"
+
+ENV PATH="/opt/airflow-venv/bin:$PATH"

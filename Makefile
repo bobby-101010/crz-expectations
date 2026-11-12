@@ -5,7 +5,7 @@ END ?= 2025-03
 RUN := docker compose run --rm spark
 CLUSTER := docker compose --profile cluster
 
-.PHONY: build test test-integration lint shell checks check-profile ingest-stats-backfill reference entries slices gold-backfill baselines validate score drivers site download profile silver gold backfill history cluster-up cluster-down cluster-silver
+.PHONY: build test test-integration lint shell checks check-profile ingest-stats-backfill reference entries slices gold-backfill baselines validate score drivers site airflow-build airflow-up airflow-down airflow-check download profile silver gold backfill history cluster-up cluster-down cluster-silver
 
 build: ; docker compose build
 
@@ -49,13 +49,26 @@ baselines: ; $(RUN) python -m pipeline.jobs.baselines
 validate: ; $(RUN) python -m pipeline.registry validate
 
 # The registry commit comes from the host, because git is not used inside the container.
-score: ; docker compose run --rm -e REGISTRY_COMMIT=$$(git rev-parse --short HEAD)$$(test -z "$$(git status --porcelain)" || echo -dirty) spark python -m pipeline.jobs.score
+# It is marked -dirty when anything but the generated site has uncommitted changes.
+score: ; docker compose run --rm -e REGISTRY_COMMIT=$$(git rev-parse --short HEAD)$$(test -z "$$(git status --porcelain -- . ':!site')" || echo -dirty) spark python -m pipeline.jobs.score
 
 # Drivers for the latest scoring run. Run `make score` first.
 drivers: ; $(RUN) python -m pipeline.jobs.drivers
 
 # Export the status page's data and render site/index.html. Run score and drivers first.
 site: ; $(RUN) python -m pipeline.jobs.site
+
+AIRFLOW := docker compose --profile airflow
+
+# The Airflow image is built on the project image, so that one is built first.
+airflow-build: build ; $(AIRFLOW) build airflow
+
+airflow-up: ; $(AIRFLOW) up -d airflow
+
+airflow-down: ; $(AIRFLOW) rm -sf airflow
+
+# Lists the DAGs and fails if either does not load.
+airflow-check: ; $(AIRFLOW) run --rm airflow sh /app/dags/check.sh
 
 history: ; mkdir -p data/spark-events && docker compose --profile history up -d history
 
