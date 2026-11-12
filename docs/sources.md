@@ -9,9 +9,9 @@ Terms of use have not been verified yet for any source. Each section says what w
 - URL: `https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_YYYY-MM.parquet`
 - Landing page: <https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page>
 - Used for: `silver.trips` (`service = 'yellow'`)
-- Loaded: 2023-01 to 2026-08. Latest published: 2026-09 (file dated 2026-10-29). 2026-10 returns HTTP 403, which is how this host answers for a month that is not published.
+- Loaded: 2023-01 to 2026-09. Latest published: 2026-09 (file dated 2026-10-29). 2026-10 returns HTTP 403, which is how this host answers for a month that is not published.
 
-Columns, from `make profile` over the 44 loaded files. A range means the months where the column has that type.
+Columns, from `make profile` over the first 44 loaded files (2023-01 to 2026-08). A range means the months where the column has that type.
 
 | Column | Type | Used by silver |
 | --- | --- | --- |
@@ -45,7 +45,7 @@ Terms of use: not verified.
 - URL: `https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_YYYY-MM.parquet`
 - Data dictionary: <https://www.nyc.gov/assets/tlc/downloads/pdf/data_dictionary_trip_records_hvfhs.pdf>
 - Used for: `silver.trips` (`service = 'fhvhv'`)
-- Loaded: 2023-01 to 2026-08. Latest published: 2026-09 (file dated 2026-10-29). 2026-10 returns HTTP 403.
+- Loaded: 2023-01 to 2026-09. Latest published: 2026-09 (file dated 2026-10-29). 2026-10 returns HTTP 403.
 
 | Column | Type | Used by silver |
 | --- | --- | --- |
@@ -69,15 +69,18 @@ Terms of use: not verified.
 ## TLC taxi zone lookup
 
 - URL: `https://d37ci6vzurychx.cloudfront.net/misc/taxi_zone_lookup.csv`
-- Used for: `reference.cbd_zones` (names and borough), from Phase 2. Not loaded yet.
+- Used for: `reference.cbd_zones` (names and borough).
+- Bronze: `data/bronze/reference/taxi_zone_lookup/pulled_<date>.csv`. First snapshot 2026-11-12.
 - Header as received: `"LocationID","Borough","Zone","service_zone"`
+- 265 rows, ids 1 to 265. Id 264 is borough `Unknown`, zone `N/A`. Id 265 is borough `N/A`, zone `Outside of NYC`.
 
 Terms of use: not verified.
 
 ## MTA Central Business District Taxi Zones (`yfdc-w5jh`)
 
 - URL: <https://data.ny.gov/d/yfdc-w5jh>
-- Used for: `reference.cbd_zones` (membership), from Phase 2. Not loaded yet.
+- Used for: `reference.cbd_zones` (membership).
+- Bronze: `data/bronze/reference/cbd_taxi_zones/pulled_<date>.csv`. First snapshot 2026-11-12.
 - Posting frequency, from the dataset's metadata: as needed.
 
 Columns, from `https://data.ny.gov/api/views/yfdc-w5jh/columns.json`:
@@ -87,7 +90,7 @@ Columns, from `https://data.ny.gov/api/views/yfdc-w5jh/columns.json`:
 | `taxi_zone` | Taxi Zone | number |
 | `polygon` | Polygon | polygon |
 
-Note for Phase 2: the dataset has a `taxi_zone` number column. Whether it holds TLC `LocationID` values has not been checked against the lookup. If it does, the name-matching fallback in spec section 13 is not needed.
+The dataset has 38 rows. Every `taxi_zone` value is a TLC `LocationID`, and the TLC lookup places all 38 in Manhattan, so membership is joined by id (decision 0008).
 
 Terms of use: the dataset's metadata has no licence field set. Attribution is "Metropolitan Transportation Authority". Not verified further.
 
@@ -95,7 +98,8 @@ Terms of use: the dataset's metadata has no licence field set. Attribution is "M
 
 - URL: <https://data.ny.gov/d/t6yz-b64h>
 - Article describing it: <https://mta.info/article/most-detailed-view-of-nyc-traffic-so-far>
-- Used for: `silver.crz_entries`, from Phase 2. Not loaded yet.
+- Used for: `silver.crz_entries` and `gold.daily_entries`.
+- Bronze: `data/bronze/crz_entries/<YYYY-MM>/pulled_<date>.csv`, one month per pull, paged 50,000 rows at a time through `https://data.ny.gov/resource/t6yz-b64h.csv` ordered by `:id`.
 - Posting frequency, from the dataset's metadata: weekly.
 - State on 2026-11-11: first `toll_date` 2025-01-05, latest `toll_date` 2026-10-31, 6,894,288 rows, rows last updated 2026-11-05 19:26:44 UTC.
 
@@ -121,8 +125,13 @@ Columns, from `https://data.ny.gov/api/views/t6yz-b64h/columns.json`:
 Quirks:
 
 - Toll weeks run Sunday to Saturday (`toll_week` is the Sunday).
-- Each date from 2026-10-18 to 2026-10-31 has 10,368 rows. Other dates were not counted.
-- 2025-11-02 and 2026-11-01 are 25-hour days. How the repeated hour appears in `toll_10_minute_block` has not been checked.
+- One row is one 10-minute block, vehicle class, and detection group: 6 classes times 12 groups is 72 rows per block and 10,368 rows on a normal day.
+- Daylight saving: 2025-03-09 and 2026-03-08 have 9,936 rows (an hour is missing). 2025-11-02 has 10,800, because each block from 1:00 to 1:50 appears twice with identical key columns. Silver keeps both rows (decision 0009).
+- `vehicle_class` labels as received: `1 - Cars, Pickups and Vans`, `2 - Single-Unit Trucks`, `3 - Multi-Unit Trucks`, `4 - Buses`, `5 - Motorcycles`, `TLC Taxi/FHV`. Silver stores canonical names from `expectations/metrics.yaml`.
+- `time_period` is `Peak` or `Overnight`.
+- `detection_group` has 12 values: Brooklyn Bridge, East 60th St, FDR Drive at 60th St, Holland Tunnel, Hugh L. Carey Tunnel, Lincoln Tunnel, Manhattan Bridge, Queensboro Bridge, Queens Midtown Tunnel, West 60th St, West Side Highway at 60th St, Williamsburg Bridge.
+- `detection_region` has 7 values: Brooklyn, East 60th St, FDR Drive, New Jersey, Queens, West 60th St, West Side Highway.
+- In the CSV every value arrives as a quoted string, and timestamps look like `2025-01-05T00:00:00.000`.
 
 Limitations, paraphrased from the dataset's metadata: it should not be used to calculate program revenue, because entries carry no exemption status, payment method, or repeat-entry information.
 

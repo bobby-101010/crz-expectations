@@ -5,7 +5,7 @@ END ?= 2025-03
 RUN := docker compose run --rm spark
 CLUSTER := docker compose --profile cluster
 
-.PHONY: build test test-integration lint shell checks check-profile ingest-stats-backfill download profile silver gold backfill history cluster-up cluster-down cluster-silver
+.PHONY: build test test-integration lint shell checks check-profile ingest-stats-backfill reference entries slices gold-backfill baselines download profile silver gold backfill history cluster-up cluster-down cluster-silver
 
 build: ; docker compose build
 
@@ -33,6 +33,18 @@ checks: ; $(RUN) python -m pipeline.jobs.checks $(if $(filter command,$(origin M
 check-profile: ; $(RUN) python -m pipeline.jobs.checks --profile
 
 ingest-stats-backfill: ; $(RUN) python -m pipeline.jobs.backfill_ingest_stats
+
+reference: ; $(RUN) python -m pipeline.jobs.reference
+
+# Pull, silver and gold for the MTA entries data, one month at a time.
+entries: ; $(RUN) python -m pipeline.jobs.backfill_entries --start $(START) --end $(END)
+
+slices: ; $(RUN) python -m pipeline.jobs.daily_trip_slices --month $(MONTH)
+
+# Rebuild gold trip tables from silver. Bronze is not read.
+gold-backfill: ; $(RUN) python -m pipeline.jobs.gold_backfill --start $(START) --end $(END)
+
+baselines: ; $(RUN) python -m pipeline.jobs.baselines
 
 history: ; mkdir -p data/spark-events && docker compose --profile history up -d history
 

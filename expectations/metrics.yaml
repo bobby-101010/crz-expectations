@@ -1,0 +1,58 @@
+# Metric catalog. Field reference: docs/SPEC.md section 7.4.
+# A `sum` metric adds up one column of a gold table. A `ratio` metric divides one
+# filtered sum metric by another. Metrics with `baseline: true` get rows in gold.baselines.
+
+# Canonical vehicle class -> the label in the MTA entries source. One-to-one.
+# The silver entries job fails on any source label that is not listed here.
+vehicle_classes:
+  cars_pickups_vans: "1 - Cars, Pickups and Vans"
+  single_unit_trucks: "2 - Single-Unit Trucks"
+  multi_unit_trucks: "3 - Multi-Unit Trucks"
+  buses: "4 - Buses"
+  motorcycles: "5 - Motorcycles"
+  tlc_taxi_fhv: "TLC Taxi/FHV"
+
+metrics:
+  tlc_trips:
+    kind: sum
+    source: gold.daily_trip_slices
+    date_column: trip_date
+    value: trips
+    dimensions: [service, operator_code, zone_relation, pickup_hour]
+    baseline: true
+
+  tlc_cbd_touch_trips:
+    kind: sum
+    source: gold.daily_trip_slices
+    date_column: trip_date
+    value: trips
+    filter: "zone_relation != 'neither'"
+    dimensions: [service, operator_code, zone_relation, pickup_hour]
+    baseline: true
+
+  tlc_fee_trips:
+    kind: sum
+    source: gold.daily_trip_slices
+    date_column: trip_date
+    value: fee_trips
+    dimensions: [service, operator_code, zone_relation, pickup_hour]
+
+  crz_entries:
+    kind: sum
+    source: gold.daily_entries
+    date_column: entry_date
+    value: crz_entries
+    dimensions: [vehicle_class, detection_group, time_period]
+    baseline: true
+
+  excluded_roadway_entries:
+    kind: sum
+    source: gold.daily_entries
+    date_column: entry_date
+    value: excluded_roadway_entries
+    dimensions: [vehicle_class, detection_group, time_period]
+
+  fhvhv_per_yellow:
+    kind: ratio
+    numerator: {metric: tlc_trips, filters: {service: fhvhv}}
+    denominator: {metric: tlc_trips, filters: {service: yellow}}

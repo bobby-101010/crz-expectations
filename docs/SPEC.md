@@ -1,10 +1,12 @@
 # CRZ Expectations: design spec
 
-Version 1.2, November 11, 2026. Drafted with Claude and approved by the owner.
+Version 1.3, November 12, 2026. Drafted with Claude and approved by the owner.
 
 **Changes in 1.1:** expectations now come from a documented elicitation with a subject matter expert (an AI agent in this project), approved by the owner, instead of being written by the owner (sections 2, 7.5, 7.11, 9, Appendix A). The registry exists (13 entries). Ratio metrics support `change_vs_period`. Baselines use exact percentiles. Vehicle classes use canonical labels.
 
 **Changes in 1.2:** the AI log is private. It is the owner's working record, kept in `docs/ai-log.md` on the owner's machine and never committed, linked, or published (sections 1, 7.8, 9, 10, 11, Appendix A). Spec changes are recorded in these change notes instead of the log. Automated, statistically derived expectations are named as future work (section 12).
+
+**Changes in 1.3:** Phase 2 found what the sources actually hold, and the owner approved these in the Phase 2 plan. The metric catalog is written in Phase 2, not Phase 3, because the baselines job depends on it (section 10). Zone membership is joined by id, since the MTA's zone list uses TLC location ids (sections 6 and 13, decision 0008). The entries data keeps the source's repeated hour at the end of daylight saving, and all six vehicle classes have canonical names (sections 6 and 7.4, decision 0009). The open details of the baseline method are settled (section 6, decision 0010).
 
 This spec is the source of truth for finishing the project. Claude Code implements it phase by phase. The owner reviews, decides, and verifies. Changes to the spec are made by editing this file in a commit, with a change note above saying what changed and why.
 
@@ -220,7 +222,7 @@ Covers 2023 to 2027, from the `holidays` package (US, New York).
 
 **`silver.crz_entries`** — one row per source row.
 `toll_date DATE, interval_start TIMESTAMP_NTZ, time_period STRING, vehicle_class STRING, detection_group STRING, detection_region STRING, crz_entries BIGINT, excluded_roadway_entries BIGINT, source_pull_date DATE`.
-Partitioned by `months(interval_start)`. Include `detection_region` only if the source has it. Each month is rebuilt from its latest bronze pull.
+Partitioned by `months(interval_start)`. The source has `detection_region`. Each month is rebuilt from its latest bronze pull. On the day daylight saving ends, the source repeats each block from 1:00 to 1:50, and silver keeps both rows, so `interval_start` with class and group is not unique on that day (decision 0009).
 
 **`gold.daily_trip_slices`** — one row per pickup date x service x operator x zone relation x pickup hour.
 `trip_date DATE, service STRING, operator_code STRING, zone_relation STRING, pickup_hour INT, trips BIGINT, fee_trips BIGINT`.
@@ -232,7 +234,7 @@ Partitioned by `months(entry_date)`.
 
 **`gold.baselines`** — one row per metric x slice x date.
 `metric STRING, slice_key STRING, slice_value STRING, baseline_date DATE, method STRING, p10 DOUBLE, p50 DOUBLE, p90 DOUBLE, n_obs INT`.
-Partitioned by `metric`, `months(baseline_date)`. The method is `same_weekday_trailing_8`: the same weekday over the previous 8 weeks, holidays excluded. Percentiles use Spark's exact `percentile`, which interpolates linearly, not `percentile_approx`. One registry entry's range depends on this. A slice with fewer than 6 observations gets no row. `slice_key = 'all'` is the unsliced metric.
+Partitioned by `metric`, `months(baseline_date)`. The method is `same_weekday_trailing_8`: the same weekday over the previous 8 weeks, holidays excluded. Percentiles use Spark's exact `percentile`, which interpolates linearly, not `percentile_approx`. One registry entry's range depends on this. A slice with fewer than 6 observations gets no row. `slice_key = 'all'` is the unsliced metric. The history of a date is the 8 dates exactly 7 to 56 days earlier; holidays among them are left out and not replaced, and a holiday still gets its own row. Slices are single dimension values, not combinations (decision 0010).
 
 **`checks.results`** — one row per check execution.
 `run_id STRING, checked_at TIMESTAMP, check_id STRING, target_table STRING, partition_value STRING, status STRING, observed DOUBLE, threshold STRING, message STRING`.
@@ -305,7 +307,7 @@ Initial metrics:
 | `excluded_roadway_entries` | gold.daily_entries | excluded_roadway_entries | | vehicle_class, detection_group, time_period |
 | `fhvhv_per_yellow` | ratio | `tlc_trips[service=fhvhv]` / `tlc_trips[service=yellow]` | | |
 
-Vehicle classes use canonical labels, starting with `cars_pickups_vans` and `tlc_taxi_fhv`. The catalog maps them one-to-one to the source's labels, and the silver job fails on any source label it cannot map, so a class renamed partway through the series can't silently drop entries.
+Vehicle classes use canonical labels: `cars_pickups_vans`, `single_unit_trucks`, `multi_unit_trucks`, `buses`, `motorcycles`, and `tlc_taxi_fhv`. The catalog maps them one-to-one to the source's labels, and the silver job fails on any source label it cannot map, so a class renamed partway through the series can't silently drop entries.
 
 Metrics marked `baseline: true` get baselines. Start with `tlc_trips`, `tlc_cbd_touch_trips`, and `crz_entries`.
 
@@ -524,6 +526,7 @@ The days are targets for a two-week window. If a phase runs long, cut its option
 **Do:**
 - Record the real columns in `docs/sources.md`.
 - Build `reference.cbd_zones` and `reference.holidays`.
+- Write the metric catalog (7.4), which the baselines job reads.
 - Ingest the entries dataset from January 2025 to its latest date, and build silver and gold for it.
 - Build `gold.daily_trip_slices` for all 44 months. This is a long run, so get approval first.
 - Build `gold.baselines`.
@@ -539,7 +542,7 @@ The days are targets for a two-week window. If a phase runs long, cut its option
 ### Phase 3: Registry and scoring (days 5 to 7)
 
 **Do:**
-- Write the metric catalog, the registry model and validation, the append-only CI check, and the scoring job. The pydantic model replaces `scripts/check_registry.py`, the stopgap checker written during the elicitation, and must accept the same 13 entries.
+- Write the registry model and validation, the append-only CI check, and the scoring job. The metric catalog exists from Phase 2. The pydantic model replaces `scripts/check_registry.py`, the stopgap checker written during the elicitation, and must accept the same 13 entries.
 - Validate the existing 13 entries without changing them. If the model and an entry disagree, the model changes, or the owner decides on a superseding entry.
 
 **Done when:**
@@ -630,7 +633,7 @@ Cards are written once, at the end, into the owner's existing ledger. **The ledg
 | Risk | Mitigation |
 | --- | --- |
 | The entries dataset's column names or API limits differ from what is described here | Phase 2 starts by recording the real schema. Pull month by month, with paging. |
-| The MTA zone dataset has polygons but no TLC zone ids | Match on zone names with the TLC lookup, and confirm with `cbd_zone_membership`. Otherwise spatially join the TLC shapefile (`https://d37ci6vzurychx.cloudfront.net/misc/taxi_zones.zip`). Record the choice. |
+| The MTA zone dataset has polygons but no TLC zone ids | Did not happen: its 38 `taxi_zone` values are TLC location ids, so membership is joined by id and confirmed with `cbd_zone_membership` (decision 0008). |
 | Full-history runs take hours on a fanless laptop | Get approval first. Run overnight on power. Build gold from silver only once. |
 | Iceberg DDL with `TIMESTAMP_NTZ` behaves differently in CI | The Phase 0 integration test catches it early |
 | Two weeks is tight | Phases have clear cut lines. Phase 6 is optional. Phase 4's driver method is deliberately simple. |
