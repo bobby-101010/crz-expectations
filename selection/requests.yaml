@@ -142,7 +142,7 @@ requests:
   - id: checks-not-passing-now
     request: Which data checks are not passing right now, going by the latest result of each check?
     reference_sql: |
-      SELECT check_id, target_table, partition_value, status
+      SELECT check_id, status
       FROM (
         SELECT *,
                row_number() OVER (
