@@ -1,0 +1,819 @@
+{
+  "run_id": "pilot-20261112T211951Z",
+  "started_at": "2026-11-12T21:19:51.569901+00:00",
+  "finished_at": "2026-11-12T21:25:13.318211+00:00",
+  "requests_commit": "de2bcb8",
+  "models": {
+    "llama3.2:3b": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+    "qwen2.5:14b": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+  },
+  "ollama_options": {
+    "temperature": 0,
+    "seed": 0,
+    "num_ctx": 16384
+  },
+  "sql_time_limit_seconds": 120,
+  "sql_max_rows": 1000,
+  "arms": [
+    "full",
+    "selector",
+    "hand"
+  ],
+  "references": [
+    {
+      "id": "yellow-trips-one-day",
+      "request": "How many yellow taxi trips were picked up on January 5, 2025?",
+      "status": "ok",
+      "error": null,
+      "columns": [
+        "trips"
+      ],
+      "rows": [
+        [
+          79624
+        ]
+      ]
+    },
+    {
+      "id": "entries-outside-normal-sept-2026",
+      "request": "On how many days in September 2026 was the total number of vehicles entering the zone outside its normal range for that day?",
+      "status": "ok",
+      "error": null,
+      "columns": [
+        "days"
+      ],
+      "rows": [
+        [
+          17
+        ]
+      ]
+    }
+  ],
+  "summary": [
+    {
+      "model": "llama3.2:3b",
+      "arm": "full",
+      "requests": 2,
+      "selection_all_included": null,
+      "selection_mean_extra": null,
+      "selection_reference_all_included": null,
+      "selector_format_broken": null,
+      "sql_ran": 1,
+      "answer_matched": 0,
+      "used_tables_not_given": 0,
+      "seconds": 37.1
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "hand",
+      "requests": 2,
+      "selection_all_included": null,
+      "selection_mean_extra": null,
+      "selection_reference_all_included": null,
+      "selector_format_broken": null,
+      "sql_ran": 1,
+      "answer_matched": 1,
+      "used_tables_not_given": 0,
+      "seconds": 6.7
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "selector",
+      "requests": 2,
+      "selection_all_included": 1,
+      "selection_mean_extra": 2.0,
+      "selection_reference_all_included": 1,
+      "selector_format_broken": 0,
+      "sql_ran": 1,
+      "answer_matched": 1,
+      "used_tables_not_given": 1,
+      "seconds": 18.6
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "full",
+      "requests": 2,
+      "selection_all_included": null,
+      "selection_mean_extra": null,
+      "selection_reference_all_included": null,
+      "selector_format_broken": null,
+      "sql_ran": 1,
+      "answer_matched": 1,
+      "used_tables_not_given": 0,
+      "seconds": 175.6
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "hand",
+      "requests": 2,
+      "selection_all_included": null,
+      "selection_mean_extra": null,
+      "selection_reference_all_included": null,
+      "selector_format_broken": null,
+      "sql_ran": 2,
+      "answer_matched": 1,
+      "used_tables_not_given": 0,
+      "seconds": 16.7
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "selector",
+      "requests": 2,
+      "selection_all_included": 2,
+      "selection_mean_extra": 0.5,
+      "selection_reference_all_included": 2,
+      "selector_format_broken": 0,
+      "sql_ran": 2,
+      "answer_matched": 1,
+      "used_tables_not_given": 0,
+      "seconds": 62.5
+    }
+  ],
+  "records": [
+    {
+      "model": "llama3.2:3b",
+      "arm": "full",
+      "request_id": "yellow-trips-one-day",
+      "request": "How many yellow taxi trips were picked up on January 5, 2025?",
+      "expected_tables": [
+        "gold.daily_trips"
+      ],
+      "reference_tables": [
+        "gold.daily_trips"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT COUNT(DISTINCT T1.service) AS yellow_taxi_trips \nFROM silver.trips AS T1 \nWHERE T1.pickup_at = '2025-01-05' AND T1.service = 'yellow'\n```",
+        "prompt_tokens": 5777,
+        "output_tokens": 52,
+        "seconds": 17.489187292
+      },
+      "sql": "SELECT COUNT(DISTINCT T1.service) AS yellow_taxi_trips \nFROM silver.trips AS T1 \nWHERE T1.pickup_at = '2025-01-05' AND T1.service = 'yellow'",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.352143,
+      "tables_in_sql": [
+        "silver.trips"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "yellow_taxi_trips"
+      ],
+      "result_rows": [
+        [
+          1
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": false,
+      "tables_given": [
+        "checks.ingest_stats",
+        "checks.results",
+        "expectations.drivers",
+        "expectations.verdicts",
+        "gold.baselines",
+        "gold.daily_entries",
+        "gold.daily_trip_slices",
+        "gold.daily_trips",
+        "reference.cbd_zones",
+        "reference.holidays",
+        "silver.crz_entries",
+        "silver.trips"
+      ],
+      "seconds": 17.856,
+      "run_id": "pilot-20261112T211951Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "selector",
+      "request_id": "yellow-trips-one-day",
+      "request": "How many yellow taxi trips were picked up on January 5, 2025?",
+      "expected_tables": [
+        "gold.daily_trips"
+      ],
+      "reference_tables": [
+        "gold.daily_trips"
+      ],
+      "selector": {
+        "answer": "TABLES: gold.daily_trips, silver.trips",
+        "prompt_tokens": 908,
+        "output_tokens": 12,
+        "seconds": 2.318697042,
+        "tables": [
+          "gold.daily_trips",
+          "silver.trips"
+        ],
+        "unknown": [],
+        "format_ok": true
+      },
+      "selection": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "silver.trips"
+        ]
+      },
+      "selection_reference": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "silver.trips"
+        ]
+      },
+      "builder": {
+        "answer": "```sql\nSELECT trips \nFROM gold.daily_trips \nWHERE trip_date = DATE '2025-01-05' AND service = 'yellow'\n```",
+        "prompt_tokens": 1245,
+        "output_tokens": 33,
+        "seconds": 3.558943916
+      },
+      "sql": "SELECT trips \nFROM gold.daily_trips \nWHERE trip_date = DATE '2025-01-05' AND service = 'yellow'",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.087623,
+      "tables_in_sql": [
+        "gold.daily_trips"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "trips"
+      ],
+      "result_rows": [
+        [
+          79624
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": true,
+      "tables_given": [
+        "gold.daily_trips",
+        "silver.trips"
+      ],
+      "seconds": 5.981,
+      "run_id": "pilot-20261112T211951Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "hand",
+      "request_id": "yellow-trips-one-day",
+      "request": "How many yellow taxi trips were picked up on January 5, 2025?",
+      "expected_tables": [
+        "gold.daily_trips"
+      ],
+      "reference_tables": [
+        "gold.daily_trips"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT trips \nFROM gold.daily_trips \nWHERE trip_date = DATE '2025-01-05' AND service = 'yellow'\n```",
+        "prompt_tokens": 469,
+        "output_tokens": 33,
+        "seconds": 1.106583583
+      },
+      "sql": "SELECT trips \nFROM gold.daily_trips \nWHERE trip_date = DATE '2025-01-05' AND service = 'yellow'",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.071204,
+      "tables_in_sql": [
+        "gold.daily_trips"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "trips"
+      ],
+      "result_rows": [
+        [
+          79624
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": true,
+      "tables_given": [
+        "gold.daily_trips"
+      ],
+      "seconds": 1.185,
+      "run_id": "pilot-20261112T211951Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "full",
+      "request_id": "entries-outside-normal-sept-2026",
+      "request": "On how many days in September 2026 was the total number of vehicles entering the zone outside its normal range for that day?",
+      "expected_tables": [
+        "gold.daily_entries",
+        "gold.baselines"
+      ],
+      "reference_tables": [
+        "gold.baselines",
+        "gold.daily_entries"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT \n  COUNT(DISTINCT D1.toll_date) AS total_days_outside_range\nFROM \n  silver.crz_entries D1\nJOIN \n  gold.baselines B ON D1.month = B.baseline_date AND D1.vehicle_class = B.slice_key AND D1.time_period = B.method\nWHERE \n  D1.crz_entries > B.p10 OR D1.crz_entries < B.p90\nAND EXTRACT(MONTH FROM D1.toll_date) = 9\nAND EXTRACT(YEAR FROM D1.toll_date) = 2026;\n```",
+        "prompt_tokens": 5786,
+        "output_tokens": 127,
+        "seconds": 19.031743917
+      },
+      "sql": "SELECT \n  COUNT(DISTINCT D1.toll_date) AS total_days_outside_range\nFROM \n  silver.crz_entries D1\nJOIN \n  gold.baselines B ON D1.month = B.baseline_date AND D1.vehicle_class = B.slice_key AND D1.time_period = B.method\nWHERE \n  D1.crz_entries > B.p10 OR D1.crz_entries < B.p90\nAND EXTRACT(MONTH FROM D1.toll_date) = 9\nAND EXTRACT(YEAR FROM D1.toll_date) = 2026",
+      "sql_status": "error",
+      "sql_error": "AnalysisException: [UNRESOLVED_COLUMN.WITH_SUGGESTION] A column, variable, or function parameter with name `D1`.`month` cannot be resolved. Did you mean one of the following? [`B`.`p10`, `B`.`p50`, `B`.`p90`, `B`.`method`, `B`.`n_obs`]. SQLSTATE: 42703; line 6 pos 22;",
+      "sql_seconds": 0.179784,
+      "tables_in_sql": [
+        "gold.baselines",
+        "silver.crz_entries"
+      ],
+      "tables_not_given": [],
+      "result_columns": [],
+      "result_rows": [],
+      "result_row_count": null,
+      "answer_matched": false,
+      "tables_given": [
+        "checks.ingest_stats",
+        "checks.results",
+        "expectations.drivers",
+        "expectations.verdicts",
+        "gold.baselines",
+        "gold.daily_entries",
+        "gold.daily_trip_slices",
+        "gold.daily_trips",
+        "reference.cbd_zones",
+        "reference.holidays",
+        "silver.crz_entries",
+        "silver.trips"
+      ],
+      "seconds": 19.225,
+      "run_id": "pilot-20261112T211951Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "selector",
+      "request_id": "entries-outside-normal-sept-2026",
+      "request": "On how many days in September 2026 was the total number of vehicles entering the zone outside its normal range for that day?",
+      "expected_tables": [
+        "gold.daily_entries",
+        "gold.baselines"
+      ],
+      "reference_tables": [
+        "gold.baselines",
+        "gold.daily_entries"
+      ],
+      "selector": {
+        "answer": "TABLES: gold.daily_entries, gold.daily_trip_slices, gold.daily_trips, reference.cbd_zones",
+        "prompt_tokens": 917,
+        "output_tokens": 22,
+        "seconds": 2.599099334,
+        "tables": [
+          "gold.daily_entries",
+          "gold.daily_trip_slices",
+          "gold.daily_trips",
+          "reference.cbd_zones"
+        ],
+        "unknown": [],
+        "format_ok": true
+      },
+      "selection": {
+        "all_included": false,
+        "missing": [
+          "gold.baselines"
+        ],
+        "extra": [
+          "gold.daily_trip_slices",
+          "gold.daily_trips",
+          "reference.cbd_zones"
+        ]
+      },
+      "selection_reference": {
+        "all_included": false,
+        "missing": [
+          "gold.baselines"
+        ],
+        "extra": [
+          "gold.daily_trip_slices",
+          "gold.daily_trips",
+          "reference.cbd_zones"
+        ]
+      },
+      "builder": {
+        "answer": "```sql\nSELECT \n    entry_date,\n    COUNT(CASE WHEN crz_entries > (SELECT AVG(crz_entries) FROM gold.daily_entries WHERE entry_date = g.entry_date AND vehicle_class IN ('cars_pickups_vans', 'single_unit_trucks', 'multi_unit_trucks', 'buses')) THEN 1 ELSE NULL END) AS above_range,\n    COUNT(CASE WHEN crz_entries < (SELECT AVG(crz_entries) FROM gold.daily_entries WHERE entry_date = g.entry_date AND vehicle_class IN ('cars_pickups_vans', 'single_unit_trucks', 'multi_unit_trucks', 'buses')) THEN 1 ELSE NULL END) AS below_range\nFROM \n    gold.daily_entries g\nJOIN \n    reference.cbd_zones r ON r.location_id = (SELECT pickup_zone_id FROM silver.trips WHERE trip_date = g.entry_date AND service = 'yellow')\nWHERE \n    g.entry_date BETWEEN '2026-09-01' AND '2026-09-30'\nGROUP BY \n    entry_date\n```",
+        "prompt_tokens": 1847,
+        "output_tokens": 215,
+        "seconds": 9.818149333
+      },
+      "sql": "SELECT \n    entry_date,\n    COUNT(CASE WHEN crz_entries > (SELECT AVG(crz_entries) FROM gold.daily_entries WHERE entry_date = g.entry_date AND vehicle_class IN ('cars_pickups_vans', 'single_unit_trucks', 'multi_unit_trucks', 'buses')) THEN 1 ELSE NULL END) AS above_range,\n    COUNT(CASE WHEN crz_entries < (SELECT AVG(crz_entries) FROM gold.daily_entries WHERE entry_date = g.entry_date AND vehicle_class IN ('cars_pickups_vans', 'single_unit_trucks', 'multi_unit_trucks', 'buses')) THEN 1 ELSE NULL END) AS below_range\nFROM \n    gold.daily_entries g\nJOIN \n    reference.cbd_zones r ON r.location_id = (SELECT pickup_zone_id FROM silver.trips WHERE trip_date = g.entry_date AND service = 'yellow')\nWHERE \n    g.entry_date BETWEEN '2026-09-01' AND '2026-09-30'\nGROUP BY \n    entry_date",
+      "sql_status": "error",
+      "sql_error": "AnalysisException: [UNRESOLVED_COLUMN.WITH_SUGGESTION] A column, variable, or function parameter with name `trip_date` cannot be resolved. Did you mean one of the following? [`trip_miles`, `pickup_at`, `dropoff_at`, `service`, `source_month`]. SQLSTATE: 42703; line 8 pos 92;",
+      "sql_seconds": 0.160128,
+      "tables_in_sql": [
+        "gold.daily_entries",
+        "reference.cbd_zones",
+        "silver.trips"
+      ],
+      "tables_not_given": [
+        "silver.trips"
+      ],
+      "result_columns": [],
+      "result_rows": [],
+      "result_row_count": null,
+      "answer_matched": false,
+      "tables_given": [
+        "gold.daily_entries",
+        "gold.daily_trip_slices",
+        "gold.daily_trips",
+        "reference.cbd_zones"
+      ],
+      "seconds": 12.594,
+      "run_id": "pilot-20261112T211951Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "hand",
+      "request_id": "entries-outside-normal-sept-2026",
+      "request": "On how many days in September 2026 was the total number of vehicles entering the zone outside its normal range for that day?",
+      "expected_tables": [
+        "gold.daily_entries",
+        "gold.baselines"
+      ],
+      "reference_tables": [
+        "gold.baselines",
+        "gold.daily_entries"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT \n    entry_date,\n    vehicle_class,\n    detection_group,\n    time_period,\n    crz_entries > (p10 + (crz_entries - p50) * 0.5) OR crz_entries < (p90 - (crz_entries - p50) * 0.5)\nFROM \n    gold.daily_entries\nWHERE \n    entry_date >= DATE '2026-09-01'\n    AND entry_date <= DATE '2026-09-30';\n```",
+        "prompt_tokens": 1256,
+        "output_tokens": 105,
+        "seconds": 5.396455
+      },
+      "sql": "SELECT \n    entry_date,\n    vehicle_class,\n    detection_group,\n    time_period,\n    crz_entries > (p10 + (crz_entries - p50) * 0.5) OR crz_entries < (p90 - (crz_entries - p50) * 0.5)\nFROM \n    gold.daily_entries\nWHERE \n    entry_date >= DATE '2026-09-01'\n    AND entry_date <= DATE '2026-09-30'",
+      "sql_status": "error",
+      "sql_error": "AnalysisException: [UNRESOLVED_COLUMN.WITH_SUGGESTION] A column, variable, or function parameter with name `p10` cannot be resolved. Did you mean one of the following? [`entry_date`, `time_period`, `crz_entries`, `vehicle_class`, `detection_group`]. SQLSTATE: 42703; line 6 pos 19;",
+      "sql_seconds": 0.125021,
+      "tables_in_sql": [
+        "gold.daily_entries"
+      ],
+      "tables_not_given": [],
+      "result_columns": [],
+      "result_rows": [],
+      "result_row_count": null,
+      "answer_matched": false,
+      "tables_given": [
+        "gold.baselines",
+        "gold.daily_entries"
+      ],
+      "seconds": 5.528,
+      "run_id": "pilot-20261112T211951Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "full",
+      "request_id": "yellow-trips-one-day",
+      "request": "How many yellow taxi trips were picked up on January 5, 2025?",
+      "expected_tables": [
+        "gold.daily_trips"
+      ],
+      "reference_tables": [
+        "gold.daily_trips"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT COUNT(*) AS trip_count \nFROM silver.trips \nWHERE service = 'yellow' AND pickup_at >= DATE '2025-01-05' AND pickup_at < DATE '2025-01-06';\n```",
+        "prompt_tokens": 5960,
+        "output_tokens": 57,
+        "seconds": 92.177756667
+      },
+      "sql": "SELECT COUNT(*) AS trip_count \nFROM silver.trips \nWHERE service = 'yellow' AND pickup_at >= DATE '2025-01-05' AND pickup_at < DATE '2025-01-06'",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.361301,
+      "tables_in_sql": [
+        "silver.trips"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "trip_count"
+      ],
+      "result_rows": [
+        [
+          79624
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": true,
+      "tables_given": [
+        "checks.ingest_stats",
+        "checks.results",
+        "expectations.drivers",
+        "expectations.verdicts",
+        "gold.baselines",
+        "gold.daily_entries",
+        "gold.daily_trip_slices",
+        "gold.daily_trips",
+        "reference.cbd_zones",
+        "reference.holidays",
+        "silver.crz_entries",
+        "silver.trips"
+      ],
+      "seconds": 92.571,
+      "run_id": "pilot-20261112T211951Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "selector",
+      "request_id": "yellow-trips-one-day",
+      "request": "How many yellow taxi trips were picked up on January 5, 2025?",
+      "expected_tables": [
+        "gold.daily_trips"
+      ],
+      "reference_tables": [
+        "gold.daily_trips"
+      ],
+      "selector": {
+        "answer": "TABLES: gold.daily_trips, reference.cbd_zones",
+        "prompt_tokens": 920,
+        "output_tokens": 13,
+        "seconds": 10.737601209,
+        "tables": [
+          "gold.daily_trips",
+          "reference.cbd_zones"
+        ],
+        "unknown": [],
+        "format_ok": true
+      },
+      "selection": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "reference.cbd_zones"
+        ]
+      },
+      "selection_reference": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "reference.cbd_zones"
+        ]
+      },
+      "builder": {
+        "answer": "```sql\nSELECT trips \nFROM gold.daily_trips \nWHERE trip_date = DATE '2025-01-05' \n  AND service = 'yellow'\n```",
+        "prompt_tokens": 842,
+        "output_tokens": 39,
+        "seconds": 12.395795708
+      },
+      "sql": "SELECT trips \nFROM gold.daily_trips \nWHERE trip_date = DATE '2025-01-05' \n  AND service = 'yellow'",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.115119,
+      "tables_in_sql": [
+        "gold.daily_trips"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "trips"
+      ],
+      "result_rows": [
+        [
+          79624
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": true,
+      "tables_given": [
+        "gold.daily_trips",
+        "reference.cbd_zones"
+      ],
+      "seconds": 23.303,
+      "run_id": "pilot-20261112T211951Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "hand",
+      "request_id": "yellow-trips-one-day",
+      "request": "How many yellow taxi trips were picked up on January 5, 2025?",
+      "expected_tables": [
+        "gold.daily_trips"
+      ],
+      "reference_tables": [
+        "gold.daily_trips"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT trips \nFROM gold.daily_trips \nWHERE trip_date = DATE '2025-01-05' \n  AND service = 'yellow'\n```",
+        "prompt_tokens": 475,
+        "output_tokens": 39,
+        "seconds": 4.54010425
+      },
+      "sql": "SELECT trips \nFROM gold.daily_trips \nWHERE trip_date = DATE '2025-01-05' \n  AND service = 'yellow'",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.087806,
+      "tables_in_sql": [
+        "gold.daily_trips"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "trips"
+      ],
+      "result_rows": [
+        [
+          79624
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": true,
+      "tables_given": [
+        "gold.daily_trips"
+      ],
+      "seconds": 4.638,
+      "run_id": "pilot-20261112T211951Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "full",
+      "request_id": "entries-outside-normal-sept-2026",
+      "request": "On how many days in September 2026 was the total number of vehicles entering the zone outside its normal range for that day?",
+      "expected_tables": [
+        "gold.daily_entries",
+        "gold.baselines"
+      ],
+      "reference_tables": [
+        "gold.baselines",
+        "gold.daily_entries"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT COUNT(DISTINCT baseline_date) AS days_outside_normal_range\nFROM gold.baselines\nWHERE metric = 'crz_entries' \n  AND slice_key = 'all'\n  AND baseline_date BETWEEN DATE '2026-09-01' AND DATE '2026-09-30'\n  AND (p10 > crz_entries OR p90 < crz_entries)\n```",
+        "prompt_tokens": 5969,
+        "output_tokens": 94,
+        "seconds": 82.767217708
+      },
+      "sql": "SELECT COUNT(DISTINCT baseline_date) AS days_outside_normal_range\nFROM gold.baselines\nWHERE metric = 'crz_entries' \n  AND slice_key = 'all'\n  AND baseline_date BETWEEN DATE '2026-09-01' AND DATE '2026-09-30'\n  AND (p10 > crz_entries OR p90 < crz_entries)",
+      "sql_status": "error",
+      "sql_error": "AnalysisException: [UNRESOLVED_COLUMN.WITH_SUGGESTION] A column, variable, or function parameter with name `crz_entries` cannot be resolved. Did you mean one of the following? [`metric`, `method`, `n_obs`, `p10`, `p50`]. SQLSTATE: 42703; line 6 pos 13;",
+      "sql_seconds": 0.222415,
+      "tables_in_sql": [
+        "gold.baselines"
+      ],
+      "tables_not_given": [],
+      "result_columns": [],
+      "result_rows": [],
+      "result_row_count": null,
+      "answer_matched": false,
+      "tables_given": [
+        "checks.ingest_stats",
+        "checks.results",
+        "expectations.drivers",
+        "expectations.verdicts",
+        "gold.baselines",
+        "gold.daily_entries",
+        "gold.daily_trip_slices",
+        "gold.daily_trips",
+        "reference.cbd_zones",
+        "reference.holidays",
+        "silver.crz_entries",
+        "silver.trips"
+      ],
+      "seconds": 83.023,
+      "run_id": "pilot-20261112T211951Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "selector",
+      "request_id": "entries-outside-normal-sept-2026",
+      "request": "On how many days in September 2026 was the total number of vehicles entering the zone outside its normal range for that day?",
+      "expected_tables": [
+        "gold.daily_entries",
+        "gold.baselines"
+      ],
+      "reference_tables": [
+        "gold.baselines",
+        "gold.daily_entries"
+      ],
+      "selector": {
+        "answer": "TABLES: gold.baselines, gold.daily_entries",
+        "prompt_tokens": 929,
+        "output_tokens": 12,
+        "seconds": 11.820984584,
+        "tables": [
+          "gold.baselines",
+          "gold.daily_entries"
+        ],
+        "unknown": [],
+        "format_ok": true
+      },
+      "selection": {
+        "all_included": true,
+        "missing": [],
+        "extra": []
+      },
+      "selection_reference": {
+        "all_included": true,
+        "missing": [],
+        "extra": []
+      },
+      "builder": {
+        "answer": "```sql\nSELECT COUNT(DISTINCT de.entry_date) AS days_outside_normal_range\nFROM gold.daily_entries de\nJOIN gold.baselines bl ON de.entry_date = bl.baseline_date AND de.vehicle_class != 'tlc_taxi_fhv' AND bl.metric = 'crz_entries'\nWHERE de.entry_date >= DATE '2026-09-01' AND de.entry_date <= DATE '2026-09-30'\n  AND (de.crz_entries < bl.p10 OR de.crz_entries > bl.p90);\n```",
+        "prompt_tokens": 1288,
+        "output_tokens": 123,
+        "seconds": 27.008906708
+      },
+      "sql": "SELECT COUNT(DISTINCT de.entry_date) AS days_outside_normal_range\nFROM gold.daily_entries de\nJOIN gold.baselines bl ON de.entry_date = bl.baseline_date AND de.vehicle_class != 'tlc_taxi_fhv' AND bl.metric = 'crz_entries'\nWHERE de.entry_date >= DATE '2026-09-01' AND de.entry_date <= DATE '2026-09-30'\n  AND (de.crz_entries < bl.p10 OR de.crz_entries > bl.p90)",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.333372,
+      "tables_in_sql": [
+        "gold.baselines",
+        "gold.daily_entries"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "days_outside_normal_range"
+      ],
+      "result_rows": [
+        [
+          30
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": false,
+      "tables_given": [
+        "gold.baselines",
+        "gold.daily_entries"
+      ],
+      "seconds": 39.188,
+      "run_id": "pilot-20261112T211951Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "hand",
+      "request_id": "entries-outside-normal-sept-2026",
+      "request": "On how many days in September 2026 was the total number of vehicles entering the zone outside its normal range for that day?",
+      "expected_tables": [
+        "gold.daily_entries",
+        "gold.baselines"
+      ],
+      "reference_tables": [
+        "gold.baselines",
+        "gold.daily_entries"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT COUNT(DISTINCT de.entry_date) AS days_outside_normal_range\nFROM gold.daily_entries de\nJOIN gold.baselines bl ON de.entry_date = bl.baseline_date AND de.vehicle_class != 'tlc_taxi_fhv' AND bl.metric = 'crz_entries'\nWHERE de.entry_date >= DATE '2026-09-01' AND de.entry_date <= DATE '2026-09-30'\n  AND (de.crz_entries < bl.p10 OR de.crz_entries > bl.p90);\n```",
+        "prompt_tokens": 1288,
+        "output_tokens": 123,
+        "seconds": 11.877240167
+      },
+      "sql": "SELECT COUNT(DISTINCT de.entry_date) AS days_outside_normal_range\nFROM gold.daily_entries de\nJOIN gold.baselines bl ON de.entry_date = bl.baseline_date AND de.vehicle_class != 'tlc_taxi_fhv' AND bl.metric = 'crz_entries'\nWHERE de.entry_date >= DATE '2026-09-01' AND de.entry_date <= DATE '2026-09-30'\n  AND (de.crz_entries < bl.p10 OR de.crz_entries > bl.p90)",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.188263,
+      "tables_in_sql": [
+        "gold.baselines",
+        "gold.daily_entries"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "days_outside_normal_range"
+      ],
+      "result_rows": [
+        [
+          30
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": false,
+      "tables_given": [
+        "gold.baselines",
+        "gold.daily_entries"
+      ],
+      "seconds": 12.074,
+      "run_id": "pilot-20261112T211951Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    }
+  ]
+}
