@@ -5,7 +5,7 @@ END ?= 2025-03
 RUN := docker compose run --rm spark
 CLUSTER := docker compose --profile cluster
 
-.PHONY: build test test-integration lint shell checks check-profile ingest-stats-backfill reference entries slices gold-backfill baselines validate score drivers site airflow-build airflow-up airflow-down airflow-check download profile silver gold backfill history cluster-up cluster-down cluster-silver
+.PHONY: catalog-check catalog-comments catalog-export selection-reference selection-run build test test-integration lint shell checks check-profile ingest-stats-backfill reference entries slices gold-backfill baselines validate score drivers site airflow-build airflow-up airflow-down airflow-check download profile silver gold backfill history cluster-up cluster-down cluster-silver
 
 build: ; docker compose build
 
@@ -57,6 +57,22 @@ drivers: ; $(RUN) python -m pipeline.jobs.drivers
 
 # Export the status page's data and render site/index.html. Run score and drivers first.
 site: ; $(RUN) python -m pipeline.jobs.site
+
+# Compare catalog/tables.yaml with the real tables. Writes nothing.
+catalog-check: ; $(RUN) python -m pipeline.jobs.catalog_comments --check
+
+# Write the descriptions into Iceberg as table and column comments. Metadata only.
+catalog-comments: ; $(RUN) python -m pipeline.jobs.catalog_comments
+
+# Read the comments back and write catalog/schema.md and catalog/index.md.
+catalog-export: ; $(RUN) python -m pipeline.jobs.catalog_export
+
+# Run each request's reference query. No model is called.
+selection-reference: ; $(RUN) python -m pipeline.jobs.selection_reference
+
+# Run the three arms with the local models. Needs Ollama on the host, and the owner's
+# expected_tables committed first. `make selection-run MODELS=llama3.2:3b` runs one model.
+selection-run: ; docker compose run --rm -e REQUESTS_COMMIT=$$(git rev-parse --short HEAD)$$(test -z "$$(git status --porcelain -- . ':!selection/results' ':!selection/precedents.jsonl')" || echo -dirty) spark python -m pipeline.jobs.selection_run $(if $(MODELS),--models $(MODELS))
 
 AIRFLOW := docker compose --profile airflow
 

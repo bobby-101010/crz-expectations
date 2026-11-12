@@ -1,0 +1,167 @@
+# Requests the selection harness is run on. DRAFT: waiting for the owner.
+#
+# `request` is what an analyst would ask, with no table names in it.
+# `reference_sql` gives the expected answer. `make selection-reference` runs them all
+# and writes selection/reference_answers.json.
+# `expected_tables` is the owner's: the tables the owner would hand an agent for this
+# request. It is the hand-picked arm and the answer key for the selector, so it is
+# filled in and committed before any model run. The harness refuses to run while any
+# of them is empty. Claude Code drafted the requests and the reference queries and
+# left every `expected_tables` empty.
+#
+# A model's answer matches when it has the same rows as the reference answer. Row
+# order, column order and column names are ignored, and extra columns are allowed.
+# Whole numbers must be equal; other numbers may differ by 0.1% (`tolerance` changes that).
+#
+# Windows are fixed dates, so answers do not move when new months are loaded. The
+# requests about "the latest" run or load are the exception.
+
+requests:
+  - id: yellow-trips-one-day
+    request: How many yellow taxi trips were picked up on January 5, 2025?
+    reference_sql: |
+      SELECT trips
+      FROM gold.daily_trips
+      WHERE service = 'yellow' AND trip_date = DATE '2025-01-05'
+    expected_tables: []
+
+  - id: uber-lyft-trips-2025
+    request: How many trips did Uber make in 2025, and how many did Lyft make?
+    reference_sql: |
+      SELECT operator_code, sum(trips) AS trips
+      FROM gold.daily_trip_slices
+      WHERE service = 'fhvhv'
+        AND trip_date >= DATE '2025-01-01' AND trip_date < DATE '2026-01-01'
+      GROUP BY operator_code
+    expected_tables: []
+
+  - id: busiest-hour-yellow-from-zone
+    request: >-
+      In March 2025, which hour of the day had the most yellow taxi pickups inside the
+      congestion zone, and how many trips was that?
+    reference_sql: |
+      SELECT pickup_hour, sum(trips) AS trips
+      FROM gold.daily_trip_slices
+      WHERE service = 'yellow'
+        AND zone_relation IN ('both_in', 'pickup_in')
+        AND trip_date >= DATE '2025-03-01' AND trip_date < DATE '2025-04-01'
+      GROUP BY pickup_hour
+      ORDER BY trips DESC
+      LIMIT 1
+    expected_tables: []
+
+  - id: fee-trips-across-midnight
+    request: >-
+      How many yellow taxi trips that were picked up on January 4, 2025, the day before
+      tolling began, carried a congestion fee and were dropped off on January 5 or later?
+    reference_sql: |
+      SELECT count(*) AS trips
+      FROM silver.trips
+      WHERE service = 'yellow'
+        AND pickup_at >= TIMESTAMP_NTZ '2025-01-04 00:00:00'
+        AND pickup_at < TIMESTAMP_NTZ '2025-01-05 00:00:00'
+        AND dropoff_at >= TIMESTAMP_NTZ '2025-01-05 00:00:00'
+        AND cbd_congestion_fee > 0
+    expected_tables: []
+
+  - id: entries-by-vehicle-class-june-2025
+    request: How many vehicles entered the congestion relief zone in June 2025, for each vehicle class?
+    reference_sql: |
+      SELECT vehicle_class, sum(crz_entries) AS entries
+      FROM gold.daily_entries
+      WHERE entry_date >= DATE '2025-06-01' AND entry_date < DATE '2025-07-01'
+      GROUP BY vehicle_class
+    expected_tables: []
+
+  - id: busiest-ten-minutes-lincoln-tunnel
+    request: >-
+      On June 10, 2025, which 10-minute interval had the most vehicles entering the
+      zone through the Lincoln Tunnel, and how many entered in it?
+    reference_sql: |
+      SELECT interval_start, sum(crz_entries) AS entries
+      FROM silver.crz_entries
+      WHERE interval_start >= TIMESTAMP_NTZ '2025-06-10 00:00:00'
+        AND interval_start < TIMESTAMP_NTZ '2025-06-11 00:00:00'
+        AND detection_group = 'Lincoln Tunnel'
+      GROUP BY interval_start
+      ORDER BY entries DESC
+      LIMIT 1
+    expected_tables: []
+
+  - id: entries-outside-normal-sept-2026
+    request: >-
+      On how many days in September 2026 was the total number of vehicles entering the
+      zone outside its normal range for that day?
+    reference_sql: |
+      SELECT count(*) AS days
+      FROM (
+        SELECT entry_date, sum(crz_entries) AS entries
+        FROM gold.daily_entries
+        WHERE entry_date >= DATE '2026-09-01' AND entry_date < DATE '2026-10-01'
+        GROUP BY entry_date
+      ) d
+      JOIN gold.baselines b
+        ON b.baseline_date = d.entry_date
+       AND b.metric = 'crz_entries' AND b.slice_key = 'all'
+      WHERE d.entries < b.p10 OR d.entries > b.p90
+    expected_tables: []
+
+  - id: zones-in-toll-zone-by-borough
+    request: How many taxi zones does each borough have, and how many of them are inside the congestion toll zone?
+    reference_sql: |
+      SELECT borough, count(*) AS zones, count_if(in_cbd) AS zones_in_toll_zone
+      FROM reference.cbd_zones
+      GROUP BY borough
+    expected_tables: []
+
+  - id: ride-hail-trips-on-holidays-2025
+    request: For each public holiday in 2025, how many ride-hail trips were picked up that day?
+    reference_sql: |
+      SELECT h.holiday_date, d.trips
+      FROM reference.holidays h
+      JOIN gold.daily_trips d
+        ON d.trip_date = h.holiday_date AND d.service = 'fhvhv'
+      WHERE h.holiday_date >= DATE '2025-01-01' AND h.holiday_date < DATE '2026-01-01'
+    expected_tables: []
+
+  - id: largest-driver-latest-run
+    request: >-
+      In the most recent scoring run, which service accounts for the largest gap for the
+      expectation derived-cbd-touch-trips-first-year, and how big is that gap?
+    reference_sql: |
+      SELECT d.slice_value, d.gap
+      FROM expectations.drivers d
+      WHERE d.expectation_id = 'derived-cbd-touch-trips-first-year'
+        AND d.dimension = 'service'
+        AND d.gap_rank = 1
+        AND d.run_id = (
+          SELECT run_id FROM expectations.verdicts ORDER BY scored_at DESC LIMIT 1
+        )
+    expected_tables: []
+
+  - id: checks-not-passing-now
+    request: Which data checks are not passing right now, going by the latest result of each check?
+    reference_sql: |
+      SELECT check_id, target_table, partition_value, status
+      FROM (
+        SELECT *,
+               row_number() OVER (
+                 PARTITION BY check_id, target_table, partition_value
+                 ORDER BY checked_at DESC
+               ) AS position
+        FROM checks.results
+      )
+      WHERE position = 1 AND status <> 'pass'
+    expected_tables: []
+
+  - id: rows-dropped-yellow-2025-01
+    request: >-
+      When the January 2025 yellow taxi file was last loaded, how many of its rows were
+      dropped for falling outside the month?
+    reference_sql: |
+      SELECT rows_read - rows_kept AS rows_dropped
+      FROM checks.ingest_stats
+      WHERE service = 'yellow' AND source_month = '2025-01'
+      ORDER BY loaded_at DESC
+      LIMIT 1
+    expected_tables: []
