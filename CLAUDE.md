@@ -20,4 +20,4 @@ Expectation-driven data pipeline on NYC congestion pricing data: Spark 4.1 + Ice
 - Never commit `~/Documents/Anki/` content to this repo.
 - One branch and PR per phase (`phase-N-name`). Plan first, in plan mode, and wait for approval.
 - Report test and run results exactly, including failures. Do not say something works unless you ran it.
-- At the end of each phase, draft the entry in `docs/ai-log.md` (template in the spec, Appendix B) and leave the owner's sections for the owner.
+- At the end of each phase, draft the entry in `docs/ai-log.md` (template in the spec, Appendix B) and leave the owner's sections for the owner. The log is private: it is untracked, so never `git add` it, link it, or quote it in commits or pull requests.
