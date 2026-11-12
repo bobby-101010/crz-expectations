@@ -12,14 +12,18 @@ def bronze_path(service: str, month: str) -> Path:
     return root / service / f"{FILE_PREFIX[service]}_{month}.parquet"
 
 
+def tlc_url(service: str, month: str) -> str:
+    base = os.environ.get("TLC_BASE_URL", "https://d37ci6vzurychx.cloudfront.net/trip-data")
+    return f"{base}/{FILE_PREFIX[service]}_{month}.parquet"
+
+
 def download(service: str, month: str) -> Path:
     """Fetch one monthly file into bronze. A file that is already there is kept."""
     target = bronze_path(service, month)
     if target.exists():
         return target
 
-    base = os.environ.get("TLC_BASE_URL", "https://d37ci6vzurychx.cloudfront.net/trip-data")
-    url = f"{base}/{target.name}"
+    url = tlc_url(service, month)
     target.parent.mkdir(parents=True, exist_ok=True)
     partial = target.with_name(target.name + ".part")
     request = urllib.request.Request(url, headers={"User-Agent": "crz-expectations"})

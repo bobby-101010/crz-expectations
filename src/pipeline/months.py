@@ -9,6 +9,13 @@ def month_bounds(month: str) -> tuple[date, date]:
     return start, end
 
 
+def shift_month(month: str, by: int) -> str:
+    """'2025-01', -2 -> '2024-11'."""
+    start, _ = month_bounds(month)
+    year, month_index = divmod(start.year * 12 + start.month - 1 + by, 12)
+    return f"{year}-{month_index + 1:02d}"
+
+
 def month_range(start: str, end: str) -> list[str]:
     """'2024-11', '2025-02' -> ['2024-11', '2024-12', '2025-01', '2025-02']."""
     current, _ = month_bounds(start)
