@@ -1,0 +1,5315 @@
+{
+  "run_id": "20261112T212530Z",
+  "started_at": "2026-11-12T21:25:30.558182+00:00",
+  "finished_at": "2026-11-12T22:04:52.676058+00:00",
+  "requests_commit": "5d53f34",
+  "models": {
+    "llama3.2:3b": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+    "qwen2.5:14b": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+  },
+  "ollama_options": {
+    "temperature": 0,
+    "seed": 0,
+    "num_ctx": 16384
+  },
+  "sql_time_limit_seconds": 120,
+  "sql_max_rows": 1000,
+  "arms": [
+    "full",
+    "selector",
+    "hand"
+  ],
+  "references": [
+    {
+      "id": "yellow-trips-one-day",
+      "request": "How many yellow taxi trips were picked up on January 5, 2025?",
+      "status": "ok",
+      "error": null,
+      "columns": [
+        "trips"
+      ],
+      "rows": [
+        [
+          79624
+        ]
+      ]
+    },
+    {
+      "id": "uber-lyft-trips-2025",
+      "request": "How many trips did Uber make in 2025, and how many did Lyft make?",
+      "status": "ok",
+      "error": null,
+      "columns": [
+        "operator_code",
+        "trips"
+      ],
+      "rows": [
+        [
+          "HV0005",
+          67600138
+        ],
+        [
+          "HV0003",
+          175989546
+        ]
+      ]
+    },
+    {
+      "id": "busiest-hour-yellow-from-zone",
+      "request": "In March 2025, which hour of the day had the most yellow taxi pickups inside the congestion zone, and how many trips was that?",
+      "status": "ok",
+      "error": null,
+      "columns": [
+        "pickup_hour",
+        "trips"
+      ],
+      "rows": [
+        [
+          18,
+          180134
+        ]
+      ]
+    },
+    {
+      "id": "fee-trips-across-midnight",
+      "request": "How many yellow taxi trips that were picked up on January 4, 2025, the day before tolling began, carried a congestion fee and were dropped off on January 5 or later?",
+      "status": "ok",
+      "error": null,
+      "columns": [
+        "trips"
+      ],
+      "rows": [
+        [
+          397
+        ]
+      ]
+    },
+    {
+      "id": "entries-by-vehicle-class-june-2025",
+      "request": "How many vehicles entered the congestion relief zone in June 2025, for each vehicle class?",
+      "status": "ok",
+      "error": null,
+      "columns": [
+        "vehicle_class",
+        "entries"
+      ],
+      "rows": [
+        [
+          "cars_pickups_vans",
+          8760324
+        ],
+        [
+          "buses",
+          237860
+        ],
+        [
+          "motorcycles",
+          60556
+        ],
+        [
+          "multi_unit_trucks",
+          34982
+        ],
+        [
+          "tlc_taxi_fhv",
+          5442654
+        ],
+        [
+          "single_unit_trucks",
+          536603
+        ]
+      ]
+    },
+    {
+      "id": "busiest-ten-minutes-lincoln-tunnel",
+      "request": "On June 10, 2025, which 10-minute interval had the most vehicles entering the zone through the Lincoln Tunnel, and how many entered in it?",
+      "status": "ok",
+      "error": null,
+      "columns": [
+        "interval_start",
+        "entries"
+      ],
+      "rows": [
+        [
+          "2025-06-10T07:00:00",
+          680
+        ]
+      ]
+    },
+    {
+      "id": "entries-outside-normal-sept-2026",
+      "request": "On how many days in September 2026 was the total number of vehicles entering the zone outside its normal range for that day?",
+      "status": "ok",
+      "error": null,
+      "columns": [
+        "days"
+      ],
+      "rows": [
+        [
+          17
+        ]
+      ]
+    },
+    {
+      "id": "zones-in-toll-zone-by-borough",
+      "request": "How many taxi zones does each borough have, and how many of them are inside the congestion toll zone?",
+      "status": "ok",
+      "error": null,
+      "columns": [
+        "borough",
+        "zones",
+        "zones_in_toll_zone"
+      ],
+      "rows": [
+        [
+          "Brooklyn",
+          61,
+          0
+        ],
+        [
+          "EWR",
+          1,
+          0
+        ],
+        [
+          "N/A",
+          1,
+          0
+        ],
+        [
+          "Staten Island",
+          20,
+          0
+        ],
+        [
+          "Manhattan",
+          69,
+          38
+        ],
+        [
+          "Unknown",
+          1,
+          0
+        ],
+        [
+          "Queens",
+          69,
+          0
+        ],
+        [
+          "Bronx",
+          43,
+          0
+        ]
+      ]
+    },
+    {
+      "id": "ride-hail-trips-on-holidays-2025",
+      "request": "For each public holiday in 2025, how many ride-hail trips were picked up that day?",
+      "status": "ok",
+      "error": null,
+      "columns": [
+        "holiday_date",
+        "trips"
+      ],
+      "rows": [
+        [
+          "2025-11-11",
+          620742
+        ],
+        [
+          "2025-11-04",
+          595305
+        ],
+        [
+          "2025-11-27",
+          661557
+        ],
+        [
+          "2025-05-26",
+          521575
+        ],
+        [
+          "2025-02-12",
+          672972
+        ],
+        [
+          "2025-02-15",
+          817074
+        ],
+        [
+          "2025-02-17",
+          591229
+        ],
+        [
+          "2025-10-13",
+          591112
+        ],
+        [
+          "2025-01-20",
+          571259
+        ],
+        [
+          "2025-01-01",
+          663563
+        ],
+        [
+          "2025-07-04",
+          573009
+        ],
+        [
+          "2025-06-19",
+          666986
+        ],
+        [
+          "2025-09-01",
+          528509
+        ],
+        [
+          "2025-12-25",
+          525428
+        ]
+      ]
+    },
+    {
+      "id": "largest-driver-latest-run",
+      "request": "In the most recent scoring run, which service accounts for the largest gap for the expectation derived-cbd-touch-trips-first-year, and how big is that gap?",
+      "status": "ok",
+      "error": null,
+      "columns": [
+        "slice_value",
+        "gap"
+      ],
+      "rows": [
+        [
+          "yellow",
+          4637079.109999999
+        ]
+      ]
+    },
+    {
+      "id": "checks-not-passing-now",
+      "request": "Which data checks are not passing right now, going by the latest result of each check?",
+      "status": "ok",
+      "error": null,
+      "columns": [
+        "check_id",
+        "status"
+      ],
+      "rows": [
+        [
+          "cbd_zone_membership",
+          "warn"
+        ]
+      ]
+    },
+    {
+      "id": "rows-dropped-yellow-2025-01",
+      "request": "When the January 2025 yellow taxi file was last loaded, how many of its rows were dropped for falling outside the month?",
+      "status": "ok",
+      "error": null,
+      "columns": [
+        "rows_dropped"
+      ],
+      "rows": [
+        [
+          22
+        ]
+      ]
+    }
+  ],
+  "summary": [
+    {
+      "model": "llama3.2:3b",
+      "arm": "full",
+      "requests": 12,
+      "selection_all_included": null,
+      "selection_mean_extra": null,
+      "selection_reference_all_included": null,
+      "selector_format_broken": null,
+      "sql_ran": 7,
+      "answer_matched": 1,
+      "used_tables_not_given": 0,
+      "seconds": 259.6
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "hand",
+      "requests": 12,
+      "selection_all_included": null,
+      "selection_mean_extra": null,
+      "selection_reference_all_included": null,
+      "selector_format_broken": null,
+      "sql_ran": 8,
+      "answer_matched": 3,
+      "used_tables_not_given": 1,
+      "seconds": 39.4
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "selector",
+      "requests": 12,
+      "selection_all_included": 10,
+      "selection_mean_extra": 1.3333333333333333,
+      "selection_reference_all_included": 10,
+      "selector_format_broken": 0,
+      "sql_ran": 8,
+      "answer_matched": 4,
+      "used_tables_not_given": 1,
+      "seconds": 137.5
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "full",
+      "requests": 12,
+      "selection_all_included": null,
+      "selection_mean_extra": null,
+      "selection_reference_all_included": null,
+      "selector_format_broken": null,
+      "sql_ran": 9,
+      "answer_matched": 7,
+      "used_tables_not_given": 0,
+      "seconds": 1279.5
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "hand",
+      "requests": 12,
+      "selection_all_included": null,
+      "selection_mean_extra": null,
+      "selection_reference_all_included": null,
+      "selector_format_broken": null,
+      "sql_ran": 12,
+      "answer_matched": 5,
+      "used_tables_not_given": 0,
+      "seconds": 158.5
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "selector",
+      "requests": 12,
+      "selection_all_included": 11,
+      "selection_mean_extra": 0.8333333333333334,
+      "selection_reference_all_included": 11,
+      "selector_format_broken": 0,
+      "sql_ran": 11,
+      "answer_matched": 5,
+      "used_tables_not_given": 0,
+      "seconds": 480.4
+    }
+  ],
+  "records": [
+    {
+      "model": "llama3.2:3b",
+      "arm": "full",
+      "request_id": "yellow-trips-one-day",
+      "request": "How many yellow taxi trips were picked up on January 5, 2025?",
+      "expected_tables": [
+        "gold.daily_trips"
+      ],
+      "reference_tables": [
+        "gold.daily_trips"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT COUNT(DISTINCT T1.service) AS yellow_taxi_trips \nFROM silver.trips AS T1 \nWHERE T1.pickup_at = '2025-01-05' AND T1.service = 'yellow'\n```",
+        "prompt_tokens": 5777,
+        "output_tokens": 52,
+        "seconds": 18.175822959
+      },
+      "sql": "SELECT COUNT(DISTINCT T1.service) AS yellow_taxi_trips \nFROM silver.trips AS T1 \nWHERE T1.pickup_at = '2025-01-05' AND T1.service = 'yellow'",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.376438,
+      "tables_in_sql": [
+        "silver.trips"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "yellow_taxi_trips"
+      ],
+      "result_rows": [
+        [
+          1
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": false,
+      "tables_given": [
+        "checks.ingest_stats",
+        "checks.results",
+        "expectations.drivers",
+        "expectations.verdicts",
+        "gold.baselines",
+        "gold.daily_entries",
+        "gold.daily_trip_slices",
+        "gold.daily_trips",
+        "reference.cbd_zones",
+        "reference.holidays",
+        "silver.crz_entries",
+        "silver.trips"
+      ],
+      "seconds": 18.582,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "selector",
+      "request_id": "yellow-trips-one-day",
+      "request": "How many yellow taxi trips were picked up on January 5, 2025?",
+      "expected_tables": [
+        "gold.daily_trips"
+      ],
+      "reference_tables": [
+        "gold.daily_trips"
+      ],
+      "selector": {
+        "answer": "TABLES: gold.daily_trips, silver.trips",
+        "prompt_tokens": 908,
+        "output_tokens": 12,
+        "seconds": 2.613010958,
+        "tables": [
+          "gold.daily_trips",
+          "silver.trips"
+        ],
+        "unknown": [],
+        "format_ok": true
+      },
+      "selection": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "silver.trips"
+        ]
+      },
+      "selection_reference": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "silver.trips"
+        ]
+      },
+      "builder": {
+        "answer": "```sql\nSELECT trips \nFROM gold.daily_trips \nWHERE trip_date = DATE '2025-01-05' AND service = 'yellow'\n```",
+        "prompt_tokens": 1245,
+        "output_tokens": 33,
+        "seconds": 3.805938042
+      },
+      "sql": "SELECT trips \nFROM gold.daily_trips \nWHERE trip_date = DATE '2025-01-05' AND service = 'yellow'",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.076344,
+      "tables_in_sql": [
+        "gold.daily_trips"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "trips"
+      ],
+      "result_rows": [
+        [
+          79624
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": true,
+      "tables_given": [
+        "gold.daily_trips",
+        "silver.trips"
+      ],
+      "seconds": 6.521,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "hand",
+      "request_id": "yellow-trips-one-day",
+      "request": "How many yellow taxi trips were picked up on January 5, 2025?",
+      "expected_tables": [
+        "gold.daily_trips"
+      ],
+      "reference_tables": [
+        "gold.daily_trips"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT trips \nFROM gold.daily_trips \nWHERE trip_date = DATE '2025-01-05' AND service = 'yellow'\n```",
+        "prompt_tokens": 469,
+        "output_tokens": 33,
+        "seconds": 1.060253125
+      },
+      "sql": "SELECT trips \nFROM gold.daily_trips \nWHERE trip_date = DATE '2025-01-05' AND service = 'yellow'",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.06035,
+      "tables_in_sql": [
+        "gold.daily_trips"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "trips"
+      ],
+      "result_rows": [
+        [
+          79624
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": true,
+      "tables_given": [
+        "gold.daily_trips"
+      ],
+      "seconds": 1.128,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "full",
+      "request_id": "uber-lyft-trips-2025",
+      "request": "How many trips did Uber make in 2025, and how many did Lyft make?",
+      "expected_tables": [
+        "gold.daily_trip_slices"
+      ],
+      "reference_tables": [
+        "gold.daily_trip_slices"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT \n  COUNT(DISTINCT fhvhv.operator_code) AS uber_trips,\n  COUNT(DISTINCT 'HV0003') AS lyft_trips\nFROM \n  silver.trips\nWHERE \n  fhvhv.operator_code IS NOT NULL AND 'HV0003' IS NOT NULL\nAND \n  EXTRACT(YEAR FROM pickup_at) = 2025\n```",
+        "prompt_tokens": 5778,
+        "output_tokens": 83,
+        "seconds": 20.991528208
+      },
+      "sql": "SELECT \n  COUNT(DISTINCT fhvhv.operator_code) AS uber_trips,\n  COUNT(DISTINCT 'HV0003') AS lyft_trips\nFROM \n  silver.trips\nWHERE \n  fhvhv.operator_code IS NOT NULL AND 'HV0003' IS NOT NULL\nAND \n  EXTRACT(YEAR FROM pickup_at) = 2025",
+      "sql_status": "error",
+      "sql_error": "AnalysisException: [UNRESOLVED_COLUMN.WITH_SUGGESTION] A column, variable, or function parameter with name `fhvhv`.`operator_code` cannot be resolved. Did you mean one of the following? [`trips`.`operator_code`, `trips`.`service`, `trips`.`dropoff_at`, `trips`.`pickup_at`, `trips`.`trip_miles`]. SQLSTATE: 42703; line 7 pos 2;",
+      "sql_seconds": 0.230611,
+      "tables_in_sql": [
+        "silver.trips"
+      ],
+      "tables_not_given": [],
+      "result_columns": [],
+      "result_rows": [],
+      "result_row_count": null,
+      "answer_matched": false,
+      "tables_given": [
+        "checks.ingest_stats",
+        "checks.results",
+        "expectations.drivers",
+        "expectations.verdicts",
+        "gold.baselines",
+        "gold.daily_entries",
+        "gold.daily_trip_slices",
+        "gold.daily_trips",
+        "reference.cbd_zones",
+        "reference.holidays",
+        "silver.crz_entries",
+        "silver.trips"
+      ],
+      "seconds": 21.254,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "selector",
+      "request_id": "uber-lyft-trips-2025",
+      "request": "How many trips did Uber make in 2025, and how many did Lyft make?",
+      "expected_tables": [
+        "gold.daily_trip_slices"
+      ],
+      "reference_tables": [
+        "gold.daily_trip_slices"
+      ],
+      "selector": {
+        "answer": "TABLES: gold.daily_trips, silver.trips",
+        "prompt_tokens": 909,
+        "output_tokens": 12,
+        "seconds": 2.903745958,
+        "tables": [
+          "gold.daily_trips",
+          "silver.trips"
+        ],
+        "unknown": [],
+        "format_ok": true
+      },
+      "selection": {
+        "all_included": false,
+        "missing": [
+          "gold.daily_trip_slices"
+        ],
+        "extra": [
+          "gold.daily_trips",
+          "silver.trips"
+        ]
+      },
+      "selection_reference": {
+        "all_included": false,
+        "missing": [
+          "gold.daily_trip_slices"
+        ],
+        "extra": [
+          "gold.daily_trips",
+          "silver.trips"
+        ]
+      },
+      "builder": {
+        "answer": "```sql\nSELECT \n  COUNT(DISTINCT T1.service) AS uber_trips,\n  COUNT(DISTINCT T2.service) AS lyft_trips\nFROM \n  gold.daily_trips T1\nJOIN \n  silver.trips T2 ON T1.trip_date = T2.pickup_at AND T1.service = 'fhvhv'\nWHERE \n  T2.pickup_at >= DATE '2025-01-05' AND T2.pickup_at < DATE '2026-10-01';\n```",
+        "prompt_tokens": 1246,
+        "output_tokens": 109,
+        "seconds": 6.282726291
+      },
+      "sql": "SELECT \n  COUNT(DISTINCT T1.service) AS uber_trips,\n  COUNT(DISTINCT T2.service) AS lyft_trips\nFROM \n  gold.daily_trips T1\nJOIN \n  silver.trips T2 ON T1.trip_date = T2.pickup_at AND T1.service = 'fhvhv'\nWHERE \n  T2.pickup_at >= DATE '2025-01-05' AND T2.pickup_at < DATE '2026-10-01'",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 24.843794,
+      "tables_in_sql": [
+        "gold.daily_trips",
+        "silver.trips"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "uber_trips",
+        "lyft_trips"
+      ],
+      "result_rows": [
+        [
+          1,
+          2
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": false,
+      "tables_given": [
+        "gold.daily_trips",
+        "silver.trips"
+      ],
+      "seconds": 34.084,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "hand",
+      "request_id": "uber-lyft-trips-2025",
+      "request": "How many trips did Uber make in 2025, and how many did Lyft make?",
+      "expected_tables": [
+        "gold.daily_trip_slices"
+      ],
+      "reference_tables": [
+        "gold.daily_trip_slices"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT \n  operator_code,\n  COUNT(*) AS trips\nFROM \n  gold.daily_trip_slices\nWHERE \n  trip_date BETWEEN '2025-01-01' AND '2026-09-30'\nGROUP BY \n  operator_code\n```",
+        "prompt_tokens": 613,
+        "output_tokens": 55,
+        "seconds": 3.135203959
+      },
+      "sql": "SELECT \n  operator_code,\n  COUNT(*) AS trips\nFROM \n  gold.daily_trip_slices\nWHERE \n  trip_date BETWEEN '2025-01-01' AND '2026-09-30'\nGROUP BY \n  operator_code",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.384984,
+      "tables_in_sql": [
+        "gold.daily_trip_slices"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "operator_code",
+        "trips"
+      ],
+      "result_rows": [
+        [
+          "HV0005",
+          61240
+        ],
+        [
+          null,
+          61240
+        ],
+        [
+          "HV0003",
+          61248
+        ]
+      ],
+      "result_row_count": 3,
+      "answer_matched": false,
+      "tables_given": [
+        "gold.daily_trip_slices"
+      ],
+      "seconds": 3.634,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "full",
+      "request_id": "busiest-hour-yellow-from-zone",
+      "request": "In March 2025, which hour of the day had the most yellow taxi pickups inside the congestion zone, and how many trips was that?",
+      "expected_tables": [
+        "gold.daily_trip_slices"
+      ],
+      "reference_tables": [
+        "gold.daily_trip_slices"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT \n  t.pickup_at,\n  COUNT(*) AS trips\nFROM \n  silver.trips t\nWHERE \n  t.service = 'yellow'\n  AND t.dropoff_zone_id IS NULL\nGROUP BY \n  t.pickup_at\nORDER BY \n  SUM(t.trips) DESC\nLIMIT 1;\n```",
+        "prompt_tokens": 5789,
+        "output_tokens": 70,
+        "seconds": 19.418573292
+      },
+      "sql": "SELECT \n  t.pickup_at,\n  COUNT(*) AS trips\nFROM \n  silver.trips t\nWHERE \n  t.service = 'yellow'\n  AND t.dropoff_zone_id IS NULL\nGROUP BY \n  t.pickup_at\nORDER BY \n  SUM(t.trips) DESC\nLIMIT 1",
+      "sql_status": "error",
+      "sql_error": "AnalysisException: [UNRESOLVED_COLUMN.WITH_SUGGESTION] A column, variable, or function parameter with name `t`.`trips` cannot be resolved. Did you mean one of the following? [`trips`, `t`.`pickup_at`]. SQLSTATE: 42703; line 12 pos 6;",
+      "sql_seconds": 0.165527,
+      "tables_in_sql": [
+        "silver.trips"
+      ],
+      "tables_not_given": [],
+      "result_columns": [],
+      "result_rows": [],
+      "result_row_count": null,
+      "answer_matched": false,
+      "tables_given": [
+        "checks.ingest_stats",
+        "checks.results",
+        "expectations.drivers",
+        "expectations.verdicts",
+        "gold.baselines",
+        "gold.daily_entries",
+        "gold.daily_trip_slices",
+        "gold.daily_trips",
+        "reference.cbd_zones",
+        "reference.holidays",
+        "silver.crz_entries",
+        "silver.trips"
+      ],
+      "seconds": 19.625,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "selector",
+      "request_id": "busiest-hour-yellow-from-zone",
+      "request": "In March 2025, which hour of the day had the most yellow taxi pickups inside the congestion zone, and how many trips was that?",
+      "expected_tables": [
+        "gold.daily_trip_slices"
+      ],
+      "reference_tables": [
+        "gold.daily_trip_slices"
+      ],
+      "selector": {
+        "answer": "TABLES: gold.daily_trip_slices, silver.trips",
+        "prompt_tokens": 920,
+        "output_tokens": 12,
+        "seconds": 3.004726833,
+        "tables": [
+          "gold.daily_trip_slices",
+          "silver.trips"
+        ],
+        "unknown": [],
+        "format_ok": true
+      },
+      "selection": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "silver.trips"
+        ]
+      },
+      "selection_reference": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "silver.trips"
+        ]
+      },
+      "builder": {
+        "answer": "```sql\nSELECT \n  pickup_hour,\n  trips\nFROM \n  gold.daily_trip_slices\nWHERE \n  trip_date >= '2025-03-01' AND trip_date < '2025-04-01'\nGROUP BY \n  pickup_hour\nORDER BY \n  trips DESC\nLIMIT 1;\n```",
+        "prompt_tokens": 1400,
+        "output_tokens": 66,
+        "seconds": 5.232507917
+      },
+      "sql": "SELECT \n  pickup_hour,\n  trips\nFROM \n  gold.daily_trip_slices\nWHERE \n  trip_date >= '2025-03-01' AND trip_date < '2025-04-01'\nGROUP BY \n  pickup_hour\nORDER BY \n  trips DESC\nLIMIT 1",
+      "sql_status": "error",
+      "sql_error": "AnalysisException: [MISSING_AGGREGATION] The non-aggregating expression \"trips\" is based on columns which are not participating in the GROUP BY clause.",
+      "sql_seconds": 0.079672,
+      "tables_in_sql": [
+        "gold.daily_trip_slices"
+      ],
+      "tables_not_given": [],
+      "result_columns": [],
+      "result_rows": [],
+      "result_row_count": null,
+      "answer_matched": false,
+      "tables_given": [
+        "gold.daily_trip_slices",
+        "silver.trips"
+      ],
+      "seconds": 8.368,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "hand",
+      "request_id": "busiest-hour-yellow-from-zone",
+      "request": "In March 2025, which hour of the day had the most yellow taxi pickups inside the congestion zone, and how many trips was that?",
+      "expected_tables": [
+        "gold.daily_trip_slices"
+      ],
+      "reference_tables": [
+        "gold.daily_trip_slices"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT \n  pickup_hour,\n  trips\nFROM \n  gold.daily_trip_slices\nWHERE \n  trip_date BETWEEN DATE '2025-03-01' AND DATE '2025-03-31'\n  AND service = 'yellow'\n  AND zone_relation = 'pickup_in'\nGROUP BY \n  pickup_hour\nORDER BY \n  trips DESC\nLIMIT 1;\n```",
+        "prompt_tokens": 624,
+        "output_tokens": 81,
+        "seconds": 2.349656
+      },
+      "sql": "SELECT \n  pickup_hour,\n  trips\nFROM \n  gold.daily_trip_slices\nWHERE \n  trip_date BETWEEN DATE '2025-03-01' AND DATE '2025-03-31'\n  AND service = 'yellow'\n  AND zone_relation = 'pickup_in'\nGROUP BY \n  pickup_hour\nORDER BY \n  trips DESC\nLIMIT 1",
+      "sql_status": "error",
+      "sql_error": "AnalysisException: [MISSING_AGGREGATION] The non-aggregating expression \"trips\" is based on columns which are not participating in the GROUP BY clause.",
+      "sql_seconds": 0.080314,
+      "tables_in_sql": [
+        "gold.daily_trip_slices"
+      ],
+      "tables_not_given": [],
+      "result_columns": [],
+      "result_rows": [],
+      "result_row_count": null,
+      "answer_matched": false,
+      "tables_given": [
+        "gold.daily_trip_slices"
+      ],
+      "seconds": 2.446,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "full",
+      "request_id": "fee-trips-across-midnight",
+      "request": "How many yellow taxi trips that were picked up on January 4, 2025, the day before tolling began, carried a congestion fee and were dropped off on January 5 or later?",
+      "expected_tables": [
+        "silver.trips"
+      ],
+      "reference_tables": [
+        "silver.trips"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT \n  COUNT(DISTINCT T1.service) AS yellow_taxi_trips,\n  SUM(T2.cbd_fee_trips) AS total_fees\nFROM \n  silver.trips T1\nJOIN \n  gold.daily_trip_slices T2 ON T1.service = T2.service AND T1.pickup_at BETWEEN T2.window_start AND T2.window_end\nWHERE \n  T1.service = 'yellow' AND T1.pickup_at >= DATE '2025-01-04' AND T1.dropoff_at >= DATE '2025-01-05'\n```",
+        "prompt_tokens": 5800,
+        "output_tokens": 123,
+        "seconds": 22.1456065
+      },
+      "sql": "SELECT \n  COUNT(DISTINCT T1.service) AS yellow_taxi_trips,\n  SUM(T2.cbd_fee_trips) AS total_fees\nFROM \n  silver.trips T1\nJOIN \n  gold.daily_trip_slices T2 ON T1.service = T2.service AND T1.pickup_at BETWEEN T2.window_start AND T2.window_end\nWHERE \n  T1.service = 'yellow' AND T1.pickup_at >= DATE '2025-01-04' AND T1.dropoff_at >= DATE '2025-01-05'",
+      "sql_status": "error",
+      "sql_error": "AnalysisException: [UNRESOLVED_COLUMN.WITH_SUGGESTION] A column, variable, or function parameter with name `T2`.`window_start` cannot be resolved. Did you mean one of the following? [`T2`.`pickup_hour`, `T1`.`pickup_at`, `T2`.`trip_date`, `T2`.`trips`, `T1`.`dropoff_at`]. SQLSTATE: 42703; line 7 pos 80;",
+      "sql_seconds": 0.179788,
+      "tables_in_sql": [
+        "gold.daily_trip_slices",
+        "silver.trips"
+      ],
+      "tables_not_given": [],
+      "result_columns": [],
+      "result_rows": [],
+      "result_row_count": null,
+      "answer_matched": false,
+      "tables_given": [
+        "checks.ingest_stats",
+        "checks.results",
+        "expectations.drivers",
+        "expectations.verdicts",
+        "gold.baselines",
+        "gold.daily_entries",
+        "gold.daily_trip_slices",
+        "gold.daily_trips",
+        "reference.cbd_zones",
+        "reference.holidays",
+        "silver.crz_entries",
+        "silver.trips"
+      ],
+      "seconds": 22.36,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "selector",
+      "request_id": "fee-trips-across-midnight",
+      "request": "How many yellow taxi trips that were picked up on January 4, 2025, the day before tolling began, carried a congestion fee and were dropped off on January 5 or later?",
+      "expected_tables": [
+        "silver.trips"
+      ],
+      "reference_tables": [
+        "silver.trips"
+      ],
+      "selector": {
+        "answer": "TABLES: gold.daily_trips, silver.trips, reference.cbd_zones",
+        "prompt_tokens": 931,
+        "output_tokens": 17,
+        "seconds": 3.15709825,
+        "tables": [
+          "gold.daily_trips",
+          "silver.trips",
+          "reference.cbd_zones"
+        ],
+        "unknown": [],
+        "format_ok": true
+      },
+      "selection": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "gold.daily_trips",
+          "reference.cbd_zones"
+        ]
+      },
+      "selection_reference": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "gold.daily_trips",
+          "reference.cbd_zones"
+        ]
+      },
+      "builder": {
+        "answer": "```sql\nSELECT \n  COUNT(DISTINCT t1.pickup_at) AS trips_with_fee,\n  COUNT(DISTINCT t2.dropoff_at) AS trips_dropped_off_later\nFROM \n  gold.daily_trips t1\nJOIN \n  silver.trips t2 ON t1.service = 'yellow' AND t1.trip_date = DATE '2025-01-04'\nWHERE \n  t2.pickup_at >= DATE '2025-01-05'\nAND \n  t2.cbd_congestion_fee > 0;\n```",
+        "prompt_tokens": 1620,
+        "output_tokens": 116,
+        "seconds": 7.4059765
+      },
+      "sql": "SELECT \n  COUNT(DISTINCT t1.pickup_at) AS trips_with_fee,\n  COUNT(DISTINCT t2.dropoff_at) AS trips_dropped_off_later\nFROM \n  gold.daily_trips t1\nJOIN \n  silver.trips t2 ON t1.service = 'yellow' AND t1.trip_date = DATE '2025-01-04'\nWHERE \n  t2.pickup_at >= DATE '2025-01-05'\nAND \n  t2.cbd_congestion_fee > 0",
+      "sql_status": "error",
+      "sql_error": "AnalysisException: [UNRESOLVED_COLUMN.WITH_SUGGESTION] A column, variable, or function parameter with name `t1`.`pickup_at` cannot be resolved. Did you mean one of the following? [`t2`.`pickup_at`, `t1`.`trip_date`, `t1`.`trips`, `t1`.`service`, `t2`.`dropoff_at`]. SQLSTATE: 42703; line 2 pos 17;",
+      "sql_seconds": 0.14939,
+      "tables_in_sql": [
+        "gold.daily_trips",
+        "silver.trips"
+      ],
+      "tables_not_given": [],
+      "result_columns": [],
+      "result_rows": [],
+      "result_row_count": null,
+      "answer_matched": false,
+      "tables_given": [
+        "gold.daily_trips",
+        "reference.cbd_zones",
+        "silver.trips"
+      ],
+      "seconds": 10.745,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "hand",
+      "request_id": "fee-trips-across-midnight",
+      "request": "How many yellow taxi trips that were picked up on January 4, 2025, the day before tolling began, carried a congestion fee and were dropped off on January 5 or later?",
+      "expected_tables": [
+        "silver.trips"
+      ],
+      "reference_tables": [
+        "silver.trips"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT \n  trip_miles,\n  dropoff_at,\n  cbd_congestion_fee\nFROM \n  silver.trips\nWHERE \n  service = 'yellow' AND pickup_at BETWEEN DATE '2024-12-31' AND DATE '2025-01-04'\nAND dropoff_at >= DATE '2025-01-05'\n```",
+        "prompt_tokens": 945,
+        "output_tokens": 76,
+        "seconds": 4.505338667
+      },
+      "sql": "SELECT \n  trip_miles,\n  dropoff_at,\n  cbd_congestion_fee\nFROM \n  silver.trips\nWHERE \n  service = 'yellow' AND pickup_at BETWEEN DATE '2024-12-31' AND DATE '2025-01-04'\nAND dropoff_at >= DATE '2025-01-05'",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.557684,
+      "tables_in_sql": [
+        "silver.trips"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "trip_miles",
+        "dropoff_at",
+        "cbd_congestion_fee"
+      ],
+      "result_rows": [],
+      "result_row_count": 0,
+      "answer_matched": false,
+      "tables_given": [
+        "silver.trips"
+      ],
+      "seconds": 5.071,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "full",
+      "request_id": "entries-by-vehicle-class-june-2025",
+      "request": "How many vehicles entered the congestion relief zone in June 2025, for each vehicle class?",
+      "expected_tables": [
+        "gold.daily_entries"
+      ],
+      "reference_tables": [
+        "gold.daily_entries"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT \n  vehicle_class,\n  SUM(crz_entries) AS vehicles_entered\nFROM \n  silver.crz_entries\nWHERE \n  toll_date >= '2025-06-01' AND toll_date < '2026-06-30'\nGROUP BY \n  vehicle_class;\n```",
+        "prompt_tokens": 5779,
+        "output_tokens": 63,
+        "seconds": 20.390973375
+      },
+      "sql": "SELECT \n  vehicle_class,\n  SUM(crz_entries) AS vehicles_entered\nFROM \n  silver.crz_entries\nWHERE \n  toll_date >= '2025-06-01' AND toll_date < '2026-06-30'\nGROUP BY \n  vehicle_class",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.417351,
+      "tables_in_sql": [
+        "silver.crz_entries"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "vehicle_class",
+        "vehicles_entered"
+      ],
+      "result_rows": [
+        [
+          "cars_pickups_vans",
+          107075590
+        ],
+        [
+          "buses",
+          3000438
+        ],
+        [
+          "motorcycles",
+          567970
+        ],
+        [
+          "multi_unit_trucks",
+          382708
+        ],
+        [
+          "tlc_taxi_fhv",
+          72555327
+        ],
+        [
+          "single_unit_trucks",
+          6793955
+        ]
+      ],
+      "result_row_count": 6,
+      "answer_matched": false,
+      "tables_given": [
+        "checks.ingest_stats",
+        "checks.results",
+        "expectations.drivers",
+        "expectations.verdicts",
+        "gold.baselines",
+        "gold.daily_entries",
+        "gold.daily_trip_slices",
+        "gold.daily_trips",
+        "reference.cbd_zones",
+        "reference.holidays",
+        "silver.crz_entries",
+        "silver.trips"
+      ],
+      "seconds": 20.827,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "selector",
+      "request_id": "entries-by-vehicle-class-june-2025",
+      "request": "How many vehicles entered the congestion relief zone in June 2025, for each vehicle class?",
+      "expected_tables": [
+        "gold.daily_entries"
+      ],
+      "reference_tables": [
+        "gold.daily_entries"
+      ],
+      "selector": {
+        "answer": "TABLES: gold.daily_entries, silver.crz_entries",
+        "prompt_tokens": 910,
+        "output_tokens": 12,
+        "seconds": 3.196245458,
+        "tables": [
+          "gold.daily_entries",
+          "silver.crz_entries"
+        ],
+        "unknown": [],
+        "format_ok": true
+      },
+      "selection": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "silver.crz_entries"
+        ]
+      },
+      "selection_reference": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "silver.crz_entries"
+        ]
+      },
+      "builder": {
+        "answer": "```sql\nSELECT \n    vehicle_class,\n    SUM(crz_entries) AS total_crz_entries\nFROM \n    gold.daily_entries\nWHERE \n    entry_date BETWEEN '2025-06-01' AND '2025-06-30'\nGROUP BY \n    vehicle_class;\n```",
+        "prompt_tokens": 1425,
+        "output_tokens": 60,
+        "seconds": 5.399374042
+      },
+      "sql": "SELECT \n    vehicle_class,\n    SUM(crz_entries) AS total_crz_entries\nFROM \n    gold.daily_entries\nWHERE \n    entry_date BETWEEN '2025-06-01' AND '2025-06-30'\nGROUP BY \n    vehicle_class",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.107556,
+      "tables_in_sql": [
+        "gold.daily_entries"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "vehicle_class",
+        "total_crz_entries"
+      ],
+      "result_rows": [
+        [
+          "cars_pickups_vans",
+          8760324
+        ],
+        [
+          "buses",
+          237860
+        ],
+        [
+          "motorcycles",
+          60556
+        ],
+        [
+          "multi_unit_trucks",
+          34982
+        ],
+        [
+          "tlc_taxi_fhv",
+          5442654
+        ],
+        [
+          "single_unit_trucks",
+          536603
+        ]
+      ],
+      "result_row_count": 6,
+      "answer_matched": true,
+      "tables_given": [
+        "gold.daily_entries",
+        "silver.crz_entries"
+      ],
+      "seconds": 8.727,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "hand",
+      "request_id": "entries-by-vehicle-class-june-2025",
+      "request": "How many vehicles entered the congestion relief zone in June 2025, for each vehicle class?",
+      "expected_tables": [
+        "gold.daily_entries"
+      ],
+      "reference_tables": [
+        "gold.daily_entries"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT \n    vehicle_class,\n    SUM(crz_entries) AS total_crz_entries\nFROM \n    gold.daily_entries\nWHERE \n    entry_date BETWEEN '2025-06-01' AND '2025-06-30'\nGROUP BY \n    vehicle_class;\n```",
+        "prompt_tokens": 699,
+        "output_tokens": 60,
+        "seconds": 1.875622208
+      },
+      "sql": "SELECT \n    vehicle_class,\n    SUM(crz_entries) AS total_crz_entries\nFROM \n    gold.daily_entries\nWHERE \n    entry_date BETWEEN '2025-06-01' AND '2025-06-30'\nGROUP BY \n    vehicle_class",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.095515,
+      "tables_in_sql": [
+        "gold.daily_entries"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "vehicle_class",
+        "total_crz_entries"
+      ],
+      "result_rows": [
+        [
+          "cars_pickups_vans",
+          8760324
+        ],
+        [
+          "buses",
+          237860
+        ],
+        [
+          "motorcycles",
+          60556
+        ],
+        [
+          "multi_unit_trucks",
+          34982
+        ],
+        [
+          "tlc_taxi_fhv",
+          5442654
+        ],
+        [
+          "single_unit_trucks",
+          536603
+        ]
+      ],
+      "result_row_count": 6,
+      "answer_matched": true,
+      "tables_given": [
+        "gold.daily_entries"
+      ],
+      "seconds": 1.98,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "full",
+      "request_id": "busiest-ten-minutes-lincoln-tunnel",
+      "request": "On June 10, 2025, which 10-minute interval had the most vehicles entering the zone through the Lincoln Tunnel, and how many entered in it?",
+      "expected_tables": [
+        "silver.crz_entries"
+      ],
+      "reference_tables": [
+        "silver.crz_entries"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT \n  interval_start,\n  SUM(crz_entries) AS total_crz_entries\nFROM \n  silver.crz_entries\nWHERE \n  toll_date = DATE '2025-06-10'\n  AND detection_group = 'Lincoln Tunnel'\nGROUP BY \n  interval_start\nORDER BY \n  total_crz_entries DESC\nLIMIT 1;\n```",
+        "prompt_tokens": 5793,
+        "output_tokens": 77,
+        "seconds": 21.014680584
+      },
+      "sql": "SELECT \n  interval_start,\n  SUM(crz_entries) AS total_crz_entries\nFROM \n  silver.crz_entries\nWHERE \n  toll_date = DATE '2025-06-10'\n  AND detection_group = 'Lincoln Tunnel'\nGROUP BY \n  interval_start\nORDER BY \n  total_crz_entries DESC\nLIMIT 1",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.175889,
+      "tables_in_sql": [
+        "silver.crz_entries"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "interval_start",
+        "total_crz_entries"
+      ],
+      "result_rows": [
+        [
+          "2025-06-10T07:00:00",
+          680
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": true,
+      "tables_given": [
+        "checks.ingest_stats",
+        "checks.results",
+        "expectations.drivers",
+        "expectations.verdicts",
+        "gold.baselines",
+        "gold.daily_entries",
+        "gold.daily_trip_slices",
+        "gold.daily_trips",
+        "reference.cbd_zones",
+        "reference.holidays",
+        "silver.crz_entries",
+        "silver.trips"
+      ],
+      "seconds": 21.204,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "selector",
+      "request_id": "busiest-ten-minutes-lincoln-tunnel",
+      "request": "On June 10, 2025, which 10-minute interval had the most vehicles entering the zone through the Lincoln Tunnel, and how many entered in it?",
+      "expected_tables": [
+        "silver.crz_entries"
+      ],
+      "reference_tables": [
+        "silver.crz_entries"
+      ],
+      "selector": {
+        "answer": "TABLES: gold.daily_entries, silver.crz_entries",
+        "prompt_tokens": 924,
+        "output_tokens": 12,
+        "seconds": 3.277307458,
+        "tables": [
+          "gold.daily_entries",
+          "silver.crz_entries"
+        ],
+        "unknown": [],
+        "format_ok": true
+      },
+      "selection": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "gold.daily_entries"
+        ]
+      },
+      "selection_reference": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "gold.daily_entries"
+        ]
+      },
+      "builder": {
+        "answer": "```sql\nSELECT \n  interval_start,\n  SUM(crz_entries) AS total_crz_entries\nFROM \n  silver.crz_entries\nWHERE \n  toll_date = DATE '2025-06-10'\n  AND detection_group = 'Lincoln Tunnel'\nGROUP BY \n  interval_start\nORDER BY \n  total_crz_entries DESC\nLIMIT 1;\n```",
+        "prompt_tokens": 1439,
+        "output_tokens": 77,
+        "seconds": 5.850175083
+      },
+      "sql": "SELECT \n  interval_start,\n  SUM(crz_entries) AS total_crz_entries\nFROM \n  silver.crz_entries\nWHERE \n  toll_date = DATE '2025-06-10'\n  AND detection_group = 'Lincoln Tunnel'\nGROUP BY \n  interval_start\nORDER BY \n  total_crz_entries DESC\nLIMIT 1",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.117223,
+      "tables_in_sql": [
+        "silver.crz_entries"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "interval_start",
+        "total_crz_entries"
+      ],
+      "result_rows": [
+        [
+          "2025-06-10T07:00:00",
+          680
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": true,
+      "tables_given": [
+        "gold.daily_entries",
+        "silver.crz_entries"
+      ],
+      "seconds": 9.263,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "hand",
+      "request_id": "busiest-ten-minutes-lincoln-tunnel",
+      "request": "On June 10, 2025, which 10-minute interval had the most vehicles entering the zone through the Lincoln Tunnel, and how many entered in it?",
+      "expected_tables": [
+        "silver.crz_entries"
+      ],
+      "reference_tables": [
+        "silver.crz_entries"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT \n  time_period,\n  crz_entries,\n  detection_group,\n  MAX(crz_entries) OVER (PARTITION BY detection_group ORDER BY toll_date DESC) AS max_crz_entries\nFROM \n  silver.crz_entries\nWHERE \n  toll_date = '2025-06-10'\n  AND detection_group = 'Lincoln Tunnel'\n```",
+        "prompt_tokens": 888,
+        "output_tokens": 77,
+        "seconds": 4.459666208
+      },
+      "sql": "SELECT \n  time_period,\n  crz_entries,\n  detection_group,\n  MAX(crz_entries) OVER (PARTITION BY detection_group ORDER BY toll_date DESC) AS max_crz_entries\nFROM \n  silver.crz_entries\nWHERE \n  toll_date = '2025-06-10'\n  AND detection_group = 'Lincoln Tunnel'",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.18643,
+      "tables_in_sql": [
+        "silver.crz_entries"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "time_period",
+        "crz_entries",
+        "detection_group",
+        "max_crz_entries"
+      ],
+      "result_rows": [
+        [
+          "Overnight",
+          62,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          14,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          0,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          3,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          1,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          55,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          55,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          8,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          1,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          1,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          0,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          40,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          60,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          5,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          1,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          4,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          1,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          45,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          74,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          8,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          2,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          1,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          0,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          29,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          54,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          5,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          2,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          1,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          0,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          39,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          43,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          9,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          1,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          2,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          2,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          27,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          29,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          10,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          4,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          12,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          1,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          29,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          31,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          8,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          4,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          6,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          0,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          19,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          26,
+          "Lincoln Tunnel",
+          529
+        ],
+        [
+          "Overnight",
+          8,
+          "Lincoln Tunnel",
+          529
+        ]
+      ],
+      "result_row_count": 864,
+      "answer_matched": false,
+      "tables_given": [
+        "silver.crz_entries"
+      ],
+      "seconds": 4.655,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "full",
+      "request_id": "entries-outside-normal-sept-2026",
+      "request": "On how many days in September 2026 was the total number of vehicles entering the zone outside its normal range for that day?",
+      "expected_tables": [
+        "gold.daily_entries",
+        "gold.baselines"
+      ],
+      "reference_tables": [
+        "gold.baselines",
+        "gold.daily_entries"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT \n  COUNT(DISTINCT D1.toll_date) AS total_days_outside_range\nFROM \n  silver.crz_entries D1\nJOIN \n  gold.baselines B ON D1.month = B.baseline_date AND D1.vehicle_class = B.slice_key AND D1.time_period = B.method\nWHERE \n  D1.crz_entries > B.p10 OR D1.crz_entries < B.p90\nAND EXTRACT(MONTH FROM D1.toll_date) = 9\nAND EXTRACT(YEAR FROM D1.toll_date) = 2026;\n```",
+        "prompt_tokens": 5786,
+        "output_tokens": 127,
+        "seconds": 23.090214834
+      },
+      "sql": "SELECT \n  COUNT(DISTINCT D1.toll_date) AS total_days_outside_range\nFROM \n  silver.crz_entries D1\nJOIN \n  gold.baselines B ON D1.month = B.baseline_date AND D1.vehicle_class = B.slice_key AND D1.time_period = B.method\nWHERE \n  D1.crz_entries > B.p10 OR D1.crz_entries < B.p90\nAND EXTRACT(MONTH FROM D1.toll_date) = 9\nAND EXTRACT(YEAR FROM D1.toll_date) = 2026",
+      "sql_status": "error",
+      "sql_error": "AnalysisException: [UNRESOLVED_COLUMN.WITH_SUGGESTION] A column, variable, or function parameter with name `D1`.`month` cannot be resolved. Did you mean one of the following? [`B`.`p10`, `B`.`p50`, `B`.`p90`, `B`.`method`, `B`.`n_obs`]. SQLSTATE: 42703; line 6 pos 22;",
+      "sql_seconds": 0.129459,
+      "tables_in_sql": [
+        "gold.baselines",
+        "silver.crz_entries"
+      ],
+      "tables_not_given": [],
+      "result_columns": [],
+      "result_rows": [],
+      "result_row_count": null,
+      "answer_matched": false,
+      "tables_given": [
+        "checks.ingest_stats",
+        "checks.results",
+        "expectations.drivers",
+        "expectations.verdicts",
+        "gold.baselines",
+        "gold.daily_entries",
+        "gold.daily_trip_slices",
+        "gold.daily_trips",
+        "reference.cbd_zones",
+        "reference.holidays",
+        "silver.crz_entries",
+        "silver.trips"
+      ],
+      "seconds": 23.238,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "selector",
+      "request_id": "entries-outside-normal-sept-2026",
+      "request": "On how many days in September 2026 was the total number of vehicles entering the zone outside its normal range for that day?",
+      "expected_tables": [
+        "gold.daily_entries",
+        "gold.baselines"
+      ],
+      "reference_tables": [
+        "gold.baselines",
+        "gold.daily_entries"
+      ],
+      "selector": {
+        "answer": "TABLES: gold.daily_entries, gold.daily_trip_slices, gold.daily_trips, reference.cbd_zones",
+        "prompt_tokens": 917,
+        "output_tokens": 22,
+        "seconds": 3.313173083,
+        "tables": [
+          "gold.daily_entries",
+          "gold.daily_trip_slices",
+          "gold.daily_trips",
+          "reference.cbd_zones"
+        ],
+        "unknown": [],
+        "format_ok": true
+      },
+      "selection": {
+        "all_included": false,
+        "missing": [
+          "gold.baselines"
+        ],
+        "extra": [
+          "gold.daily_trip_slices",
+          "gold.daily_trips",
+          "reference.cbd_zones"
+        ]
+      },
+      "selection_reference": {
+        "all_included": false,
+        "missing": [
+          "gold.baselines"
+        ],
+        "extra": [
+          "gold.daily_trip_slices",
+          "gold.daily_trips",
+          "reference.cbd_zones"
+        ]
+      },
+      "builder": {
+        "answer": "```sql\nSELECT \n    entry_date,\n    COUNT(CASE WHEN crz_entries > (SELECT AVG(crz_entries) FROM gold.daily_entries WHERE entry_date = g.entry_date AND vehicle_class IN ('cars_pickups_vans', 'single_unit_trucks', 'multi_unit_trucks', 'buses')) THEN 1 ELSE NULL END) AS above_range,\n    COUNT(CASE WHEN crz_entries < (SELECT AVG(crz_entries) FROM gold.daily_entries WHERE entry_date = g.entry_date AND vehicle_class IN ('cars_pickups_vans', 'single_unit_trucks', 'multi_unit_trucks', 'buses')) THEN 1 ELSE NULL END) AS below_range\nFROM \n    gold.daily_entries g\nJOIN \n    reference.cbd_zones r ON r.location_id = (SELECT pickup_zone_id FROM silver.trips WHERE trip_date = g.entry_date AND service = 'yellow')\nWHERE \n    g.entry_date BETWEEN '2026-09-01' AND '2026-09-30'\nGROUP BY \n    entry_date\n```",
+        "prompt_tokens": 1847,
+        "output_tokens": 215,
+        "seconds": 11.123256584
+      },
+      "sql": "SELECT \n    entry_date,\n    COUNT(CASE WHEN crz_entries > (SELECT AVG(crz_entries) FROM gold.daily_entries WHERE entry_date = g.entry_date AND vehicle_class IN ('cars_pickups_vans', 'single_unit_trucks', 'multi_unit_trucks', 'buses')) THEN 1 ELSE NULL END) AS above_range,\n    COUNT(CASE WHEN crz_entries < (SELECT AVG(crz_entries) FROM gold.daily_entries WHERE entry_date = g.entry_date AND vehicle_class IN ('cars_pickups_vans', 'single_unit_trucks', 'multi_unit_trucks', 'buses')) THEN 1 ELSE NULL END) AS below_range\nFROM \n    gold.daily_entries g\nJOIN \n    reference.cbd_zones r ON r.location_id = (SELECT pickup_zone_id FROM silver.trips WHERE trip_date = g.entry_date AND service = 'yellow')\nWHERE \n    g.entry_date BETWEEN '2026-09-01' AND '2026-09-30'\nGROUP BY \n    entry_date",
+      "sql_status": "error",
+      "sql_error": "AnalysisException: [UNRESOLVED_COLUMN.WITH_SUGGESTION] A column, variable, or function parameter with name `trip_date` cannot be resolved. Did you mean one of the following? [`trip_miles`, `pickup_at`, `dropoff_at`, `service`, `source_month`]. SQLSTATE: 42703; line 8 pos 92;",
+      "sql_seconds": 0.138149,
+      "tables_in_sql": [
+        "gold.daily_entries",
+        "reference.cbd_zones",
+        "silver.trips"
+      ],
+      "tables_not_given": [
+        "silver.trips"
+      ],
+      "result_columns": [],
+      "result_rows": [],
+      "result_row_count": null,
+      "answer_matched": false,
+      "tables_given": [
+        "gold.daily_entries",
+        "gold.daily_trip_slices",
+        "gold.daily_trips",
+        "reference.cbd_zones"
+      ],
+      "seconds": 14.598,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "hand",
+      "request_id": "entries-outside-normal-sept-2026",
+      "request": "On how many days in September 2026 was the total number of vehicles entering the zone outside its normal range for that day?",
+      "expected_tables": [
+        "gold.daily_entries",
+        "gold.baselines"
+      ],
+      "reference_tables": [
+        "gold.baselines",
+        "gold.daily_entries"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT \n    entry_date,\n    vehicle_class,\n    detection_group,\n    time_period,\n    crz_entries > (p10 + (crz_entries - p50) * 0.5) OR crz_entries < (p90 - (crz_entries - p50) * 0.5)\nFROM \n    gold.daily_entries\nWHERE \n    entry_date >= DATE '2026-09-01'\n    AND entry_date <= DATE '2026-09-30';\n```",
+        "prompt_tokens": 1256,
+        "output_tokens": 105,
+        "seconds": 6.168326083
+      },
+      "sql": "SELECT \n    entry_date,\n    vehicle_class,\n    detection_group,\n    time_period,\n    crz_entries > (p10 + (crz_entries - p50) * 0.5) OR crz_entries < (p90 - (crz_entries - p50) * 0.5)\nFROM \n    gold.daily_entries\nWHERE \n    entry_date >= DATE '2026-09-01'\n    AND entry_date <= DATE '2026-09-30'",
+      "sql_status": "error",
+      "sql_error": "AnalysisException: [UNRESOLVED_COLUMN.WITH_SUGGESTION] A column, variable, or function parameter with name `p10` cannot be resolved. Did you mean one of the following? [`entry_date`, `time_period`, `crz_entries`, `vehicle_class`, `detection_group`]. SQLSTATE: 42703; line 6 pos 19;",
+      "sql_seconds": 0.132646,
+      "tables_in_sql": [
+        "gold.daily_entries"
+      ],
+      "tables_not_given": [],
+      "result_columns": [],
+      "result_rows": [],
+      "result_row_count": null,
+      "answer_matched": false,
+      "tables_given": [
+        "gold.baselines",
+        "gold.daily_entries"
+      ],
+      "seconds": 6.31,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "full",
+      "request_id": "zones-in-toll-zone-by-borough",
+      "request": "How many taxi zones does each borough have, and how many of them are inside the congestion toll zone?",
+      "expected_tables": [
+        "reference.cbd_zones"
+      ],
+      "reference_tables": [
+        "reference.cbd_zones"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT \n  r.borough,\n  COUNT(DISTINCT r.location_id) AS zones_in_borough,\n  COALESCE(COUNT(DISTINCT r.location_id), 0) AS zones_inside_cbd\nFROM \n  reference.cbd_zones r\nGROUP BY \n  r.borough;\n```",
+        "prompt_tokens": 5781,
+        "output_tokens": 66,
+        "seconds": 20.6610195
+      },
+      "sql": "SELECT \n  r.borough,\n  COUNT(DISTINCT r.location_id) AS zones_in_borough,\n  COALESCE(COUNT(DISTINCT r.location_id), 0) AS zones_inside_cbd\nFROM \n  reference.cbd_zones r\nGROUP BY \n  r.borough",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.17811,
+      "tables_in_sql": [
+        "reference.cbd_zones"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "borough",
+        "zones_in_borough",
+        "zones_inside_cbd"
+      ],
+      "result_rows": [
+        [
+          "Brooklyn",
+          61,
+          61
+        ],
+        [
+          "EWR",
+          1,
+          1
+        ],
+        [
+          "N/A",
+          1,
+          1
+        ],
+        [
+          "Staten Island",
+          20,
+          20
+        ],
+        [
+          "Manhattan",
+          69,
+          69
+        ],
+        [
+          "Unknown",
+          1,
+          1
+        ],
+        [
+          "Queens",
+          69,
+          69
+        ],
+        [
+          "Bronx",
+          43,
+          43
+        ]
+      ],
+      "result_row_count": 8,
+      "answer_matched": false,
+      "tables_given": [
+        "checks.ingest_stats",
+        "checks.results",
+        "expectations.drivers",
+        "expectations.verdicts",
+        "gold.baselines",
+        "gold.daily_entries",
+        "gold.daily_trip_slices",
+        "gold.daily_trips",
+        "reference.cbd_zones",
+        "reference.holidays",
+        "silver.crz_entries",
+        "silver.trips"
+      ],
+      "seconds": 20.854,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "selector",
+      "request_id": "zones-in-toll-zone-by-borough",
+      "request": "How many taxi zones does each borough have, and how many of them are inside the congestion toll zone?",
+      "expected_tables": [
+        "reference.cbd_zones"
+      ],
+      "reference_tables": [
+        "reference.cbd_zones"
+      ],
+      "selector": {
+        "answer": "TABLES: reference.cbd_zones, reference.holidays, silver.trips",
+        "prompt_tokens": 912,
+        "output_tokens": 16,
+        "seconds": 3.262954292,
+        "tables": [
+          "reference.cbd_zones",
+          "reference.holidays",
+          "silver.trips"
+        ],
+        "unknown": [],
+        "format_ok": true
+      },
+      "selection": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "reference.holidays",
+          "silver.trips"
+        ]
+      },
+      "selection_reference": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "reference.holidays",
+          "silver.trips"
+        ]
+      },
+      "builder": {
+        "answer": "```sql\nSELECT \n  r.borough,\n  COUNT(DISTINCT r.location_id) AS total_zones,\n  COUNT(CASE WHEN r.in_cbd THEN r.location_id END) AS in_cbd_zones\nFROM \n  reference.cbd_zones r\nGROUP BY \n  r.borough;\n```",
+        "prompt_tokens": 1431,
+        "output_tokens": 63,
+        "seconds": 5.520032958
+      },
+      "sql": "SELECT \n  r.borough,\n  COUNT(DISTINCT r.location_id) AS total_zones,\n  COUNT(CASE WHEN r.in_cbd THEN r.location_id END) AS in_cbd_zones\nFROM \n  reference.cbd_zones r\nGROUP BY \n  r.borough",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.178221,
+      "tables_in_sql": [
+        "reference.cbd_zones"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "borough",
+        "total_zones",
+        "in_cbd_zones"
+      ],
+      "result_rows": [
+        [
+          "Brooklyn",
+          61,
+          0
+        ],
+        [
+          "EWR",
+          1,
+          0
+        ],
+        [
+          "N/A",
+          1,
+          0
+        ],
+        [
+          "Staten Island",
+          20,
+          0
+        ],
+        [
+          "Manhattan",
+          69,
+          38
+        ],
+        [
+          "Unknown",
+          1,
+          0
+        ],
+        [
+          "Queens",
+          69,
+          0
+        ],
+        [
+          "Bronx",
+          43,
+          0
+        ]
+      ],
+      "result_row_count": 8,
+      "answer_matched": true,
+      "tables_given": [
+        "reference.cbd_zones",
+        "reference.holidays",
+        "silver.trips"
+      ],
+      "seconds": 8.977,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "hand",
+      "request_id": "zones-in-toll-zone-by-borough",
+      "request": "How many taxi zones does each borough have, and how many of them are inside the congestion toll zone?",
+      "expected_tables": [
+        "reference.cbd_zones"
+      ],
+      "reference_tables": [
+        "reference.cbd_zones"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT \n  b.borough,\n  COUNT(*) AS total_zones,\n  SUM(CASE WHEN c.in_cbd THEN 1 ELSE 0 END) AS in_cbd_zones\nFROM \n  reference.cbd_zones c\nJOIN \n  gold.daily_trip_slices d ON c.location_id = d.pickup_zone_id OR c.location_id = d.dropoff_zone_id\nJOIN \n  reference.boroughs b ON c.borough = b.name\nGROUP BY \n  b.borough;\n```",
+        "prompt_tokens": 502,
+        "output_tokens": 104,
+        "seconds": 3.141304083
+      },
+      "sql": "SELECT \n  b.borough,\n  COUNT(*) AS total_zones,\n  SUM(CASE WHEN c.in_cbd THEN 1 ELSE 0 END) AS in_cbd_zones\nFROM \n  reference.cbd_zones c\nJOIN \n  gold.daily_trip_slices d ON c.location_id = d.pickup_zone_id OR c.location_id = d.dropoff_zone_id\nJOIN \n  reference.boroughs b ON c.borough = b.name\nGROUP BY \n  b.borough",
+      "sql_status": "error",
+      "sql_error": "AnalysisException: [UNRESOLVED_COLUMN.WITH_SUGGESTION] A column, variable, or function parameter with name `d`.`pickup_zone_id` cannot be resolved. Did you mean one of the following? [`d`.`pickup_hour`, `c`.`zone`, `c`.`location_id`, `d`.`trip_date`, `c`.`in_cbd`]. SQLSTATE: 42703; line 8 pos 46;",
+      "sql_seconds": 0.668726,
+      "tables_in_sql": [
+        "gold.daily_trip_slices",
+        "reference.cbd_zones"
+      ],
+      "tables_not_given": [
+        "gold.daily_trip_slices"
+      ],
+      "result_columns": [],
+      "result_rows": [],
+      "result_row_count": null,
+      "answer_matched": false,
+      "tables_given": [
+        "reference.cbd_zones"
+      ],
+      "seconds": 3.815,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "full",
+      "request_id": "ride-hail-trips-on-holidays-2025",
+      "request": "For each public holiday in 2025, how many ride-hail trips were picked up that day?",
+      "expected_tables": [
+        "reference.holidays",
+        "gold.daily_trips"
+      ],
+      "reference_tables": [
+        "gold.daily_trips",
+        "reference.holidays"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT \n  reference.holidays.holiday_date,\n  gold.daily_trips.service,\n  COUNT(gold.daily_trips.trips) AS trips_picked_up\nFROM \n  gold.daily_trips\nJOIN \n  reference.holidays ON gold.daily_trips.pickup_at = reference.holidays.holiday_date\nGROUP BY \n  reference.holidays.holiday_date, gold.daily_trips.service\nHAVING \n  gold.daily_trips.service = 'fhvhv'\n```",
+        "prompt_tokens": 5781,
+        "output_tokens": 100,
+        "seconds": 21.732477625
+      },
+      "sql": "SELECT \n  reference.holidays.holiday_date,\n  gold.daily_trips.service,\n  COUNT(gold.daily_trips.trips) AS trips_picked_up\nFROM \n  gold.daily_trips\nJOIN \n  reference.holidays ON gold.daily_trips.pickup_at = reference.holidays.holiday_date\nGROUP BY \n  reference.holidays.holiday_date, gold.daily_trips.service\nHAVING \n  gold.daily_trips.service = 'fhvhv'",
+      "sql_status": "error",
+      "sql_error": "AnalysisException: [UNRESOLVED_COLUMN.WITH_SUGGESTION] A column, variable, or function parameter with name `gold`.`daily_trips`.`pickup_at` cannot be resolved. Did you mean one of the following? [`local`.`gold`.`daily_trips`.`trip_date`, `local`.`gold`.`daily_trips`.`trips`, `local`.`gold`.`daily_trips`.`service`, `local`.`gold`.`daily_trips`.`cbd_fee_trips`, `local`.`reference`.`holidays`.`name`]. SQLSTATE: 42703; line 8 pos 24;",
+      "sql_seconds": 0.126053,
+      "tables_in_sql": [
+        "gold.daily_trips",
+        "reference.holidays"
+      ],
+      "tables_not_given": [],
+      "result_columns": [],
+      "result_rows": [],
+      "result_row_count": null,
+      "answer_matched": false,
+      "tables_given": [
+        "checks.ingest_stats",
+        "checks.results",
+        "expectations.drivers",
+        "expectations.verdicts",
+        "gold.baselines",
+        "gold.daily_entries",
+        "gold.daily_trip_slices",
+        "gold.daily_trips",
+        "reference.cbd_zones",
+        "reference.holidays",
+        "silver.crz_entries",
+        "silver.trips"
+      ],
+      "seconds": 21.873,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "selector",
+      "request_id": "ride-hail-trips-on-holidays-2025",
+      "request": "For each public holiday in 2025, how many ride-hail trips were picked up that day?",
+      "expected_tables": [
+        "reference.holidays",
+        "gold.daily_trips"
+      ],
+      "reference_tables": [
+        "gold.daily_trips",
+        "reference.holidays"
+      ],
+      "selector": {
+        "answer": "TABLES: gold.daily_trips, reference.holidays",
+        "prompt_tokens": 912,
+        "output_tokens": 12,
+        "seconds": 3.057785708,
+        "tables": [
+          "gold.daily_trips",
+          "reference.holidays"
+        ],
+        "unknown": [],
+        "format_ok": true
+      },
+      "selection": {
+        "all_included": true,
+        "missing": [],
+        "extra": []
+      },
+      "selection_reference": {
+        "all_included": true,
+        "missing": [],
+        "extra": []
+      },
+      "builder": {
+        "answer": "```sql\nSELECT \n  r.holiday_date,\n  COUNT(DISTINCT g.trips) AS trips_picked_up\nFROM \n  reference.holidays r\nJOIN \n  gold.daily_trips g ON r.holiday_date = g.trip_date AND g.service = 'fhvhv'\nWHERE \n  g.trip_date BETWEEN '2025-01-01' AND '2025-12-31'\nGROUP BY \n  r.holiday_date;\n```",
+        "prompt_tokens": 626,
+        "output_tokens": 95,
+        "seconds": 4.055124917
+      },
+      "sql": "SELECT \n  r.holiday_date,\n  COUNT(DISTINCT g.trips) AS trips_picked_up\nFROM \n  reference.holidays r\nJOIN \n  gold.daily_trips g ON r.holiday_date = g.trip_date AND g.service = 'fhvhv'\nWHERE \n  g.trip_date BETWEEN '2025-01-01' AND '2025-12-31'\nGROUP BY \n  r.holiday_date",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.239973,
+      "tables_in_sql": [
+        "gold.daily_trips",
+        "reference.holidays"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "holiday_date",
+        "trips_picked_up"
+      ],
+      "result_rows": [
+        [
+          "2025-11-27",
+          1
+        ],
+        [
+          "2025-09-01",
+          1
+        ],
+        [
+          "2025-11-04",
+          1
+        ],
+        [
+          "2025-12-25",
+          1
+        ],
+        [
+          "2025-02-15",
+          1
+        ],
+        [
+          "2025-02-12",
+          1
+        ],
+        [
+          "2025-06-19",
+          1
+        ],
+        [
+          "2025-05-26",
+          1
+        ],
+        [
+          "2025-11-11",
+          1
+        ],
+        [
+          "2025-02-17",
+          1
+        ],
+        [
+          "2025-10-13",
+          1
+        ],
+        [
+          "2025-01-01",
+          1
+        ],
+        [
+          "2025-07-04",
+          1
+        ],
+        [
+          "2025-01-20",
+          1
+        ]
+      ],
+      "result_row_count": 14,
+      "answer_matched": false,
+      "tables_given": [
+        "gold.daily_trips",
+        "reference.holidays"
+      ],
+      "seconds": 7.37,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "hand",
+      "request_id": "ride-hail-trips-on-holidays-2025",
+      "request": "For each public holiday in 2025, how many ride-hail trips were picked up that day?",
+      "expected_tables": [
+        "reference.holidays",
+        "gold.daily_trips"
+      ],
+      "reference_tables": [
+        "gold.daily_trips",
+        "reference.holidays"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT \n  r.holiday_date,\n  COUNT(DISTINCT g.trips) AS trips_picked_up\nFROM \n  reference.holidays r\nJOIN \n  gold.daily_trips g ON r.holiday_date = g.trip_date AND g.service = 'fhvhv'\nWHERE \n  g.trip_date BETWEEN '2025-01-01' AND '2025-12-31'\nGROUP BY \n  r.holiday_date;\n```",
+        "prompt_tokens": 626,
+        "output_tokens": 95,
+        "seconds": 2.828074709
+      },
+      "sql": "SELECT \n  r.holiday_date,\n  COUNT(DISTINCT g.trips) AS trips_picked_up\nFROM \n  reference.holidays r\nJOIN \n  gold.daily_trips g ON r.holiday_date = g.trip_date AND g.service = 'fhvhv'\nWHERE \n  g.trip_date BETWEEN '2025-01-01' AND '2025-12-31'\nGROUP BY \n  r.holiday_date",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.169754,
+      "tables_in_sql": [
+        "gold.daily_trips",
+        "reference.holidays"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "holiday_date",
+        "trips_picked_up"
+      ],
+      "result_rows": [
+        [
+          "2025-11-27",
+          1
+        ],
+        [
+          "2025-09-01",
+          1
+        ],
+        [
+          "2025-11-04",
+          1
+        ],
+        [
+          "2025-12-25",
+          1
+        ],
+        [
+          "2025-02-15",
+          1
+        ],
+        [
+          "2025-06-19",
+          1
+        ],
+        [
+          "2025-02-12",
+          1
+        ],
+        [
+          "2025-11-11",
+          1
+        ],
+        [
+          "2025-05-26",
+          1
+        ],
+        [
+          "2025-01-01",
+          1
+        ],
+        [
+          "2025-02-17",
+          1
+        ],
+        [
+          "2025-10-13",
+          1
+        ],
+        [
+          "2025-07-04",
+          1
+        ],
+        [
+          "2025-01-20",
+          1
+        ]
+      ],
+      "result_row_count": 14,
+      "answer_matched": false,
+      "tables_given": [
+        "gold.daily_trips",
+        "reference.holidays"
+      ],
+      "seconds": 3.004,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "full",
+      "request_id": "largest-driver-latest-run",
+      "request": "In the most recent scoring run, which service accounts for the largest gap for the expectation derived-cbd-touch-trips-first-year, and how big is that gap?",
+      "expected_tables": [
+        "expectations.drivers",
+        "expectations.verdicts"
+      ],
+      "reference_tables": [
+        "expectations.drivers",
+        "expectations.verdicts"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT \n  e.dimension,\n  e.slice_value,\n  (e.observed_value - e.expected_value) AS gap,\n  (e.observed_value - e.expected_value) / (\n    SELECT SUM(gap_rank)\n    FROM expectations.drivers\n    WHERE expectation_id = 'derived-cbd-touch-trips-first-year'\n      AND run_id = (SELECT MAX(run_id) FROM expectations.drivers)\n      AND dimension = e.dimension\n  ) AS share_of_gap\nFROM \n  expectations.drivers e\nWHERE \n  e.run_id = (SELECT MAX(run_id) FROM expectations.drivers)\n  AND expectation_id = 'derived-cbd-touch-trips-first-year'\n  AND e.gap_rank = 1\nORDER BY \n  gap DESC;\n```",
+        "prompt_tokens": 5793,
+        "output_tokens": 159,
+        "seconds": 24.217600875
+      },
+      "sql": "SELECT \n  e.dimension,\n  e.slice_value,\n  (e.observed_value - e.expected_value) AS gap,\n  (e.observed_value - e.expected_value) / (\n    SELECT SUM(gap_rank)\n    FROM expectations.drivers\n    WHERE expectation_id = 'derived-cbd-touch-trips-first-year'\n      AND run_id = (SELECT MAX(run_id) FROM expectations.drivers)\n      AND dimension = e.dimension\n  ) AS share_of_gap\nFROM \n  expectations.drivers e\nWHERE \n  e.run_id = (SELECT MAX(run_id) FROM expectations.drivers)\n  AND expectation_id = 'derived-cbd-touch-trips-first-year'\n  AND e.gap_rank = 1\nORDER BY \n  gap DESC",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.376178,
+      "tables_in_sql": [
+        "expectations.drivers"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "dimension",
+        "slice_value",
+        "gap",
+        "share_of_gap"
+      ],
+      "result_rows": [
+        [
+          "service",
+          "yellow",
+          4637079.109999999,
+          1545693.0366666664
+        ],
+        [
+          "zone_relation",
+          "pickup_in",
+          665511.9624999985,
+          110918.66041666642
+        ]
+      ],
+      "result_row_count": 2,
+      "answer_matched": false,
+      "tables_given": [
+        "checks.ingest_stats",
+        "checks.results",
+        "expectations.drivers",
+        "expectations.verdicts",
+        "gold.baselines",
+        "gold.daily_entries",
+        "gold.daily_trip_slices",
+        "gold.daily_trips",
+        "reference.cbd_zones",
+        "reference.holidays",
+        "silver.crz_entries",
+        "silver.trips"
+      ],
+      "seconds": 24.605,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "selector",
+      "request_id": "largest-driver-latest-run",
+      "request": "In the most recent scoring run, which service accounts for the largest gap for the expectation derived-cbd-touch-trips-first-year, and how big is that gap?",
+      "expected_tables": [
+        "expectations.drivers",
+        "expectations.verdicts"
+      ],
+      "reference_tables": [
+        "expectations.drivers",
+        "expectations.verdicts"
+      ],
+      "selector": {
+        "answer": "TABLES: expectations.drivers, expectations.verdicts, reference.cbd_zones",
+        "prompt_tokens": 924,
+        "output_tokens": 17,
+        "seconds": 3.394080542,
+        "tables": [
+          "expectations.drivers",
+          "expectations.verdicts",
+          "reference.cbd_zones"
+        ],
+        "unknown": [],
+        "format_ok": true
+      },
+      "selection": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "reference.cbd_zones"
+        ]
+      },
+      "selection_reference": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "reference.cbd_zones"
+        ]
+      },
+      "builder": {
+        "answer": "```sql\nSELECT \n  e.expectation_id,\n  d.slice_value AS service,\n  (d.observed - d.expected_low) / d.expected_high * 100 AS gap_percentage\nFROM \n  expectations.drivers d\nJOIN \n  expectations.verdicts e ON d.run_id = e.run_id\nWHERE \n  e.window_start <= CURRENT_DATE AND e.scored_at = (\n    SELECT MAX(scored_at)\n    FROM expectations.verdicts\n    WHERE run_id = d.run_id AND expectation_id = 'derived-cbd-touch-trips-first-year'\n  )\nAND d.dimension = 'service'\nORDER BY \n  (d.observed - d.expected_low) / d.expected_high DESC\nLIMIT 1;\n```",
+        "prompt_tokens": 1568,
+        "output_tokens": 150,
+        "seconds": 8.5543145
+      },
+      "sql": "SELECT \n  e.expectation_id,\n  d.slice_value AS service,\n  (d.observed - d.expected_low) / d.expected_high * 100 AS gap_percentage\nFROM \n  expectations.drivers d\nJOIN \n  expectations.verdicts e ON d.run_id = e.run_id\nWHERE \n  e.window_start <= CURRENT_DATE AND e.scored_at = (\n    SELECT MAX(scored_at)\n    FROM expectations.verdicts\n    WHERE run_id = d.run_id AND expectation_id = 'derived-cbd-touch-trips-first-year'\n  )\nAND d.dimension = 'service'\nORDER BY \n  (d.observed - d.expected_low) / d.expected_high DESC\nLIMIT 1",
+      "sql_status": "error",
+      "sql_error": "AnalysisException: [UNRESOLVED_COLUMN.WITH_SUGGESTION] A column, variable, or function parameter with name `d`.`observed` cannot be resolved. Did you mean one of the following? [`e`.`observed`, `e`.`note`, `d`.`gap`, `d`.`observed_value`, `d`.`run_id`]. SQLSTATE: 42703; line 4 pos 3;",
+      "sql_seconds": 0.128727,
+      "tables_in_sql": [
+        "expectations.drivers",
+        "expectations.verdicts"
+      ],
+      "tables_not_given": [],
+      "result_columns": [],
+      "result_rows": [],
+      "result_row_count": null,
+      "answer_matched": false,
+      "tables_given": [
+        "expectations.drivers",
+        "expectations.verdicts",
+        "reference.cbd_zones"
+      ],
+      "seconds": 12.096,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "hand",
+      "request_id": "largest-driver-latest-run",
+      "request": "In the most recent scoring run, which service accounts for the largest gap for the expectation derived-cbd-touch-trips-first-year, and how big is that gap?",
+      "expected_tables": [
+        "expectations.drivers",
+        "expectations.verdicts"
+      ],
+      "reference_tables": [
+        "expectations.drivers",
+        "expectations.verdicts"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT \n  e.expectation_id,\n  d.slice_value AS service,\n  (d.observed - d.expected_low) AS gap\nFROM \n  expectations.drivers d\nJOIN \n  expectations.verdicts e ON d.run_id = e.run_id AND d.expectation_id = e.expectation_id\nWHERE \n  e.scored_at = (SELECT MAX(scored_at) FROM expectations.verdicts WHERE run_id = d.run_id)\nAND \n  e.expectation_id = 'derived-cbd-touch-trips-first-year'\nAND \n  d.dimension = 'service'\nORDER BY \n  gap DESC\nLIMIT 1;\n```",
+        "prompt_tokens": 1216,
+        "output_tokens": 134,
+        "seconds": 4.098985041
+      },
+      "sql": "SELECT \n  e.expectation_id,\n  d.slice_value AS service,\n  (d.observed - d.expected_low) AS gap\nFROM \n  expectations.drivers d\nJOIN \n  expectations.verdicts e ON d.run_id = e.run_id AND d.expectation_id = e.expectation_id\nWHERE \n  e.scored_at = (SELECT MAX(scored_at) FROM expectations.verdicts WHERE run_id = d.run_id)\nAND \n  e.expectation_id = 'derived-cbd-touch-trips-first-year'\nAND \n  d.dimension = 'service'\nORDER BY \n  gap DESC\nLIMIT 1",
+      "sql_status": "error",
+      "sql_error": "AnalysisException: [UNRESOLVED_COLUMN.WITH_SUGGESTION] A column, variable, or function parameter with name `d`.`observed` cannot be resolved. Did you mean one of the following? [`e`.`observed`, `e`.`note`, `d`.`gap`, `d`.`observed_value`, `d`.`run_id`]. SQLSTATE: 42703; line 4 pos 3;",
+      "sql_seconds": 0.128971,
+      "tables_in_sql": [
+        "expectations.drivers",
+        "expectations.verdicts"
+      ],
+      "tables_not_given": [],
+      "result_columns": [],
+      "result_rows": [],
+      "result_row_count": null,
+      "answer_matched": false,
+      "tables_given": [
+        "expectations.drivers",
+        "expectations.verdicts"
+      ],
+      "seconds": 4.237,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "full",
+      "request_id": "checks-not-passing-now",
+      "request": "Which data checks are not passing right now, going by the latest result of each check?",
+      "expected_tables": [
+        "checks.results"
+      ],
+      "reference_tables": [
+        "checks.results"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT \n  c.check_id,\n  c.target_table,\n  c.partition_value,\n  c.status\nFROM \n  checks.results c\nWHERE \n  c.checked_at = (SELECT MAX(checked_at) FROM checks.results)\nGROUP BY \n  c.check_id, c.target_table, c.partition_value, c.status\nHAVING \n  c.status IN ('warn', 'fail')\n```",
+        "prompt_tokens": 5778,
+        "output_tokens": 83,
+        "seconds": 23.240370583
+      },
+      "sql": "SELECT \n  c.check_id,\n  c.target_table,\n  c.partition_value,\n  c.status\nFROM \n  checks.results c\nWHERE \n  c.checked_at = (SELECT MAX(checked_at) FROM checks.results)\nGROUP BY \n  c.check_id, c.target_table, c.partition_value, c.status\nHAVING \n  c.status IN ('warn', 'fail')",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.220822,
+      "tables_in_sql": [
+        "checks.results"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "check_id",
+        "target_table",
+        "partition_value",
+        "status"
+      ],
+      "result_rows": [],
+      "result_row_count": 0,
+      "answer_matched": false,
+      "tables_given": [
+        "checks.ingest_stats",
+        "checks.results",
+        "expectations.drivers",
+        "expectations.verdicts",
+        "gold.baselines",
+        "gold.daily_entries",
+        "gold.daily_trip_slices",
+        "gold.daily_trips",
+        "reference.cbd_zones",
+        "reference.holidays",
+        "silver.crz_entries",
+        "silver.trips"
+      ],
+      "seconds": 23.473,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "selector",
+      "request_id": "checks-not-passing-now",
+      "request": "Which data checks are not passing right now, going by the latest result of each check?",
+      "expected_tables": [
+        "checks.results"
+      ],
+      "reference_tables": [
+        "checks.results"
+      ],
+      "selector": {
+        "answer": "TABLES: checks.results, gold.baselines",
+        "prompt_tokens": 909,
+        "output_tokens": 11,
+        "seconds": 4.130230417,
+        "tables": [
+          "checks.results",
+          "gold.baselines"
+        ],
+        "unknown": [],
+        "format_ok": true
+      },
+      "selection": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "gold.baselines"
+        ]
+      },
+      "selection_reference": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "gold.baselines"
+        ]
+      },
+      "builder": {
+        "answer": "```sql\nSELECT \n  c.check_id,\n  c.target_table,\n  c.partition_value,\n  c.status\nFROM \n  checks.results c\nWHERE \n  c.status = 'fail'\n```",
+        "prompt_tokens": 1119,
+        "output_tokens": 42,
+        "seconds": 4.1501345
+      },
+      "sql": "SELECT \n  c.check_id,\n  c.target_table,\n  c.partition_value,\n  c.status\nFROM \n  checks.results c\nWHERE \n  c.status = 'fail'",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.056977,
+      "tables_in_sql": [
+        "checks.results"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "check_id",
+        "target_table",
+        "partition_value",
+        "status"
+      ],
+      "result_rows": [],
+      "result_row_count": 0,
+      "answer_matched": false,
+      "tables_given": [
+        "checks.results",
+        "gold.baselines"
+      ],
+      "seconds": 8.347,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "hand",
+      "request_id": "checks-not-passing-now",
+      "request": "Which data checks are not passing right now, going by the latest result of each check?",
+      "expected_tables": [
+        "checks.results"
+      ],
+      "reference_tables": [
+        "checks.results"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT \n  check_id,\n  target_table,\n  partition_value,\n  status\nFROM \n  checks.results\nWHERE \n  status = 'fail'\n```",
+        "prompt_tokens": 569,
+        "output_tokens": 36,
+        "seconds": 1.19557575
+      },
+      "sql": "SELECT \n  check_id,\n  target_table,\n  partition_value,\n  status\nFROM \n  checks.results\nWHERE \n  status = 'fail'",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.043726,
+      "tables_in_sql": [
+        "checks.results"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "check_id",
+        "target_table",
+        "partition_value",
+        "status"
+      ],
+      "result_rows": [],
+      "result_row_count": 0,
+      "answer_matched": false,
+      "tables_given": [
+        "checks.results"
+      ],
+      "seconds": 1.244,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "full",
+      "request_id": "rows-dropped-yellow-2025-01",
+      "request": "When the January 2025 yellow taxi file was last loaded, how many of its rows were dropped for falling outside the month?",
+      "expected_tables": [
+        "checks.ingest_stats"
+      ],
+      "reference_tables": [
+        "checks.ingest_stats"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT \n  COUNT(DISTINCT T1.run_id) AS dropped_rows\nFROM \n  checks.ingest_stats AS T1\nJOIN \n  checks.results AS T2 ON T1.run_id = T2.run_id\nWHERE \n  T2.status IN ('fail', 'warn') AND T1.source_month = '2025-01'\n```",
+        "prompt_tokens": 5786,
+        "output_tokens": 77,
+        "seconds": 21.543219916
+      },
+      "sql": "SELECT \n  COUNT(DISTINCT T1.run_id) AS dropped_rows\nFROM \n  checks.ingest_stats AS T1\nJOIN \n  checks.results AS T2 ON T1.run_id = T2.run_id\nWHERE \n  T2.status IN ('fail', 'warn') AND T1.source_month = '2025-01'",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.194051,
+      "tables_in_sql": [
+        "checks.ingest_stats",
+        "checks.results"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "dropped_rows"
+      ],
+      "result_rows": [
+        [
+          0
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": false,
+      "tables_given": [
+        "checks.ingest_stats",
+        "checks.results",
+        "expectations.drivers",
+        "expectations.verdicts",
+        "gold.baselines",
+        "gold.daily_entries",
+        "gold.daily_trip_slices",
+        "gold.daily_trips",
+        "reference.cbd_zones",
+        "reference.holidays",
+        "silver.crz_entries",
+        "silver.trips"
+      ],
+      "seconds": 21.748,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "selector",
+      "request_id": "rows-dropped-yellow-2025-01",
+      "request": "When the January 2025 yellow taxi file was last loaded, how many of its rows were dropped for falling outside the month?",
+      "expected_tables": [
+        "checks.ingest_stats"
+      ],
+      "reference_tables": [
+        "checks.ingest_stats"
+      ],
+      "selector": {
+        "answer": "TABLES: checks.ingest_stats, silver.trips",
+        "prompt_tokens": 917,
+        "output_tokens": 13,
+        "seconds": 3.387796041,
+        "tables": [
+          "checks.ingest_stats",
+          "silver.trips"
+        ],
+        "unknown": [],
+        "format_ok": true
+      },
+      "selection": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "silver.trips"
+        ]
+      },
+      "selection_reference": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "silver.trips"
+        ]
+      },
+      "builder": {
+        "answer": "```sql\nSELECT \n  COUNT(DISTINCT T1.rows_read - T1.rows_kept) AS dropped_rows\nFROM \n  checks.ingest_stats T1\nWHERE \n  T1.service = 'yellow' AND T1.source_month = '2025-01'\n```",
+        "prompt_tokens": 1189,
+        "output_tokens": 60,
+        "seconds": 4.8302825
+      },
+      "sql": "SELECT \n  COUNT(DISTINCT T1.rows_read - T1.rows_kept) AS dropped_rows\nFROM \n  checks.ingest_stats T1\nWHERE \n  T1.service = 'yellow' AND T1.source_month = '2025-01'",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.125752,
+      "tables_in_sql": [
+        "checks.ingest_stats"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "dropped_rows"
+      ],
+      "result_rows": [
+        [
+          1
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": false,
+      "tables_given": [
+        "checks.ingest_stats",
+        "silver.trips"
+      ],
+      "seconds": 8.358,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "llama3.2:3b",
+      "arm": "hand",
+      "request_id": "rows-dropped-yellow-2025-01",
+      "request": "When the January 2025 yellow taxi file was last loaded, how many of its rows were dropped for falling outside the month?",
+      "expected_tables": [
+        "checks.ingest_stats"
+      ],
+      "reference_tables": [
+        "checks.ingest_stats"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT \n  c.rows_read - c.rows_kept AS dropped_rows\nFROM \n  checks.ingest_stats c\nWHERE \n  c.service = 'yellow' AND \n  c.source_month = '2025-01'\n```",
+        "prompt_tokens": 413,
+        "output_tokens": 52,
+        "seconds": 1.818058667
+      },
+      "sql": "SELECT \n  c.rows_read - c.rows_kept AS dropped_rows\nFROM \n  checks.ingest_stats c\nWHERE \n  c.service = 'yellow' AND \n  c.source_month = '2025-01'",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.073448,
+      "tables_in_sql": [
+        "checks.ingest_stats"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "dropped_rows"
+      ],
+      "result_rows": [
+        [
+          22
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": true,
+      "tables_given": [
+        "checks.ingest_stats"
+      ],
+      "seconds": 1.896,
+      "run_id": "20261112T212530Z",
+      "model_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "full",
+      "request_id": "yellow-trips-one-day",
+      "request": "How many yellow taxi trips were picked up on January 5, 2025?",
+      "expected_tables": [
+        "gold.daily_trips"
+      ],
+      "reference_tables": [
+        "gold.daily_trips"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT COUNT(*) AS trip_count \nFROM silver.trips \nWHERE service = 'yellow' AND pickup_at >= DATE '2025-01-05' AND pickup_at < DATE '2025-01-06';\n```",
+        "prompt_tokens": 5960,
+        "output_tokens": 57,
+        "seconds": 98.432769459
+      },
+      "sql": "SELECT COUNT(*) AS trip_count \nFROM silver.trips \nWHERE service = 'yellow' AND pickup_at >= DATE '2025-01-05' AND pickup_at < DATE '2025-01-06'",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.293508,
+      "tables_in_sql": [
+        "silver.trips"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "trip_count"
+      ],
+      "result_rows": [
+        [
+          79624
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": true,
+      "tables_given": [
+        "checks.ingest_stats",
+        "checks.results",
+        "expectations.drivers",
+        "expectations.verdicts",
+        "gold.baselines",
+        "gold.daily_entries",
+        "gold.daily_trip_slices",
+        "gold.daily_trips",
+        "reference.cbd_zones",
+        "reference.holidays",
+        "silver.crz_entries",
+        "silver.trips"
+      ],
+      "seconds": 98.763,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "selector",
+      "request_id": "yellow-trips-one-day",
+      "request": "How many yellow taxi trips were picked up on January 5, 2025?",
+      "expected_tables": [
+        "gold.daily_trips"
+      ],
+      "reference_tables": [
+        "gold.daily_trips"
+      ],
+      "selector": {
+        "answer": "TABLES: gold.daily_trips, reference.cbd_zones",
+        "prompt_tokens": 920,
+        "output_tokens": 13,
+        "seconds": 13.6613535,
+        "tables": [
+          "gold.daily_trips",
+          "reference.cbd_zones"
+        ],
+        "unknown": [],
+        "format_ok": true
+      },
+      "selection": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "reference.cbd_zones"
+        ]
+      },
+      "selection_reference": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "reference.cbd_zones"
+        ]
+      },
+      "builder": {
+        "answer": "```sql\nSELECT trips \nFROM gold.daily_trips \nWHERE trip_date = DATE '2025-01-05' \n  AND service = 'yellow'\n```",
+        "prompt_tokens": 842,
+        "output_tokens": 39,
+        "seconds": 15.891853291
+      },
+      "sql": "SELECT trips \nFROM gold.daily_trips \nWHERE trip_date = DATE '2025-01-05' \n  AND service = 'yellow'",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.083155,
+      "tables_in_sql": [
+        "gold.daily_trips"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "trips"
+      ],
+      "result_rows": [
+        [
+          79624
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": true,
+      "tables_given": [
+        "gold.daily_trips",
+        "reference.cbd_zones"
+      ],
+      "seconds": 29.704,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "hand",
+      "request_id": "yellow-trips-one-day",
+      "request": "How many yellow taxi trips were picked up on January 5, 2025?",
+      "expected_tables": [
+        "gold.daily_trips"
+      ],
+      "reference_tables": [
+        "gold.daily_trips"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT trips \nFROM gold.daily_trips \nWHERE trip_date = DATE '2025-01-05' \n  AND service = 'yellow'\n```",
+        "prompt_tokens": 475,
+        "output_tokens": 39,
+        "seconds": 5.76183475
+      },
+      "sql": "SELECT trips \nFROM gold.daily_trips \nWHERE trip_date = DATE '2025-01-05' \n  AND service = 'yellow'",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.086152,
+      "tables_in_sql": [
+        "gold.daily_trips"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "trips"
+      ],
+      "result_rows": [
+        [
+          79624
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": true,
+      "tables_given": [
+        "gold.daily_trips"
+      ],
+      "seconds": 5.863,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "full",
+      "request_id": "uber-lyft-trips-2025",
+      "request": "How many trips did Uber make in 2025, and how many did Lyft make?",
+      "expected_tables": [
+        "gold.daily_trip_slices"
+      ],
+      "reference_tables": [
+        "gold.daily_trip_slices"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT \n    operator_code,\n    COUNT(*) AS trip_count\nFROM silver.trips\nWHERE pickup_at >= DATE '2025-01-01' AND pickup_at < DATE '2026-01-01'\n  AND service = 'fhvhv'\nGROUP BY operator_code;\n```",
+        "prompt_tokens": 5961,
+        "output_tokens": 71,
+        "seconds": 102.2173245
+      },
+      "sql": "SELECT \n    operator_code,\n    COUNT(*) AS trip_count\nFROM silver.trips\nWHERE pickup_at >= DATE '2025-01-01' AND pickup_at < DATE '2026-01-01'\n  AND service = 'fhvhv'\nGROUP BY operator_code",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 6.063205,
+      "tables_in_sql": [
+        "silver.trips"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "operator_code",
+        "trip_count"
+      ],
+      "result_rows": [
+        [
+          "HV0005",
+          67600138
+        ],
+        [
+          "HV0003",
+          175989546
+        ]
+      ],
+      "result_row_count": 2,
+      "answer_matched": true,
+      "tables_given": [
+        "checks.ingest_stats",
+        "checks.results",
+        "expectations.drivers",
+        "expectations.verdicts",
+        "gold.baselines",
+        "gold.daily_entries",
+        "gold.daily_trip_slices",
+        "gold.daily_trips",
+        "reference.cbd_zones",
+        "reference.holidays",
+        "silver.crz_entries",
+        "silver.trips"
+      ],
+      "seconds": 108.316,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "selector",
+      "request_id": "uber-lyft-trips-2025",
+      "request": "How many trips did Uber make in 2025, and how many did Lyft make?",
+      "expected_tables": [
+        "gold.daily_trip_slices"
+      ],
+      "reference_tables": [
+        "gold.daily_trip_slices"
+      ],
+      "selector": {
+        "answer": "TABLES: gold.daily_trip_slices, reference.holidays",
+        "prompt_tokens": 921,
+        "output_tokens": 12,
+        "seconds": 13.611704334,
+        "tables": [
+          "gold.daily_trip_slices",
+          "reference.holidays"
+        ],
+        "unknown": [],
+        "format_ok": true
+      },
+      "selection": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "reference.holidays"
+        ]
+      },
+      "selection_reference": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "reference.holidays"
+        ]
+      },
+      "builder": {
+        "answer": "```sql\nSELECT \n    SUM(CASE WHEN operator_code = 'HV0003' THEN trips ELSE 0 END) AS uber_trips,\n    SUM(CASE WHEN operator_code = 'HV0005' THEN trips ELSE 0 END) AS lyft_trips\nFROM gold.daily_trip_slices\nWHERE trip_date >= DATE '2025-01-01' AND trip_date < DATE '2026-01-01'\n```",
+        "prompt_tokens": 793,
+        "output_tokens": 102,
+        "seconds": 22.803520417
+      },
+      "sql": "SELECT \n    SUM(CASE WHEN operator_code = 'HV0003' THEN trips ELSE 0 END) AS uber_trips,\n    SUM(CASE WHEN operator_code = 'HV0005' THEN trips ELSE 0 END) AS lyft_trips\nFROM gold.daily_trip_slices\nWHERE trip_date >= DATE '2025-01-01' AND trip_date < DATE '2026-01-01'",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.225947,
+      "tables_in_sql": [
+        "gold.daily_trip_slices"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "uber_trips",
+        "lyft_trips"
+      ],
+      "result_rows": [
+        [
+          175989546,
+          67600138
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": false,
+      "tables_given": [
+        "gold.daily_trip_slices",
+        "reference.holidays"
+      ],
+      "seconds": 36.743,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "hand",
+      "request_id": "uber-lyft-trips-2025",
+      "request": "How many trips did Uber make in 2025, and how many did Lyft make?",
+      "expected_tables": [
+        "gold.daily_trip_slices"
+      ],
+      "reference_tables": [
+        "gold.daily_trip_slices"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT \n    SUM(CASE WHEN operator_code = 'HV0003' THEN trips ELSE 0 END) AS uber_trips,\n    SUM(CASE WHEN operator_code = 'HV0005' THEN trips ELSE 0 END) AS lyft_trips\nFROM gold.daily_trip_slices\nWHERE trip_date >= DATE '2025-01-01' AND trip_date < DATE '2026-01-01'\n```",
+        "prompt_tokens": 627,
+        "output_tokens": 102,
+        "seconds": 13.534594625
+      },
+      "sql": "SELECT \n    SUM(CASE WHEN operator_code = 'HV0003' THEN trips ELSE 0 END) AS uber_trips,\n    SUM(CASE WHEN operator_code = 'HV0005' THEN trips ELSE 0 END) AS lyft_trips\nFROM gold.daily_trip_slices\nWHERE trip_date >= DATE '2025-01-01' AND trip_date < DATE '2026-01-01'",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.100389,
+      "tables_in_sql": [
+        "gold.daily_trip_slices"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "uber_trips",
+        "lyft_trips"
+      ],
+      "result_rows": [
+        [
+          175989546,
+          67600138
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": false,
+      "tables_given": [
+        "gold.daily_trip_slices"
+      ],
+      "seconds": 13.642,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "full",
+      "request_id": "busiest-hour-yellow-from-zone",
+      "request": "In March 2025, which hour of the day had the most yellow taxi pickups inside the congestion zone, and how many trips was that?",
+      "expected_tables": [
+        "gold.daily_trip_slices"
+      ],
+      "reference_tables": [
+        "gold.daily_trip_slices"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT pickup_hour, SUM(trips) AS total_trips\nFROM gold.daily_trip_slices\nWHERE trip_date >= DATE '2025-03-01' AND trip_date <= DATE '2025-03-31'\n  AND service = 'yellow'\n  AND zone_relation = 'pickup_in'\nGROUP BY pickup_hour\nORDER BY total_trips DESC\nLIMIT 1;\n```",
+        "prompt_tokens": 5972,
+        "output_tokens": 90,
+        "seconds": 102.980353083
+      },
+      "sql": "SELECT pickup_hour, SUM(trips) AS total_trips\nFROM gold.daily_trip_slices\nWHERE trip_date >= DATE '2025-03-01' AND trip_date <= DATE '2025-03-31'\n  AND service = 'yellow'\n  AND zone_relation = 'pickup_in'\nGROUP BY pickup_hour\nORDER BY total_trips DESC\nLIMIT 1",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.109729,
+      "tables_in_sql": [
+        "gold.daily_trip_slices"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "pickup_hour",
+        "total_trips"
+      ],
+      "result_rows": [
+        [
+          21,
+          52480
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": false,
+      "tables_given": [
+        "checks.ingest_stats",
+        "checks.results",
+        "expectations.drivers",
+        "expectations.verdicts",
+        "gold.baselines",
+        "gold.daily_entries",
+        "gold.daily_trip_slices",
+        "gold.daily_trips",
+        "reference.cbd_zones",
+        "reference.holidays",
+        "silver.crz_entries",
+        "silver.trips"
+      ],
+      "seconds": 103.11,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "selector",
+      "request_id": "busiest-hour-yellow-from-zone",
+      "request": "In March 2025, which hour of the day had the most yellow taxi pickups inside the congestion zone, and how many trips was that?",
+      "expected_tables": [
+        "gold.daily_trip_slices"
+      ],
+      "reference_tables": [
+        "gold.daily_trip_slices"
+      ],
+      "selector": {
+        "answer": "TABLES: gold.daily_trip_slices, reference.cbd_zones",
+        "prompt_tokens": 932,
+        "output_tokens": 13,
+        "seconds": 14.013184792,
+        "tables": [
+          "gold.daily_trip_slices",
+          "reference.cbd_zones"
+        ],
+        "unknown": [],
+        "format_ok": true
+      },
+      "selection": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "reference.cbd_zones"
+        ]
+      },
+      "selection_reference": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "reference.cbd_zones"
+        ]
+      },
+      "builder": {
+        "answer": "```sql\nSELECT pickup_hour, SUM(trips) AS total_trips\nFROM gold.daily_trip_slices\nWHERE trip_date >= DATE '2025-03-01' AND trip_date <= DATE '2025-03-31'\n  AND service = 'yellow'\n  AND zone_relation = 'both_in'\nGROUP BY pickup_hour\nORDER BY total_trips DESC\nLIMIT 1;\n```",
+        "prompt_tokens": 1005,
+        "output_tokens": 90,
+        "seconds": 24.746253666
+      },
+      "sql": "SELECT pickup_hour, SUM(trips) AS total_trips\nFROM gold.daily_trip_slices\nWHERE trip_date >= DATE '2025-03-01' AND trip_date <= DATE '2025-03-31'\n  AND service = 'yellow'\n  AND zone_relation = 'both_in'\nGROUP BY pickup_hour\nORDER BY total_trips DESC\nLIMIT 1",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.084571,
+      "tables_in_sql": [
+        "gold.daily_trip_slices"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "pickup_hour",
+        "total_trips"
+      ],
+      "result_rows": [
+        [
+          18,
+          134352
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": false,
+      "tables_given": [
+        "gold.daily_trip_slices",
+        "reference.cbd_zones"
+      ],
+      "seconds": 38.864,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "hand",
+      "request_id": "busiest-hour-yellow-from-zone",
+      "request": "In March 2025, which hour of the day had the most yellow taxi pickups inside the congestion zone, and how many trips was that?",
+      "expected_tables": [
+        "gold.daily_trip_slices"
+      ],
+      "reference_tables": [
+        "gold.daily_trip_slices"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT pickup_hour, trips AS yellow_taxi_pickups_inside_zone\nFROM gold.daily_trip_slices\nWHERE trip_date >= DATE '2025-03-01' AND trip_date <= DATE '2025-03-31'\n  AND service = 'yellow'\n  AND zone_relation = 'both_in'\nGROUP BY pickup_hour, trips\nORDER BY trips DESC\nLIMIT 1;\n```",
+        "prompt_tokens": 638,
+        "output_tokens": 91,
+        "seconds": 12.512817166
+      },
+      "sql": "SELECT pickup_hour, trips AS yellow_taxi_pickups_inside_zone\nFROM gold.daily_trip_slices\nWHERE trip_date >= DATE '2025-03-01' AND trip_date <= DATE '2025-03-31'\n  AND service = 'yellow'\n  AND zone_relation = 'both_in'\nGROUP BY pickup_hour, trips\nORDER BY trips DESC\nLIMIT 1",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.109805,
+      "tables_in_sql": [
+        "gold.daily_trip_slices"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "pickup_hour",
+        "yellow_taxi_pickups_inside_zone"
+      ],
+      "result_rows": [
+        [
+          21,
+          6734
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": false,
+      "tables_given": [
+        "gold.daily_trip_slices"
+      ],
+      "seconds": 12.63,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "full",
+      "request_id": "fee-trips-across-midnight",
+      "request": "How many yellow taxi trips that were picked up on January 4, 2025, the day before tolling began, carried a congestion fee and were dropped off on January 5 or later?",
+      "expected_tables": [
+        "silver.trips"
+      ],
+      "reference_tables": [
+        "silver.trips"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT COUNT(*) AS fee_trip_count\nFROM silver.trips\nWHERE service = 'yellow'\n  AND pickup_at >= DATE '2025-01-04'\n  AND pickup_at < DATE '2025-01-05'\n  AND cbd_congestion_fee > 0\n  AND dropoff_at >= DATE '2025-01-05';\n```",
+        "prompt_tokens": 5983,
+        "output_tokens": 90,
+        "seconds": 102.826859
+      },
+      "sql": "SELECT COUNT(*) AS fee_trip_count\nFROM silver.trips\nWHERE service = 'yellow'\n  AND pickup_at >= DATE '2025-01-04'\n  AND pickup_at < DATE '2025-01-05'\n  AND cbd_congestion_fee > 0\n  AND dropoff_at >= DATE '2025-01-05'",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.248738,
+      "tables_in_sql": [
+        "silver.trips"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "fee_trip_count"
+      ],
+      "result_rows": [
+        [
+          397
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": true,
+      "tables_given": [
+        "checks.ingest_stats",
+        "checks.results",
+        "expectations.drivers",
+        "expectations.verdicts",
+        "gold.baselines",
+        "gold.daily_entries",
+        "gold.daily_trip_slices",
+        "gold.daily_trips",
+        "reference.cbd_zones",
+        "reference.holidays",
+        "silver.crz_entries",
+        "silver.trips"
+      ],
+      "seconds": 103.094,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "selector",
+      "request_id": "fee-trips-across-midnight",
+      "request": "How many yellow taxi trips that were picked up on January 4, 2025, the day before tolling began, carried a congestion fee and were dropped off on January 5 or later?",
+      "expected_tables": [
+        "silver.trips"
+      ],
+      "reference_tables": [
+        "silver.trips"
+      ],
+      "selector": {
+        "answer": "TABLES: silver.trips, gold.daily_trips, reference.holidays",
+        "prompt_tokens": 943,
+        "output_tokens": 16,
+        "seconds": 14.891979042,
+        "tables": [
+          "silver.trips",
+          "gold.daily_trips",
+          "reference.holidays"
+        ],
+        "unknown": [],
+        "format_ok": true
+      },
+      "selection": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "gold.daily_trips",
+          "reference.holidays"
+        ]
+      },
+      "selection_reference": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "gold.daily_trips",
+          "reference.holidays"
+        ]
+      },
+      "builder": {
+        "answer": "```sql\nSELECT COUNT(*) AS fee_trip_count\nFROM silver.trips\nWHERE service = 'yellow'\n  AND pickup_at >= DATE '2025-01-04'\n  AND pickup_at < DATE '2025-01-05'\n  AND dropoff_at >= DATE '2025-01-05'\n  AND cbd_congestion_fee > 0;\n```",
+        "prompt_tokens": 1489,
+        "output_tokens": 90,
+        "seconds": 31.995781292
+      },
+      "sql": "SELECT COUNT(*) AS fee_trip_count\nFROM silver.trips\nWHERE service = 'yellow'\n  AND pickup_at >= DATE '2025-01-04'\n  AND pickup_at < DATE '2025-01-05'\n  AND dropoff_at >= DATE '2025-01-05'\n  AND cbd_congestion_fee > 0",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.221807,
+      "tables_in_sql": [
+        "silver.trips"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "fee_trip_count"
+      ],
+      "result_rows": [
+        [
+          397
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": true,
+      "tables_given": [
+        "gold.daily_trips",
+        "reference.holidays",
+        "silver.trips"
+      ],
+      "seconds": 47.132,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "hand",
+      "request_id": "fee-trips-across-midnight",
+      "request": "How many yellow taxi trips that were picked up on January 4, 2025, the day before tolling began, carried a congestion fee and were dropped off on January 5 or later?",
+      "expected_tables": [
+        "silver.trips"
+      ],
+      "reference_tables": [
+        "silver.trips"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT COUNT(*) AS trip_count\nFROM silver.trips\nWHERE service = 'yellow'\n  AND pickup_at = DATE '2025-01-04'\n  AND cbd_congestion_fee > 0\n  AND dropoff_at >= DATE '2025-01-05';\n```",
+        "prompt_tokens": 988,
+        "output_tokens": 71,
+        "seconds": 21.816969125
+      },
+      "sql": "SELECT COUNT(*) AS trip_count\nFROM silver.trips\nWHERE service = 'yellow'\n  AND pickup_at = DATE '2025-01-04'\n  AND cbd_congestion_fee > 0\n  AND dropoff_at >= DATE '2025-01-05'",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.21814,
+      "tables_in_sql": [
+        "silver.trips"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "trip_count"
+      ],
+      "result_rows": [
+        [
+          0
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": false,
+      "tables_given": [
+        "silver.trips"
+      ],
+      "seconds": 22.044,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "full",
+      "request_id": "entries-by-vehicle-class-june-2025",
+      "request": "How many vehicles entered the congestion relief zone in June 2025, for each vehicle class?",
+      "expected_tables": [
+        "gold.daily_entries"
+      ],
+      "reference_tables": [
+        "gold.daily_entries"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT vehicle_class, SUM(crz_entries) AS total_entries\nFROM silver.crz_entries\nWHERE interval_start >= TIMESTAMP_NTZ('2025-06-01 00:00:00') AND interval_start < TIMESTAMP_NTZ('2025-07-01 00:00:00')\nGROUP BY vehicle_class;\n```",
+        "prompt_tokens": 5962,
+        "output_tokens": 85,
+        "seconds": 103.129361333
+      },
+      "sql": "SELECT vehicle_class, SUM(crz_entries) AS total_entries\nFROM silver.crz_entries\nWHERE interval_start >= TIMESTAMP_NTZ('2025-06-01 00:00:00') AND interval_start < TIMESTAMP_NTZ('2025-07-01 00:00:00')\nGROUP BY vehicle_class",
+      "sql_status": "error",
+      "sql_error": "AnalysisException: [UNRESOLVED_ROUTINE] Cannot resolve routine `TIMESTAMP_NTZ` on search path [`system`.`builtin`, `system`.`session`, `local`]. SQLSTATE: 42883; line 3 pos 24",
+      "sql_seconds": 0.120952,
+      "tables_in_sql": [
+        "silver.crz_entries"
+      ],
+      "tables_not_given": [],
+      "result_columns": [],
+      "result_rows": [],
+      "result_row_count": null,
+      "answer_matched": false,
+      "tables_given": [
+        "checks.ingest_stats",
+        "checks.results",
+        "expectations.drivers",
+        "expectations.verdicts",
+        "gold.baselines",
+        "gold.daily_entries",
+        "gold.daily_trip_slices",
+        "gold.daily_trips",
+        "reference.cbd_zones",
+        "reference.holidays",
+        "silver.crz_entries",
+        "silver.trips"
+      ],
+      "seconds": 103.268,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "selector",
+      "request_id": "entries-by-vehicle-class-june-2025",
+      "request": "How many vehicles entered the congestion relief zone in June 2025, for each vehicle class?",
+      "expected_tables": [
+        "gold.daily_entries"
+      ],
+      "reference_tables": [
+        "gold.daily_entries"
+      ],
+      "selector": {
+        "answer": "TABLES: gold.daily_entries, silver.crz_entries",
+        "prompt_tokens": 922,
+        "output_tokens": 12,
+        "seconds": 14.264237541,
+        "tables": [
+          "gold.daily_entries",
+          "silver.crz_entries"
+        ],
+        "unknown": [],
+        "format_ok": true
+      },
+      "selection": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "silver.crz_entries"
+        ]
+      },
+      "selection_reference": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "silver.crz_entries"
+        ]
+      },
+      "builder": {
+        "answer": "```sql\nSELECT vehicle_class, SUM(crz_entries) AS total_entries_june_2025\nFROM gold.daily_entries\nWHERE entry_date >= DATE '2025-06-01' AND entry_date <= DATE '2025-06-30'\nGROUP BY vehicle_class\n```",
+        "prompt_tokens": 1474,
+        "output_tokens": 69,
+        "seconds": 29.640492166
+      },
+      "sql": "SELECT vehicle_class, SUM(crz_entries) AS total_entries_june_2025\nFROM gold.daily_entries\nWHERE entry_date >= DATE '2025-06-01' AND entry_date <= DATE '2025-06-30'\nGROUP BY vehicle_class",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.114904,
+      "tables_in_sql": [
+        "gold.daily_entries"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "vehicle_class",
+        "total_entries_june_2025"
+      ],
+      "result_rows": [
+        [
+          "cars_pickups_vans",
+          8760324
+        ],
+        [
+          "buses",
+          237860
+        ],
+        [
+          "motorcycles",
+          60556
+        ],
+        [
+          "multi_unit_trucks",
+          34982
+        ],
+        [
+          "tlc_taxi_fhv",
+          5442654
+        ],
+        [
+          "single_unit_trucks",
+          536603
+        ]
+      ],
+      "result_row_count": 6,
+      "answer_matched": true,
+      "tables_given": [
+        "gold.daily_entries",
+        "silver.crz_entries"
+      ],
+      "seconds": 44.042,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "hand",
+      "request_id": "entries-by-vehicle-class-june-2025",
+      "request": "How many vehicles entered the congestion relief zone in June 2025, for each vehicle class?",
+      "expected_tables": [
+        "gold.daily_entries"
+      ],
+      "reference_tables": [
+        "gold.daily_entries"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT vehicle_class, SUM(crz_entries) AS total_entries_june_2025\nFROM gold.daily_entries\nWHERE entry_date >= DATE '2025-06-01' AND entry_date <= DATE '2025-06-30'\nGROUP BY vehicle_class\n```",
+        "prompt_tokens": 713,
+        "output_tokens": 69,
+        "seconds": 10.252404209
+      },
+      "sql": "SELECT vehicle_class, SUM(crz_entries) AS total_entries_june_2025\nFROM gold.daily_entries\nWHERE entry_date >= DATE '2025-06-01' AND entry_date <= DATE '2025-06-30'\nGROUP BY vehicle_class",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.084823,
+      "tables_in_sql": [
+        "gold.daily_entries"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "vehicle_class",
+        "total_entries_june_2025"
+      ],
+      "result_rows": [
+        [
+          "cars_pickups_vans",
+          8760324
+        ],
+        [
+          "buses",
+          237860
+        ],
+        [
+          "motorcycles",
+          60556
+        ],
+        [
+          "multi_unit_trucks",
+          34982
+        ],
+        [
+          "tlc_taxi_fhv",
+          5442654
+        ],
+        [
+          "single_unit_trucks",
+          536603
+        ]
+      ],
+      "result_row_count": 6,
+      "answer_matched": true,
+      "tables_given": [
+        "gold.daily_entries"
+      ],
+      "seconds": 10.345,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "full",
+      "request_id": "busiest-ten-minutes-lincoln-tunnel",
+      "request": "On June 10, 2025, which 10-minute interval had the most vehicles entering the zone through the Lincoln Tunnel, and how many entered in it?",
+      "expected_tables": [
+        "silver.crz_entries"
+      ],
+      "reference_tables": [
+        "silver.crz_entries"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT interval_start AS ten_minute_interval, crz_entries AS vehicles_entering_zone\nFROM silver.crz_entries\nWHERE toll_date = DATE '2025-06-10'\n  AND detection_group = 'Lincoln Tunnel'\nORDER BY crz_entries DESC\nLIMIT 1;\n```",
+        "prompt_tokens": 5978,
+        "output_tokens": 66,
+        "seconds": 101.831841667
+      },
+      "sql": "SELECT interval_start AS ten_minute_interval, crz_entries AS vehicles_entering_zone\nFROM silver.crz_entries\nWHERE toll_date = DATE '2025-06-10'\n  AND detection_group = 'Lincoln Tunnel'\nORDER BY crz_entries DESC\nLIMIT 1",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.133278,
+      "tables_in_sql": [
+        "silver.crz_entries"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "ten_minute_interval",
+        "vehicles_entering_zone"
+      ],
+      "result_rows": [
+        [
+          "2025-06-10T06:40:00",
+          529
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": false,
+      "tables_given": [
+        "checks.ingest_stats",
+        "checks.results",
+        "expectations.drivers",
+        "expectations.verdicts",
+        "gold.baselines",
+        "gold.daily_entries",
+        "gold.daily_trip_slices",
+        "gold.daily_trips",
+        "reference.cbd_zones",
+        "reference.holidays",
+        "silver.crz_entries",
+        "silver.trips"
+      ],
+      "seconds": 101.983,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "selector",
+      "request_id": "busiest-ten-minutes-lincoln-tunnel",
+      "request": "On June 10, 2025, which 10-minute interval had the most vehicles entering the zone through the Lincoln Tunnel, and how many entered in it?",
+      "expected_tables": [
+        "silver.crz_entries"
+      ],
+      "reference_tables": [
+        "silver.crz_entries"
+      ],
+      "selector": {
+        "answer": "TABLES: silver.crz_entries, reference.holidays",
+        "prompt_tokens": 938,
+        "output_tokens": 12,
+        "seconds": 14.854668917,
+        "tables": [
+          "silver.crz_entries",
+          "reference.holidays"
+        ],
+        "unknown": [],
+        "format_ok": true
+      },
+      "selection": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "reference.holidays"
+        ]
+      },
+      "selection_reference": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "reference.holidays"
+        ]
+      },
+      "builder": {
+        "answer": "```sql\nSELECT interval_start, crz_entries \nFROM silver.crz_entries \nWHERE toll_date = DATE '2025-06-10' \n  AND detection_group = 'Lincoln Tunnel' \nORDER BY crz_entries DESC \nLIMIT 1;\n```",
+        "prompt_tokens": 1085,
+        "output_tokens": 59,
+        "seconds": 22.816443458
+      },
+      "sql": "SELECT interval_start, crz_entries \nFROM silver.crz_entries \nWHERE toll_date = DATE '2025-06-10' \n  AND detection_group = 'Lincoln Tunnel' \nORDER BY crz_entries DESC \nLIMIT 1",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.090168,
+      "tables_in_sql": [
+        "silver.crz_entries"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "interval_start",
+        "crz_entries"
+      ],
+      "result_rows": [
+        [
+          "2025-06-10T06:40:00",
+          529
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": false,
+      "tables_given": [
+        "reference.holidays",
+        "silver.crz_entries"
+      ],
+      "seconds": 37.782,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "hand",
+      "request_id": "busiest-ten-minutes-lincoln-tunnel",
+      "request": "On June 10, 2025, which 10-minute interval had the most vehicles entering the zone through the Lincoln Tunnel, and how many entered in it?",
+      "expected_tables": [
+        "silver.crz_entries"
+      ],
+      "reference_tables": [
+        "silver.crz_entries"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT interval_start, crz_entries \nFROM silver.crz_entries \nWHERE toll_date = DATE '2025-06-10' \n  AND detection_group = 'Lincoln Tunnel' \nORDER BY crz_entries DESC \nLIMIT 1;\n```",
+        "prompt_tokens": 919,
+        "output_tokens": 59,
+        "seconds": 20.125692875
+      },
+      "sql": "SELECT interval_start, crz_entries \nFROM silver.crz_entries \nWHERE toll_date = DATE '2025-06-10' \n  AND detection_group = 'Lincoln Tunnel' \nORDER BY crz_entries DESC \nLIMIT 1",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.099409,
+      "tables_in_sql": [
+        "silver.crz_entries"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "interval_start",
+        "crz_entries"
+      ],
+      "result_rows": [
+        [
+          "2025-06-10T06:40:00",
+          529
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": false,
+      "tables_given": [
+        "silver.crz_entries"
+      ],
+      "seconds": 20.233,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "full",
+      "request_id": "entries-outside-normal-sept-2026",
+      "request": "On how many days in September 2026 was the total number of vehicles entering the zone outside its normal range for that day?",
+      "expected_tables": [
+        "gold.daily_entries",
+        "gold.baselines"
+      ],
+      "reference_tables": [
+        "gold.baselines",
+        "gold.daily_entries"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT COUNT(DISTINCT baseline_date) AS days_outside_normal_range\nFROM gold.baselines\nWHERE metric = 'crz_entries' \n  AND slice_key = 'all'\n  AND baseline_date BETWEEN DATE '2026-09-01' AND DATE '2026-09-30'\n  AND (p10 > crz_entries OR p90 < crz_entries)\n```",
+        "prompt_tokens": 5969,
+        "output_tokens": 94,
+        "seconds": 107.406360333
+      },
+      "sql": "SELECT COUNT(DISTINCT baseline_date) AS days_outside_normal_range\nFROM gold.baselines\nWHERE metric = 'crz_entries' \n  AND slice_key = 'all'\n  AND baseline_date BETWEEN DATE '2026-09-01' AND DATE '2026-09-30'\n  AND (p10 > crz_entries OR p90 < crz_entries)",
+      "sql_status": "error",
+      "sql_error": "AnalysisException: [UNRESOLVED_COLUMN.WITH_SUGGESTION] A column, variable, or function parameter with name `crz_entries` cannot be resolved. Did you mean one of the following? [`metric`, `method`, `n_obs`, `p10`, `p50`]. SQLSTATE: 42703; line 6 pos 13;",
+      "sql_seconds": 0.132397,
+      "tables_in_sql": [
+        "gold.baselines"
+      ],
+      "tables_not_given": [],
+      "result_columns": [],
+      "result_rows": [],
+      "result_row_count": null,
+      "answer_matched": false,
+      "tables_given": [
+        "checks.ingest_stats",
+        "checks.results",
+        "expectations.drivers",
+        "expectations.verdicts",
+        "gold.baselines",
+        "gold.daily_entries",
+        "gold.daily_trip_slices",
+        "gold.daily_trips",
+        "reference.cbd_zones",
+        "reference.holidays",
+        "silver.crz_entries",
+        "silver.trips"
+      ],
+      "seconds": 107.557,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "selector",
+      "request_id": "entries-outside-normal-sept-2026",
+      "request": "On how many days in September 2026 was the total number of vehicles entering the zone outside its normal range for that day?",
+      "expected_tables": [
+        "gold.daily_entries",
+        "gold.baselines"
+      ],
+      "reference_tables": [
+        "gold.baselines",
+        "gold.daily_entries"
+      ],
+      "selector": {
+        "answer": "TABLES: gold.baselines, gold.daily_entries",
+        "prompt_tokens": 929,
+        "output_tokens": 12,
+        "seconds": 14.489361625,
+        "tables": [
+          "gold.baselines",
+          "gold.daily_entries"
+        ],
+        "unknown": [],
+        "format_ok": true
+      },
+      "selection": {
+        "all_included": true,
+        "missing": [],
+        "extra": []
+      },
+      "selection_reference": {
+        "all_included": true,
+        "missing": [],
+        "extra": []
+      },
+      "builder": {
+        "answer": "```sql\nSELECT COUNT(DISTINCT de.entry_date) AS days_outside_normal_range\nFROM gold.daily_entries de\nJOIN gold.baselines bl ON de.entry_date = bl.baseline_date AND de.vehicle_class != 'tlc_taxi_fhv' AND bl.metric = 'crz_entries'\nWHERE de.entry_date >= DATE '2026-09-01' AND de.entry_date <= DATE '2026-09-30'\n  AND (de.crz_entries < bl.p10 OR de.crz_entries > bl.p90);\n```",
+        "prompt_tokens": 1288,
+        "output_tokens": 123,
+        "seconds": 34.713495417
+      },
+      "sql": "SELECT COUNT(DISTINCT de.entry_date) AS days_outside_normal_range\nFROM gold.daily_entries de\nJOIN gold.baselines bl ON de.entry_date = bl.baseline_date AND de.vehicle_class != 'tlc_taxi_fhv' AND bl.metric = 'crz_entries'\nWHERE de.entry_date >= DATE '2026-09-01' AND de.entry_date <= DATE '2026-09-30'\n  AND (de.crz_entries < bl.p10 OR de.crz_entries > bl.p90)",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.201513,
+      "tables_in_sql": [
+        "gold.baselines",
+        "gold.daily_entries"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "days_outside_normal_range"
+      ],
+      "result_rows": [
+        [
+          30
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": false,
+      "tables_given": [
+        "gold.baselines",
+        "gold.daily_entries"
+      ],
+      "seconds": 49.428,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "hand",
+      "request_id": "entries-outside-normal-sept-2026",
+      "request": "On how many days in September 2026 was the total number of vehicles entering the zone outside its normal range for that day?",
+      "expected_tables": [
+        "gold.daily_entries",
+        "gold.baselines"
+      ],
+      "reference_tables": [
+        "gold.baselines",
+        "gold.daily_entries"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT COUNT(DISTINCT de.entry_date) AS days_outside_normal_range\nFROM gold.daily_entries de\nJOIN gold.baselines bl ON de.entry_date = bl.baseline_date AND de.vehicle_class != 'tlc_taxi_fhv' AND bl.metric = 'crz_entries'\nWHERE de.entry_date >= DATE '2026-09-01' AND de.entry_date <= DATE '2026-09-30'\n  AND (de.crz_entries < bl.p10 OR de.crz_entries > bl.p90);\n```",
+        "prompt_tokens": 1288,
+        "output_tokens": 123,
+        "seconds": 16.321152
+      },
+      "sql": "SELECT COUNT(DISTINCT de.entry_date) AS days_outside_normal_range\nFROM gold.daily_entries de\nJOIN gold.baselines bl ON de.entry_date = bl.baseline_date AND de.vehicle_class != 'tlc_taxi_fhv' AND bl.metric = 'crz_entries'\nWHERE de.entry_date >= DATE '2026-09-01' AND de.entry_date <= DATE '2026-09-30'\n  AND (de.crz_entries < bl.p10 OR de.crz_entries > bl.p90)",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.131837,
+      "tables_in_sql": [
+        "gold.baselines",
+        "gold.daily_entries"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "days_outside_normal_range"
+      ],
+      "result_rows": [
+        [
+          30
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": false,
+      "tables_given": [
+        "gold.baselines",
+        "gold.daily_entries"
+      ],
+      "seconds": 16.463,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "full",
+      "request_id": "zones-in-toll-zone-by-borough",
+      "request": "How many taxi zones does each borough have, and how many of them are inside the congestion toll zone?",
+      "expected_tables": [
+        "reference.cbd_zones"
+      ],
+      "reference_tables": [
+        "reference.cbd_zones"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT borough, COUNT(location_id) AS total_zones, SUM(CAST(in_cbd AS INT)) AS zones_inside_cbd\nFROM reference.cbd_zones\nGROUP BY borough;\n```",
+        "prompt_tokens": 5962,
+        "output_tokens": 41,
+        "seconds": 99.276077375
+      },
+      "sql": "SELECT borough, COUNT(location_id) AS total_zones, SUM(CAST(in_cbd AS INT)) AS zones_inside_cbd\nFROM reference.cbd_zones\nGROUP BY borough",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.107375,
+      "tables_in_sql": [
+        "reference.cbd_zones"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "borough",
+        "total_zones",
+        "zones_inside_cbd"
+      ],
+      "result_rows": [
+        [
+          "Brooklyn",
+          61,
+          0
+        ],
+        [
+          "EWR",
+          1,
+          0
+        ],
+        [
+          "N/A",
+          1,
+          0
+        ],
+        [
+          "Staten Island",
+          20,
+          0
+        ],
+        [
+          "Manhattan",
+          69,
+          38
+        ],
+        [
+          "Unknown",
+          1,
+          0
+        ],
+        [
+          "Queens",
+          69,
+          0
+        ],
+        [
+          "Bronx",
+          43,
+          0
+        ]
+      ],
+      "result_row_count": 8,
+      "answer_matched": true,
+      "tables_given": [
+        "checks.ingest_stats",
+        "checks.results",
+        "expectations.drivers",
+        "expectations.verdicts",
+        "gold.baselines",
+        "gold.daily_entries",
+        "gold.daily_trip_slices",
+        "gold.daily_trips",
+        "reference.cbd_zones",
+        "reference.holidays",
+        "silver.crz_entries",
+        "silver.trips"
+      ],
+      "seconds": 99.4,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "selector",
+      "request_id": "zones-in-toll-zone-by-borough",
+      "request": "How many taxi zones does each borough have, and how many of them are inside the congestion toll zone?",
+      "expected_tables": [
+        "reference.cbd_zones"
+      ],
+      "reference_tables": [
+        "reference.cbd_zones"
+      ],
+      "selector": {
+        "answer": "TABLES: reference.cbd_zones",
+        "prompt_tokens": 922,
+        "output_tokens": 8,
+        "seconds": 14.281735042,
+        "tables": [
+          "reference.cbd_zones"
+        ],
+        "unknown": [],
+        "format_ok": true
+      },
+      "selection": {
+        "all_included": true,
+        "missing": [],
+        "extra": []
+      },
+      "selection_reference": {
+        "all_included": true,
+        "missing": [],
+        "extra": []
+      },
+      "builder": {
+        "answer": "```sql\nSELECT borough, COUNT(*) AS total_zones, SUM(in_cbd::INT) AS zones_inside_cbd\nFROM reference.cbd_zones\nWHERE borough != 'Unknown' AND borough != 'N/A'\nGROUP BY borough;\n```",
+        "prompt_tokens": 509,
+        "output_tokens": 50,
+        "seconds": 14.546556709
+      },
+      "sql": "SELECT borough, COUNT(*) AS total_zones, SUM(in_cbd::INT) AS zones_inside_cbd\nFROM reference.cbd_zones\nWHERE borough != 'Unknown' AND borough != 'N/A'\nGROUP BY borough",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.118868,
+      "tables_in_sql": [
+        "reference.cbd_zones"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "borough",
+        "total_zones",
+        "zones_inside_cbd"
+      ],
+      "result_rows": [
+        [
+          "Brooklyn",
+          61,
+          0
+        ],
+        [
+          "EWR",
+          1,
+          0
+        ],
+        [
+          "Staten Island",
+          20,
+          0
+        ],
+        [
+          "Manhattan",
+          69,
+          38
+        ],
+        [
+          "Queens",
+          69,
+          0
+        ],
+        [
+          "Bronx",
+          43,
+          0
+        ]
+      ],
+      "result_row_count": 6,
+      "answer_matched": false,
+      "tables_given": [
+        "reference.cbd_zones"
+      ],
+      "seconds": 28.967,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "hand",
+      "request_id": "zones-in-toll-zone-by-borough",
+      "request": "How many taxi zones does each borough have, and how many of them are inside the congestion toll zone?",
+      "expected_tables": [
+        "reference.cbd_zones"
+      ],
+      "reference_tables": [
+        "reference.cbd_zones"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT borough, COUNT(*) AS total_zones, SUM(in_cbd::INT) AS zones_inside_cbd\nFROM reference.cbd_zones\nWHERE borough != 'Unknown' AND borough != 'N/A'\nGROUP BY borough;\n```",
+        "prompt_tokens": 509,
+        "output_tokens": 50,
+        "seconds": 6.577846291
+      },
+      "sql": "SELECT borough, COUNT(*) AS total_zones, SUM(in_cbd::INT) AS zones_inside_cbd\nFROM reference.cbd_zones\nWHERE borough != 'Unknown' AND borough != 'N/A'\nGROUP BY borough",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.082,
+      "tables_in_sql": [
+        "reference.cbd_zones"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "borough",
+        "total_zones",
+        "zones_inside_cbd"
+      ],
+      "result_rows": [
+        [
+          "Brooklyn",
+          61,
+          0
+        ],
+        [
+          "EWR",
+          1,
+          0
+        ],
+        [
+          "Staten Island",
+          20,
+          0
+        ],
+        [
+          "Manhattan",
+          69,
+          38
+        ],
+        [
+          "Queens",
+          69,
+          0
+        ],
+        [
+          "Bronx",
+          43,
+          0
+        ]
+      ],
+      "result_row_count": 6,
+      "answer_matched": false,
+      "tables_given": [
+        "reference.cbd_zones"
+      ],
+      "seconds": 6.669,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "full",
+      "request_id": "ride-hail-trips-on-holidays-2025",
+      "request": "For each public holiday in 2025, how many ride-hail trips were picked up that day?",
+      "expected_tables": [
+        "reference.holidays",
+        "gold.daily_trips"
+      ],
+      "reference_tables": [
+        "gold.daily_trips",
+        "reference.holidays"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT \n    h.holiday_date AS holiday,\n    COUNT(t.trip_id) AS ride_hail_trips\nFROM \n    reference.holidays h\nJOIN \n    silver.trips t ON h.holiday_date = DATE_TRUNC('day', t.pickup_at)\nWHERE \n    h.holiday_date BETWEEN DATE '2025-01-01' AND DATE '2025-12-31'\n    AND t.service = 'fhvhv'\nGROUP BY \n    h.holiday_date\nORDER BY \n    h.holiday_date;\n```",
+        "prompt_tokens": 5964,
+        "output_tokens": 122,
+        "seconds": 112.430814834
+      },
+      "sql": "SELECT \n    h.holiday_date AS holiday,\n    COUNT(t.trip_id) AS ride_hail_trips\nFROM \n    reference.holidays h\nJOIN \n    silver.trips t ON h.holiday_date = DATE_TRUNC('day', t.pickup_at)\nWHERE \n    h.holiday_date BETWEEN DATE '2025-01-01' AND DATE '2025-12-31'\n    AND t.service = 'fhvhv'\nGROUP BY \n    h.holiday_date\nORDER BY \n    h.holiday_date",
+      "sql_status": "error",
+      "sql_error": "AnalysisException: [UNRESOLVED_COLUMN.WITH_SUGGESTION] A column, variable, or function parameter with name `t`.`trip_id` cannot be resolved. Did you mean one of the following? [`t`.`trip_miles`, `h`.`name`, `t`.`pickup_at`, `t`.`service`, `t`.`dropoff_at`]. SQLSTATE: 42703; line 3 pos 10;",
+      "sql_seconds": 0.105763,
+      "tables_in_sql": [
+        "reference.holidays",
+        "silver.trips"
+      ],
+      "tables_not_given": [],
+      "result_columns": [],
+      "result_rows": [],
+      "result_row_count": null,
+      "answer_matched": false,
+      "tables_given": [
+        "checks.ingest_stats",
+        "checks.results",
+        "expectations.drivers",
+        "expectations.verdicts",
+        "gold.baselines",
+        "gold.daily_entries",
+        "gold.daily_trip_slices",
+        "gold.daily_trips",
+        "reference.cbd_zones",
+        "reference.holidays",
+        "silver.crz_entries",
+        "silver.trips"
+      ],
+      "seconds": 112.552,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "selector",
+      "request_id": "ride-hail-trips-on-holidays-2025",
+      "request": "For each public holiday in 2025, how many ride-hail trips were picked up that day?",
+      "expected_tables": [
+        "reference.holidays",
+        "gold.daily_trips"
+      ],
+      "reference_tables": [
+        "gold.daily_trips",
+        "reference.holidays"
+      ],
+      "selector": {
+        "answer": "TABLES: reference.holidays, gold.daily_trip_slices",
+        "prompt_tokens": 924,
+        "output_tokens": 12,
+        "seconds": 14.68814625,
+        "tables": [
+          "reference.holidays",
+          "gold.daily_trip_slices"
+        ],
+        "unknown": [],
+        "format_ok": true
+      },
+      "selection": {
+        "all_included": false,
+        "missing": [
+          "gold.daily_trips"
+        ],
+        "extra": [
+          "gold.daily_trip_slices"
+        ]
+      },
+      "selection_reference": {
+        "all_included": false,
+        "missing": [
+          "gold.daily_trips"
+        ],
+        "extra": [
+          "gold.daily_trip_slices"
+        ]
+      },
+      "builder": {
+        "answer": "```sql\nSELECT h.holiday_date, t.trips AS ride_hail_trips\nFROM reference.holidays h\nJOIN gold.daily_trip_slices t ON h.holiday_date = t.trip_date\nWHERE h.name IS NOT NULL AND t.service = 'fhvhv' AND YEAR(h.holiday_date) = 2025;\n```",
+        "prompt_tokens": 796,
+        "output_tokens": 72,
+        "seconds": 20.691675292
+      },
+      "sql": "SELECT h.holiday_date, t.trips AS ride_hail_trips\nFROM reference.holidays h\nJOIN gold.daily_trip_slices t ON h.holiday_date = t.trip_date\nWHERE h.name IS NOT NULL AND t.service = 'fhvhv' AND YEAR(h.holiday_date) = 2025",
+      "sql_status": "too_many_rows",
+      "sql_error": "more than 1000 rows",
+      "sql_seconds": 0.200938,
+      "tables_in_sql": [
+        "gold.daily_trip_slices",
+        "reference.holidays"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "holiday_date",
+        "ride_hail_trips"
+      ],
+      "result_rows": [],
+      "result_row_count": null,
+      "answer_matched": false,
+      "tables_given": [
+        "gold.daily_trip_slices",
+        "reference.holidays"
+      ],
+      "seconds": 35.6,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "hand",
+      "request_id": "ride-hail-trips-on-holidays-2025",
+      "request": "For each public holiday in 2025, how many ride-hail trips were picked up that day?",
+      "expected_tables": [
+        "reference.holidays",
+        "gold.daily_trips"
+      ],
+      "reference_tables": [
+        "gold.daily_trips",
+        "reference.holidays"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT h.holiday_date, g.trips AS ride_hail_trips\nFROM reference.holidays h\nJOIN gold.daily_trips g ON h.holiday_date = g.trip_date\nWHERE h.name IS NOT NULL AND g.service = 'fhvhv' AND YEAR(h.holiday_date) = 2025\n```",
+        "prompt_tokens": 645,
+        "output_tokens": 72,
+        "seconds": 18.384463917
+      },
+      "sql": "SELECT h.holiday_date, g.trips AS ride_hail_trips\nFROM reference.holidays h\nJOIN gold.daily_trips g ON h.holiday_date = g.trip_date\nWHERE h.name IS NOT NULL AND g.service = 'fhvhv' AND YEAR(h.holiday_date) = 2025",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.189741,
+      "tables_in_sql": [
+        "gold.daily_trips",
+        "reference.holidays"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "holiday_date",
+        "ride_hail_trips"
+      ],
+      "result_rows": [
+        [
+          "2025-11-11",
+          620742
+        ],
+        [
+          "2025-11-04",
+          595305
+        ],
+        [
+          "2025-11-27",
+          661557
+        ],
+        [
+          "2025-12-25",
+          525428
+        ],
+        [
+          "2025-10-13",
+          591112
+        ],
+        [
+          "2025-09-01",
+          528509
+        ],
+        [
+          "2025-07-04",
+          573009
+        ],
+        [
+          "2025-05-26",
+          521575
+        ],
+        [
+          "2025-02-12",
+          672972
+        ],
+        [
+          "2025-02-15",
+          817074
+        ],
+        [
+          "2025-02-17",
+          591229
+        ],
+        [
+          "2025-01-20",
+          571259
+        ],
+        [
+          "2025-01-01",
+          663563
+        ],
+        [
+          "2025-06-19",
+          666986
+        ]
+      ],
+      "result_row_count": 14,
+      "answer_matched": true,
+      "tables_given": [
+        "gold.daily_trips",
+        "reference.holidays"
+      ],
+      "seconds": 18.581,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "full",
+      "request_id": "largest-driver-latest-run",
+      "request": "In the most recent scoring run, which service accounts for the largest gap for the expectation derived-cbd-touch-trips-first-year, and how big is that gap?",
+      "expected_tables": [
+        "expectations.drivers",
+        "expectations.verdicts"
+      ],
+      "reference_tables": [
+        "expectations.drivers",
+        "expectations.verdicts"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT \n    drivers.slice_value AS service,\n    drivers.gap AS largest_gap\nFROM \n    expectations.drivers drivers\nJOIN \n    (SELECT run_id, expectation_id, MAX(scored_at) AS scored_at FROM expectations.verdicts GROUP BY run_id, expectation_id) latest_verdicts\nON \n    drivers.run_id = latest_verdicts.run_id AND drivers.expectation_id = latest_verdicts.expectation_id\nWHERE \n    drivers.dimension = 'service' AND drivers.expectation_id = 'derived-cbd-touch-trips-first-year'\nORDER BY \n    drivers.gap DESC\nLIMIT 1;\n```",
+        "prompt_tokens": 5974,
+        "output_tokens": 132,
+        "seconds": 114.389188833
+      },
+      "sql": "SELECT \n    drivers.slice_value AS service,\n    drivers.gap AS largest_gap\nFROM \n    expectations.drivers drivers\nJOIN \n    (SELECT run_id, expectation_id, MAX(scored_at) AS scored_at FROM expectations.verdicts GROUP BY run_id, expectation_id) latest_verdicts\nON \n    drivers.run_id = latest_verdicts.run_id AND drivers.expectation_id = latest_verdicts.expectation_id\nWHERE \n    drivers.dimension = 'service' AND drivers.expectation_id = 'derived-cbd-touch-trips-first-year'\nORDER BY \n    drivers.gap DESC\nLIMIT 1",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.20294,
+      "tables_in_sql": [
+        "expectations.drivers",
+        "expectations.verdicts"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "service",
+        "largest_gap"
+      ],
+      "result_rows": [
+        [
+          "yellow",
+          4637079.109999999
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": true,
+      "tables_given": [
+        "checks.ingest_stats",
+        "checks.results",
+        "expectations.drivers",
+        "expectations.verdicts",
+        "gold.baselines",
+        "gold.daily_entries",
+        "gold.daily_trip_slices",
+        "gold.daily_trips",
+        "reference.cbd_zones",
+        "reference.holidays",
+        "silver.crz_entries",
+        "silver.trips"
+      ],
+      "seconds": 114.611,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "selector",
+      "request_id": "largest-driver-latest-run",
+      "request": "In the most recent scoring run, which service accounts for the largest gap for the expectation derived-cbd-touch-trips-first-year, and how big is that gap?",
+      "expected_tables": [
+        "expectations.drivers",
+        "expectations.verdicts"
+      ],
+      "reference_tables": [
+        "expectations.drivers",
+        "expectations.verdicts"
+      ],
+      "selector": {
+        "answer": "TABLES: expectations.drivers, expectations.verdicts",
+        "prompt_tokens": 934,
+        "output_tokens": 12,
+        "seconds": 15.274177667,
+        "tables": [
+          "expectations.drivers",
+          "expectations.verdicts"
+        ],
+        "unknown": [],
+        "format_ok": true
+      },
+      "selection": {
+        "all_included": true,
+        "missing": [],
+        "extra": []
+      },
+      "selection_reference": {
+        "all_included": true,
+        "missing": [],
+        "extra": []
+      },
+      "builder": {
+        "answer": "```sql\nSELECT dimension AS service, gap AS largest_gap\nFROM expectations.drivers\nWHERE run_id = (\n    SELECT run_id \n    FROM expectations.verdicts \n    WHERE expectation_id = 'derived-cbd-touch-trips-first-year' \n    ORDER BY scored_at DESC \n    LIMIT 1\n) AND expectation_id = 'derived-cbd-touch-trips-first-year'\nAND dimension = 'service'\nORDER BY gap_rank ASC\nLIMIT 1;\n```",
+        "prompt_tokens": 1212,
+        "output_tokens": 96,
+        "seconds": 30.298195375
+      },
+      "sql": "SELECT dimension AS service, gap AS largest_gap\nFROM expectations.drivers\nWHERE run_id = (\n    SELECT run_id \n    FROM expectations.verdicts \n    WHERE expectation_id = 'derived-cbd-touch-trips-first-year' \n    ORDER BY scored_at DESC \n    LIMIT 1\n) AND expectation_id = 'derived-cbd-touch-trips-first-year'\nAND dimension = 'service'\nORDER BY gap_rank ASC\nLIMIT 1",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.134334,
+      "tables_in_sql": [
+        "expectations.drivers",
+        "expectations.verdicts"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "service",
+        "largest_gap"
+      ],
+      "result_rows": [
+        [
+          "service",
+          4637079.109999999
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": false,
+      "tables_given": [
+        "expectations.drivers",
+        "expectations.verdicts"
+      ],
+      "seconds": 45.727,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "hand",
+      "request_id": "largest-driver-latest-run",
+      "request": "In the most recent scoring run, which service accounts for the largest gap for the expectation derived-cbd-touch-trips-first-year, and how big is that gap?",
+      "expected_tables": [
+        "expectations.drivers",
+        "expectations.verdicts"
+      ],
+      "reference_tables": [
+        "expectations.drivers",
+        "expectations.verdicts"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT dimension AS service, gap AS largest_gap\nFROM expectations.drivers\nWHERE run_id = (\n    SELECT run_id \n    FROM expectations.verdicts \n    WHERE expectation_id = 'derived-cbd-touch-trips-first-year' \n    ORDER BY scored_at DESC \n    LIMIT 1\n) AND expectation_id = 'derived-cbd-touch-trips-first-year'\nAND dimension = 'service'\nORDER BY gap_rank ASC\nLIMIT 1;\n```",
+        "prompt_tokens": 1212,
+        "output_tokens": 96,
+        "seconds": 12.909685541
+      },
+      "sql": "SELECT dimension AS service, gap AS largest_gap\nFROM expectations.drivers\nWHERE run_id = (\n    SELECT run_id \n    FROM expectations.verdicts \n    WHERE expectation_id = 'derived-cbd-touch-trips-first-year' \n    ORDER BY scored_at DESC \n    LIMIT 1\n) AND expectation_id = 'derived-cbd-touch-trips-first-year'\nAND dimension = 'service'\nORDER BY gap_rank ASC\nLIMIT 1",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.14262,
+      "tables_in_sql": [
+        "expectations.drivers",
+        "expectations.verdicts"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "service",
+        "largest_gap"
+      ],
+      "result_rows": [
+        [
+          "service",
+          4637079.109999999
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": false,
+      "tables_given": [
+        "expectations.drivers",
+        "expectations.verdicts"
+      ],
+      "seconds": 13.061,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "full",
+      "request_id": "checks-not-passing-now",
+      "request": "Which data checks are not passing right now, going by the latest result of each check?",
+      "expected_tables": [
+        "checks.results"
+      ],
+      "reference_tables": [
+        "checks.results"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT target_table, check_id, partition_value, status, observed, threshold, message\nFROM (\n    SELECT target_table, check_id, partition_value, status, observed, threshold, message,\n           ROW_NUMBER() OVER (PARTITION BY check_id, target_table, partition_value ORDER BY checked_at DESC) as rn\n    FROM checks.results\n) t\nWHERE rn = 1 AND status != 'pass'\n```",
+        "prompt_tokens": 5959,
+        "output_tokens": 89,
+        "seconds": 111.464274208
+      },
+      "sql": "SELECT target_table, check_id, partition_value, status, observed, threshold, message\nFROM (\n    SELECT target_table, check_id, partition_value, status, observed, threshold, message,\n           ROW_NUMBER() OVER (PARTITION BY check_id, target_table, partition_value ORDER BY checked_at DESC) as rn\n    FROM checks.results\n) t\nWHERE rn = 1 AND status != 'pass'",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.347085,
+      "tables_in_sql": [
+        "checks.results"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "target_table",
+        "check_id",
+        "partition_value",
+        "status",
+        "observed",
+        "threshold",
+        "message"
+      ],
+      "result_rows": [
+        [
+          "reference.cbd_zones",
+          "cbd_zone_membership",
+          "2025",
+          "warn",
+          0.9482439762639054,
+          "at least 0.95",
+          "1,823,293 of 1,922,810 trips that start and end in the same in-zone zone carry the fee (2025-01-05 to 2025-12-31)"
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": true,
+      "tables_given": [
+        "checks.ingest_stats",
+        "checks.results",
+        "expectations.drivers",
+        "expectations.verdicts",
+        "gold.baselines",
+        "gold.daily_entries",
+        "gold.daily_trip_slices",
+        "gold.daily_trips",
+        "reference.cbd_zones",
+        "reference.holidays",
+        "silver.crz_entries",
+        "silver.trips"
+      ],
+      "seconds": 111.851,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "selector",
+      "request_id": "checks-not-passing-now",
+      "request": "Which data checks are not passing right now, going by the latest result of each check?",
+      "expected_tables": [
+        "checks.results"
+      ],
+      "reference_tables": [
+        "checks.results"
+      ],
+      "selector": {
+        "answer": "TABLES: checks.results",
+        "prompt_tokens": 919,
+        "output_tokens": 6,
+        "seconds": 14.716337875,
+        "tables": [
+          "checks.results"
+        ],
+        "unknown": [],
+        "format_ok": true
+      },
+      "selection": {
+        "all_included": true,
+        "missing": [],
+        "extra": []
+      },
+      "selection_reference": {
+        "all_included": true,
+        "missing": [],
+        "extra": []
+      },
+      "builder": {
+        "answer": "```sql\nSELECT check_id, target_table, partition_value, status, observed, threshold, message, checked_at\nFROM (\n    SELECT *,\n        ROW_NUMBER() OVER (PARTITION BY check_id ORDER BY checked_at DESC) AS rn\n    FROM checks.results\n) ranked_results\nWHERE rn = 1 AND status != 'pass'\n```",
+        "prompt_tokens": 564,
+        "output_tokens": 71,
+        "seconds": 17.641468042
+      },
+      "sql": "SELECT check_id, target_table, partition_value, status, observed, threshold, message, checked_at\nFROM (\n    SELECT *,\n        ROW_NUMBER() OVER (PARTITION BY check_id ORDER BY checked_at DESC) AS rn\n    FROM checks.results\n) ranked_results\nWHERE rn = 1 AND status != 'pass'",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.199236,
+      "tables_in_sql": [
+        "checks.results"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "check_id",
+        "target_table",
+        "partition_value",
+        "status",
+        "observed",
+        "threshold",
+        "message",
+        "checked_at"
+      ],
+      "result_rows": [
+        [
+          "cbd_zone_membership",
+          "reference.cbd_zones",
+          "2025",
+          "warn",
+          0.9482439762639054,
+          "at least 0.95",
+          "1,823,293 of 1,922,810 trips that start and end in the same in-zone zone carry the fee (2025-01-05 to 2025-12-31)",
+          "2026-11-12T04:12:18.690905"
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": true,
+      "tables_given": [
+        "checks.results"
+      ],
+      "seconds": 32.58,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "hand",
+      "request_id": "checks-not-passing-now",
+      "request": "Which data checks are not passing right now, going by the latest result of each check?",
+      "expected_tables": [
+        "checks.results"
+      ],
+      "reference_tables": [
+        "checks.results"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT check_id, target_table, partition_value, status, observed, threshold, message, checked_at\nFROM (\n    SELECT *,\n        ROW_NUMBER() OVER (PARTITION BY check_id ORDER BY checked_at DESC) AS rn\n    FROM checks.results\n) ranked_results\nWHERE rn = 1 AND status != 'pass'\n```",
+        "prompt_tokens": 564,
+        "output_tokens": 71,
+        "seconds": 9.802556
+      },
+      "sql": "SELECT check_id, target_table, partition_value, status, observed, threshold, message, checked_at\nFROM (\n    SELECT *,\n        ROW_NUMBER() OVER (PARTITION BY check_id ORDER BY checked_at DESC) AS rn\n    FROM checks.results\n) ranked_results\nWHERE rn = 1 AND status != 'pass'",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.118774,
+      "tables_in_sql": [
+        "checks.results"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "check_id",
+        "target_table",
+        "partition_value",
+        "status",
+        "observed",
+        "threshold",
+        "message",
+        "checked_at"
+      ],
+      "result_rows": [
+        [
+          "cbd_zone_membership",
+          "reference.cbd_zones",
+          "2025",
+          "warn",
+          0.9482439762639054,
+          "at least 0.95",
+          "1,823,293 of 1,922,810 trips that start and end in the same in-zone zone carry the fee (2025-01-05 to 2025-12-31)",
+          "2026-11-12T04:12:18.690905"
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": true,
+      "tables_given": [
+        "checks.results"
+      ],
+      "seconds": 9.931,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "full",
+      "request_id": "rows-dropped-yellow-2025-01",
+      "request": "When the January 2025 yellow taxi file was last loaded, how many of its rows were dropped for falling outside the month?",
+      "expected_tables": [
+        "checks.ingest_stats"
+      ],
+      "reference_tables": [
+        "checks.ingest_stats"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT \n    rows_dropped AS dropped_rows_count\nFROM (\n    SELECT \n        run_id,\n        loaded_at,\n        service,\n        source_month,\n        (rows_read - rows_kept) AS rows_dropped\n    FROM \n        checks.ingest_stats\n    WHERE \n        service = 'yellow' AND \n        source_month = '2025-01'\n    ORDER BY \n        loaded_at DESC\n    LIMIT 1\n)\n```",
+        "prompt_tokens": 5969,
+        "output_tokens": 99,
+        "seconds": 114.753685917
+      },
+      "sql": "SELECT \n    rows_dropped AS dropped_rows_count\nFROM (\n    SELECT \n        run_id,\n        loaded_at,\n        service,\n        source_month,\n        (rows_read - rows_kept) AS rows_dropped\n    FROM \n        checks.ingest_stats\n    WHERE \n        service = 'yellow' AND \n        source_month = '2025-01'\n    ORDER BY \n        loaded_at DESC\n    LIMIT 1\n)",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.166223,
+      "tables_in_sql": [
+        "checks.ingest_stats"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "dropped_rows_count"
+      ],
+      "result_rows": [
+        [
+          22
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": true,
+      "tables_given": [
+        "checks.ingest_stats",
+        "checks.results",
+        "expectations.drivers",
+        "expectations.verdicts",
+        "gold.baselines",
+        "gold.daily_entries",
+        "gold.daily_trip_slices",
+        "gold.daily_trips",
+        "reference.cbd_zones",
+        "reference.holidays",
+        "silver.crz_entries",
+        "silver.trips"
+      ],
+      "seconds": 114.954,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "selector",
+      "request_id": "rows-dropped-yellow-2025-01",
+      "request": "When the January 2025 yellow taxi file was last loaded, how many of its rows were dropped for falling outside the month?",
+      "expected_tables": [
+        "checks.ingest_stats"
+      ],
+      "reference_tables": [
+        "checks.ingest_stats"
+      ],
+      "selector": {
+        "answer": "TABLES: checks.ingest_stats, gold.daily_entries, silver.trips",
+        "prompt_tokens": 929,
+        "output_tokens": 17,
+        "seconds": 15.955849542,
+        "tables": [
+          "checks.ingest_stats",
+          "gold.daily_entries",
+          "silver.trips"
+        ],
+        "unknown": [],
+        "format_ok": true
+      },
+      "selection": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "gold.daily_entries",
+          "silver.trips"
+        ]
+      },
+      "selection_reference": {
+        "all_included": true,
+        "missing": [],
+        "extra": [
+          "gold.daily_entries",
+          "silver.trips"
+        ]
+      },
+      "builder": {
+        "answer": "```sql\nSELECT run_id, loaded_at, source_month, rows_read, rows_kept, (rows_read - rows_kept) AS rows_dropped\nFROM checks.ingest_stats\nWHERE service = 'yellow' AND source_month = '2025-01'\nORDER BY loaded_at DESC\nLIMIT 1;\n```",
+        "prompt_tokens": 1803,
+        "output_tokens": 71,
+        "seconds": 37.803788958
+      },
+      "sql": "SELECT run_id, loaded_at, source_month, rows_read, rows_kept, (rows_read - rows_kept) AS rows_dropped\nFROM checks.ingest_stats\nWHERE service = 'yellow' AND source_month = '2025-01'\nORDER BY loaded_at DESC\nLIMIT 1",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.087556,
+      "tables_in_sql": [
+        "checks.ingest_stats"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "run_id",
+        "loaded_at",
+        "source_month",
+        "rows_read",
+        "rows_kept",
+        "rows_dropped"
+      ],
+      "result_rows": [
+        [
+          "backfill-9a67fe7b55594d83bf787f8dca1fdb3d",
+          "2026-11-12T02:35:09.458701",
+          "2025-01",
+          3475226,
+          3475204,
+          22
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": true,
+      "tables_given": [
+        "checks.ingest_stats",
+        "gold.daily_entries",
+        "silver.trips"
+      ],
+      "seconds": 53.876,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    },
+    {
+      "model": "qwen2.5:14b",
+      "arm": "hand",
+      "request_id": "rows-dropped-yellow-2025-01",
+      "request": "When the January 2025 yellow taxi file was last loaded, how many of its rows were dropped for falling outside the month?",
+      "expected_tables": [
+        "checks.ingest_stats"
+      ],
+      "reference_tables": [
+        "checks.ingest_stats"
+      ],
+      "selector": null,
+      "selection": null,
+      "selection_reference": null,
+      "builder": {
+        "answer": "```sql\nSELECT rows_read - rows_kept AS dropped_rows \nFROM checks.ingest_stats \nWHERE service = 'yellow' AND source_month = '2025-01' \nORDER BY loaded_at DESC \nLIMIT 1\n```",
+        "prompt_tokens": 407,
+        "output_tokens": 53,
+        "seconds": 8.902830875
+      },
+      "sql": "SELECT rows_read - rows_kept AS dropped_rows \nFROM checks.ingest_stats \nWHERE service = 'yellow' AND source_month = '2025-01' \nORDER BY loaded_at DESC \nLIMIT 1",
+      "sql_status": "ok",
+      "sql_error": null,
+      "sql_seconds": 0.14055,
+      "tables_in_sql": [
+        "checks.ingest_stats"
+      ],
+      "tables_not_given": [],
+      "result_columns": [
+        "dropped_rows"
+      ],
+      "result_rows": [
+        [
+          22
+        ]
+      ],
+      "result_row_count": 1,
+      "answer_matched": true,
+      "tables_given": [
+        "checks.ingest_stats"
+      ],
+      "seconds": 9.05,
+      "run_id": "20261112T212530Z",
+      "model_digest": "7cdf5a0187d5c58cc5d369b255592f7841d1c4696d45a8c8a9489440385b22f6"
+    }
+  ]
+}

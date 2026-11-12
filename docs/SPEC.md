@@ -1,6 +1,6 @@
 # CRZ Expectations: design spec
 
-Version 1.6, November 12, 2026. Drafted with Claude and approved by the owner.
+Version 1.7, November 12, 2026. Drafted with Claude and approved by the owner.
 
 **Changes in 1.1:** expectations now come from a documented elicitation with a subject matter expert (an AI agent in this project), approved by the owner, instead of being written by the owner (sections 2, 7.5, 7.11, 9, Appendix A). The registry exists (13 entries). Ratio metrics support `change_vs_period`. Baselines use exact percentiles. Vehicle classes use canonical labels.
 
@@ -13,6 +13,8 @@ Version 1.6, November 12, 2026. Drafted with Claude and approved by the owner.
 **Changes in 1.5:** the driver details section 7.7 left open are settled in decision 0012, approved by the owner in the Phase 4 plan: `share_of_gap` is null only when the total gap is exactly zero, a slice with no value is labelled `(none)`, and each scoring run gets one set of driver rows.
 
 **Changes in 1.6:** Phase 6 was built (section 7.9, decision 0013). Approved by the owner in the Phase 6 plan: a second DAG, `crz_entries_weekly`, follows the MTA's weekly update; `crz_monthly` processes the month two months before its run date and catches up from October 2026 only; orchestrated scoring reads the registry commit with git inside the task; and a tree counts as `-dirty` only when something other than the generated `site/` has uncommitted changes (section 7.6).
+
+**Changes in 1.7:** Phase 8 was added and built (sections 6, 7.12, 10 and 12, decision 0014). Every warehouse table and column now carries a plain-language comment, written from `catalog/tables.yaml`. A selection harness beside the pipeline asks small local models to pick the tables for a request and to write SQL from them, and scores the two steps separately. This touches the scope in section 12, which rules out an LLM feature inside the pipeline. The harness is not inside the pipeline: no job, check, verdict or page depends on a model, and the only thing it writes to the warehouse is comments. The owner confirmed this change of scope on 2026-11-12.
 
 This spec is the source of truth for finishing the project. Claude Code implements it phase by phase. The owner reviews, decides, and verifies. Changes to the spec are made by editing this file in a commit, with a change note above saying what changed and why.
 
@@ -257,6 +259,10 @@ Append-only, so the history of verdicts is kept.
 **`expectations.drivers`** — one row per expectation x dimension x slice per run.
 `run_id STRING, expectation_id STRING, dimension STRING, slice_value STRING, comparison_value DOUBLE, observed_value DOUBLE, expected_value DOUBLE, gap DOUBLE, share_of_gap DOUBLE, gap_rank INT`.
 
+### Comments
+
+Every table and column carries a comment (Phase 8). A table's comment has a one-line summary, its grain, optional details, and when not to use it. The text lives in `catalog/tables.yaml` and is written by `make catalog-comments`, which changes metadata only. `make reference` rebuilds the two reference tables and drops their comments, so run `make catalog-comments` after it.
+
 ## 7. Components
 
 ### 7.1 Data checks (`src/pipeline/checks/`)
@@ -446,6 +452,22 @@ Rules for the briefing and challenge:
 
 The first elicitation is `docs/elicitation/2026-11-11-crz-expectations.md`.
 
+### 7.12 Agent selection harness (`src/pipeline/selection/`, Phase 8)
+
+A toy, kept deliberately small, for one question: when an agent is given only part of a schema, how should that part be chosen? It sits beside the pipeline. Nothing in sections 7.1 to 7.9 calls it.
+
+- **Catalog.** `catalog/tables.yaml` describes the 12 tables and their columns. `jobs/catalog_comments.py` writes the descriptions into Iceberg as comments, and stops if the YAML and the real tables disagree. `jobs/catalog_export.py` reads the comments back and writes `catalog/schema.md` (the full described schema) and `catalog/index.md` (one line per table). A model is shown what the warehouse carries, not the YAML.
+- **Requests.** `selection/requests.yaml` holds 12 plain-language requests, each with a reference query and `expected_tables`. The owner's approval of `expected_tables` is committed before any model run, and the run refuses to start while any is empty.
+- **The loop.** A selector reads the index and a request and answers with one line, `TABLES: schema.table, ...`. It is told to include a table when in doubt. A builder reads the described schema of the chosen tables and writes one SQL query. The request and the tables used are appended to `selection/precedents.jsonl`. Reading precedents back is not built.
+- **Three arms** on the same requests: `full` (the builder gets the whole schema), `selector` (the selector's tables), and `hand` (the owner's tables).
+- **Models.** Local models through Ollama on the host, called over plain HTTP with the standard library: `llama3.2:3b` and `qwen2.5:14b`, temperature 0. The model name, digest and options are recorded in every result. There is no agent framework, no vector search and no tool calling.
+- **Running SQL.** A model's query runs through the existing Spark session. It must be a single SELECT, it is cancelled after 120 seconds, and at most 1,000 rows come back.
+- **Scoring.** Selection and SQL are scored separately. Selection: were the owner's tables all included, were the reference query's tables all included, and how many extra tables came with them. SQL: did the query run, and does its answer match the reference answer. The matching rule is in decision 0014.
+- **Output.** `selection/results/<run_id>.json` and `.md`. Nothing but comments is written to the warehouse.
+- **Limit.** With 12 tables the whole schema fits in a prompt, so this shows the method and the look-alike decision (`silver.trips` against `gold.daily_trips`), not selection at scale.
+
+Make targets: `catalog-check`, `catalog-comments`, `catalog-export`, `selection-reference`, `selection-run [MODELS=]`. CI runs the unit and integration tests with the model calls replaced, and needs no model.
+
 ## 8. Engineering conventions
 
 - **Jobs** have a pure `run(spark, ...)` and a thin `main()`. Logic lives in pure DataFrame functions with unit tests.
@@ -593,6 +615,23 @@ See 7.9. Skip it if time is short, and update the README instead.
 
 See section 11. Also add a final AI log entry: a retrospective on what worked, what didn't, and what the owner would do differently.
 
+### Phase 8: Agent selection (added November 12, 2026)
+
+See 7.12. Added after Phase 7 was planned, as evidence for a second essay on making a warehouse usable by AI agents. The owner approved the plan before work began.
+
+**Do:**
+- Describe every table and column in `catalog/tables.yaml`, write the descriptions into the warehouse as comments, and export them back.
+- Draft about ten requests with reference queries. The owner approves `expected_tables` before any model run.
+- Build the selector, the builder, the Ollama client, the SQL runner, the three arms, scoring, and the precedent writer, with tests that need no model.
+- Run both local models across the three arms and write up the results.
+
+**Done when:**
+- [ ] `make catalog-check` reports that the descriptions match the warehouse, and a second `make catalog-comments` writes nothing
+- [ ] `expected_tables` is committed before the first results file
+- [ ] Both models have run all 12 requests through all three arms, and the results and summary are committed
+- [ ] The summary reports failures, format breaks and discarded output as they happened
+- [x] The owner has confirmed the change of scope in section 12 (2026-11-12)
+
 ## 11. Anki cards (final phase)
 
 Cards are written once, at the end, into the owner's existing ledger. **The ledger is outside the repo and must never be committed to it.**
@@ -634,7 +673,8 @@ Cards are written once, at the end, into the owner's existing ledger. **The ledg
 
 ## 12. Out of scope
 
-- An LLM feature inside the pipeline, such as generated narratives of verdicts. It is easy to make look good and hard to make reliable, and this project's credibility rests on its numbers.
+- An LLM feature inside the pipeline, such as generated narratives of verdicts. It is easy to make look good and hard to make reliable, and this project's credibility rests on its numbers. The Phase 8 selection harness (7.12) is a separate evaluation beside the pipeline: no number on the status page comes from a model. The owner confirmed this on 2026-11-12.
+- Selection at scale, reuse of saved precedents by the selector, hosted models, and agent frameworks. Phase 8 stops at a toy on 12 tables.
 - A second industry dataset (health care or finance). That is the next project, reusing the registry and scoring code.
 - Traffic speeds, vehicle miles traveled, and bus speeds datasets.
 - A hosted server. The pipeline runs on the laptop, and only the static page is public.
@@ -678,6 +718,8 @@ Expectation-driven data pipeline on NYC congestion pricing data: Spark 4.1 + Ice
 - `make test`: unit tests in the container. `make lint`: ruff.
 - `make silver|gold SERVICE= MONTH=`, `make backfill START= END=`, `make gold-backfill START= END=`
 - `make checks [MONTH=]`, `make score`, `make drivers`, `make site` (added as their phases land)
+- `make catalog-check`, `make catalog-comments`, `make catalog-export`: table and column descriptions from `catalog/tables.yaml`. Rerun `make catalog-comments` after `make reference`, which drops the comments on the reference tables.
+- `make selection-reference`, `make selection-run [MODELS=]`, `make selection-report RUN_ID=`: the selection harness. `selection-run` needs Ollama running on the host and took about 40 minutes for both models.
 - Develop on 1 to 3 months. Ask before any run likely to take more than 10 minutes.
 
 ## Rules
