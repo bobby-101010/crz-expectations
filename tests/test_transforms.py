@@ -46,13 +46,11 @@ def test_conform_fhvhv_before_2025_has_null_fee(spark):
         "trip_miles double",
     )
 
-    row = conform_trips(
-        bronze, "fhvhv", "2023-01", date(2023, 1, 1), date(2023, 2, 1)
-    ).first()
+    row = conform_trips(bronze, "fhvhv", "2023-01", date(2023, 1, 1), date(2023, 2, 1)).first()
 
-    assert row["operator_code"] == "HV0003" # type: ignore
-    assert row["pickup_zone_id"] == 79 # type: ignore
-    assert row["cbd_congestion_fee"] is None # type: ignore
+    assert row["operator_code"] == "HV0003"  # type: ignore
+    assert row["pickup_zone_id"] == 79  # type: ignore
+    assert row["cbd_congestion_fee"] is None  # type: ignore
 
 
 def test_conform_fails_loudly_when_a_required_column_is_missing(spark):
@@ -78,9 +76,7 @@ def test_daily_trips_counts_by_date_and_service(spark):
 
     result = daily_trips(silver, *JAN).collect()
 
-    assert {
-        (r["trip_date"], r["service"]): (r["trips"], r["cbd_fee_trips"]) for r in result
-    } == {
+    assert {(r["trip_date"], r["service"]): (r["trips"], r["cbd_fee_trips"]) for r in result} == {
         (date(2025, 1, 5), "yellow"): (2, 1),
         (date(2025, 1, 5), "fhvhv"): (1, 1),
         (date(2025, 1, 6), "fhvhv"): (1, 0),

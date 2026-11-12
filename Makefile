@@ -5,11 +5,15 @@ END ?= 2025-03
 RUN := docker compose run --rm spark
 CLUSTER := docker compose --profile cluster
 
-.PHONY: build test shell download profile silver gold backfill history cluster-up cluster-down cluster-silver
+.PHONY: build test test-integration lint shell download profile silver gold backfill history cluster-up cluster-down cluster-silver
 
 build: ; docker compose build
 
-test: ; $(RUN) pytest -q
+test: ; $(RUN) pytest -q -m "not integration"
+
+test-integration: ; $(RUN) pytest -q -m integration
+
+lint: ; $(RUN) sh -c "ruff check . && ruff format --check ."
 
 shell: ; $(RUN) bash
 

@@ -1,10 +1,12 @@
 # CRZ Expectations: design spec
 
-Version 1.1, November 11, 2026. Drafted with Claude and approved by the owner.
+Version 1.2, November 11, 2026. Drafted with Claude and approved by the owner.
 
 **Changes in 1.1:** expectations now come from a documented elicitation with a subject matter expert (an AI agent in this project), approved by the owner, instead of being written by the owner (sections 2, 7.5, 7.11, 9, Appendix A). The registry exists (13 entries). Ratio metrics support `change_vs_period`. Baselines use exact percentiles. Vehicle classes use canonical labels.
 
-This spec is the source of truth for finishing the project. Claude Code implements it phase by phase. The owner reviews, decides, and verifies. Changes to the spec are made by editing this file in a commit, with a line in `docs/ai-log.md` saying what changed and why.
+**Changes in 1.2:** the AI log is private. It is the owner's working record, kept in `docs/ai-log.md` on the owner's machine and never committed, linked, or published (sections 1, 7.8, 9, 10, 11, Appendix A). Spec changes are recorded in these change notes instead of the log. Automated, statistically derived expectations are named as future work (section 12).
+
+This spec is the source of truth for finishing the project. Claude Code implements it phase by phase. The owner reviews, decides, and verifies. Changes to the spec are made by editing this file in a commit, with a change note above saying what changed and why.
 
 ## Contents
 
@@ -35,7 +37,7 @@ A public portfolio project for data engineering roles. It has to show three thin
 
 1. **Engineering depth.** Spark and Iceberg at a scale of about a billion rows, a medallion layout, idempotent jobs, data checks, tests, and CI.
 2. **A point of view.** Expectation-driven data engineering: write down what should happen before the data arrives, then build pipelines that measure the gap and locate where it comes from.
-3. **Disciplined use of generative AI.** The project is finished with Claude Code, working from this spec, with a public log of what the AI did, what the owner decided, and what was checked. The expectations themselves come from an interview with an AI subject matter expert. It is run and checked by the engineer the way a real stakeholder interview would be, and recorded in full.
+3. **Disciplined use of generative AI.** The project is finished with Claude Code, working from this spec, with the spec, the decision records, the tests, and the elicitation record public. The owner also keeps a private log of what the AI did, what the owner decided, and what was checked. The expectations themselves come from an interview with an AI subject matter expert. It is run and checked by the engineer the way a real stakeholder interview would be, and recorded in full.
 
 The deadline is about two weeks from the date above. Every phase has a "done when" list, so scope can be cut cleanly if time runs short.
 
@@ -62,7 +64,7 @@ The deadline is about two weeks from the date above. Every phase has a "done whe
 
 ## 3. Where the project stands
 
-Checklists 1 and 2 are done. They were planned with Claude in chat. Claude drafted the code, and the owner set it up, ran it, debugged it, and verified it. That history goes in the first AI log entry.
+Checklists 1 and 2 are done. They were planned with Claude in chat. Claude drafted the code, and the owner set it up, ran it, debugged it, and verified it. That history goes in the first entry of the owner's private AI log.
 
 ### Stack (pinned; do not upgrade without asking)
 
@@ -385,7 +387,7 @@ A static site on GitHub Pages, deployed by a workflow when `site/**` changes on 
 
 - `make site` exports small JSON to `site/data/`: verdicts, drivers, latest checks, freshness, and a daily series for each expectation's metric. It then renders `site/index.html` with Jinja2 and draws small charts as inline SVG generated in Python. `site/` is committed.
 - For each expectation, the page shows: the statement, an origin badge, the recorded date linked to the registry commit, the verdict badge, observed versus the expected range drawn as a bar, the top three drivers with their share of the gap, and the note.
-- The page also shows: a data health table (the latest result of each check), freshness per source, a short "how to read this" section, and links to the README, the essay, this spec, and the AI log.
+- The page also shows: a data health table (the latest result of each check), freshness per source, a short "how to read this" section, and links to the README, the essay, and this spec.
 - It must work at phone width, respect dark mode, and pass basic accessibility checks (labels, contrast, alt text for charts).
 
 GitHub Pages on a free plan needs a public repo. Making the repo public is the owner's decision in Phase 5. Check the history for secrets first.
@@ -468,9 +470,9 @@ This section is part of what the project demonstrates. Follow it as closely as t
 6. Claude Code drafts the phase's AI log entry from the session. The owner completes the "checked", "changed or rejected", and "mistakes caught" parts in their own words.
 7. A pull request opens with a summary and the acceptance results, and the owner merges it.
 
-### AI log (`docs/ai-log.md`)
+### AI log (`docs/ai-log.md`, private)
 
-The log is public and honest. It records what was asked, what the AI produced, what was verified and how, what the owner changed or rejected, and the mistakes caught, whether the AI's or the owner's. It never pads or flatters. The template is in Appendix B.
+The log is private and honest. It stays on the owner's machine, listed in `.git/info/exclude`, and is never committed, linked from the README or status page, or quoted in commit messages or pull requests. It records what was asked, what the AI produced, what was verified and how, what the owner changed or rejected, and the mistakes caught, whether the AI's or the owner's. It never pads or flatters. The template is in Appendix B.
 
 The first entry covers checklists 1 and 2. Claude in chat planned them and drafted the code. The owner set up, ran, debugged, and verified everything, including:
 
@@ -491,7 +493,7 @@ The days are targets for a two-week window. If a phase runs long, cut its option
 ### Phase 0: Workflow, CI, and day-1 expectations (day 1)
 
 **Do:**
-- Create `CLAUDE.md` (Appendix A), `docs/ai-log.md` with its first entry, `docs/decisions/` with the backfilled records, and `docs/sources.md`.
+- Create `CLAUDE.md` (Appendix A), the private `docs/ai-log.md` with its first entry, `docs/decisions/` with the backfilled records, and `docs/sources.md`.
 - Add ruff and fix the lint findings.
 - Add `ci.yml` with unit tests, plus one integration test that runs the silver and gold jobs on fixtures with Iceberg.
 
@@ -501,7 +503,7 @@ The days are targets for a two-week window. If a phase runs long, cut its option
 - [ ] CI is green on `main`
 - [ ] The integration test creates and writes both Iceberg tables in a temporary warehouse
 - [ ] The registry and the elicitation record are on `main`, with commit times earlier than the prospective windows' data
-- [ ] The first AI log entry is complete
+- [ ] The first AI log entry is drafted in the private log
 
 ### Phase 1: Data checks (days 2 and 3)
 
@@ -559,7 +561,7 @@ The days are targets for a two-week window. If a phase runs long, cut its option
 
 **Do:**
 - Build the `make site` export and renderer, and `pages.yml`.
-- Rewrite the README: the pitch, the architecture diagram, headline results, how to run, the philosophy, a link to the essay, and a "Built with Claude Code" section linking the AI log.
+- Rewrite the README: the pitch, the architecture diagram, headline results, how to run, the philosophy, a link to the essay, and a "Built with Claude Code" section linking this spec, the decision records, and the elicitation record.
 - Produce an essay outline (Appendix D) with a fact-checked numbers table. The owner writes `docs/essay.md`.
 
 **Done when:**
@@ -621,6 +623,7 @@ Cards are written once, at the end, into the owner's existing ledger. **The ledg
 - A second industry dataset (health care or finance). That is the next project, reusing the registry and scoring code.
 - Traffic speeds, vehicle miles traveled, and bus speeds datasets.
 - A hosted server. The pipeline runs on the laptop, and only the static page is public.
+- Automated expectations. Every expectation here depends on a subject matter expert, simulated or real. A later version will add expectations produced by statistical methods, to sit alongside the experts' in the same registry. Not in this project.
 
 ## 13. Risks and open questions
 
@@ -673,7 +676,7 @@ Expectation-driven data pipeline on NYC congestion pricing data: Spark 4.1 + Ice
 - Never commit `~/Documents/Anki/` content to this repo.
 - One branch and PR per phase (`phase-N-name`). Plan first, in plan mode, and wait for approval.
 - Report test and run results exactly, including failures. Do not say something works unless you ran it.
-- At the end of each phase, draft the entry in `docs/ai-log.md` (template in the spec, Appendix B) and leave the owner's sections for the owner.
+- At the end of each phase, draft the entry in `docs/ai-log.md` (template in the spec, Appendix B) and leave the owner's sections for the owner. The log is private: it is untracked, so never `git add` it, link it, or quote it in commits or pull requests.
 ````
 
 ## Appendix B: AI log template

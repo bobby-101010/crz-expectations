@@ -28,7 +28,10 @@ def main() -> None:
             read, kept = silver_trips.run(spark, service, month)
             print(f"  {service} {month}: read {read:,}, kept {kept:,}, dropped {read - kept:,}")
         daily_trips.run(spark, month)
-        print(f"[{position}/{len(months)}] {month} done in {time.monotonic() - began:.0f}s", flush=True)
+        print(
+            f"[{position}/{len(months)}] {month} done in {time.monotonic() - began:.0f}s",
+            flush=True,
+        )
     spark.stop()
 
 
