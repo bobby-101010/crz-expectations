@@ -754,6 +754,7 @@ Expectation-driven data pipeline on NYC congestion pricing data: Spark 4.1 + Ice
 - `make checks [MONTH=]`, `make score`, `make drivers`, `make site` (added as their phases land)
 - `make catalog-check`, `make catalog-comments`, `make catalog-export`: table and column descriptions from `catalog/tables.yaml`. Rerun `make catalog-comments` after `make reference`, which drops the comments on the reference tables.
 - `make selection-reference`, `make selection-run [MODELS=]`, `make selection-report RUN_ID=`: the selection harness. `selection-run` needs Ollama running on the host and took about 40 minutes for both models.
+- `make staged-check`, `make staged-run [MODELS=]`, `make staged-report RUN_ID=`: the staged harness with lifecycle narratives (`narratives/`). `staged-check` reads the inputs and runs no model. `staged-run` needs Ollama running on the host and took about 2 hours 15 minutes for both models.
 - Develop on 1 to 3 months. Ask before any run likely to take more than 10 minutes.
 
 ## Rules
