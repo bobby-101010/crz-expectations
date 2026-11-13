@@ -1,6 +1,6 @@
 # CRZ Expectations: design spec
 
-Version 1.7, November 12, 2026. Drafted with Claude and approved by the owner.
+Version 1.8, November 13, 2026. Drafted with Claude and approved by the owner.
 
 **Changes in 1.1:** expectations now come from a documented elicitation with a subject matter expert (an AI agent in this project), approved by the owner, instead of being written by the owner (sections 2, 7.5, 7.11, 9, Appendix A). The registry exists (13 entries). Ratio metrics support `change_vs_period`. Baselines use exact percentiles. Vehicle classes use canonical labels.
 
@@ -15,6 +15,8 @@ Version 1.7, November 12, 2026. Drafted with Claude and approved by the owner.
 **Changes in 1.6:** Phase 6 was built (section 7.9, decision 0013). Approved by the owner in the Phase 6 plan: a second DAG, `crz_entries_weekly`, follows the MTA's weekly update; `crz_monthly` processes the month two months before its run date and catches up from October 2026 only; orchestrated scoring reads the registry commit with git inside the task; and a tree counts as `-dirty` only when something other than the generated `site/` has uncommitted changes (section 7.6).
 
 **Changes in 1.7:** Phase 8 was added and built (sections 6, 7.12, 10 and 12, decision 0014). Every warehouse table and column now carries a plain-language comment, written from `catalog/tables.yaml`. A selection harness beside the pipeline asks small local models to pick the tables for a request and to write SQL from them, and scores the two steps separately. This touches the scope in section 12, which rules out an LLM feature inside the pipeline. The harness is not inside the pipeline: no job, check, verdict or page depends on a model, and the only thing it writes to the warehouse is comments. The owner confirmed this change of scope on 2026-11-12.
+
+**Changes in 1.8:** Phase 9 was added and built (sections 7.12, 7.13, 10 and 12, decision 0015). Four lifecycle narratives in `narratives/` describe, in prose, how each process writes its rows. A staged version of the Phase 8 harness gives a request to three model calls with fresh contexts (choose a lifecycle, write a plan from its narrative, write SQL from the plan) and compares that with one call that sees everything. Predictions per request, arm and model were committed before the run. A fault in the query time limit was found and fixed: the Spark session is now replaced after a timeout (7.12). Like Phase 8, this is an evaluation beside the pipeline and nothing in the pipeline depends on it.
 
 This spec is the source of truth for finishing the project. Claude Code implements it phase by phase. The owner reviews, decides, and verifies. Changes to the spec are made by editing this file in a commit, with a change note above saying what changed and why.
 
@@ -461,12 +463,27 @@ A toy, kept deliberately small, for one question: when an agent is given only pa
 - **The loop.** A selector reads the index and a request and answers with one line, `TABLES: schema.table, ...`. It is told to include a table when in doubt. A builder reads the described schema of the chosen tables and writes one SQL query. The request and the tables used are appended to `selection/precedents.jsonl`. Reading precedents back is not built.
 - **Three arms** on the same requests: `full` (the builder gets the whole schema), `selector` (the selector's tables), and `hand` (the owner's tables).
 - **Models.** Local models through Ollama on the host, called over plain HTTP with the standard library: `llama3.2:3b` and `qwen2.5:14b`, temperature 0. The model name, digest and options are recorded in every result. There is no agent framework, no vector search and no tool calling.
-- **Running SQL.** A model's query runs through the existing Spark session. It must be a single SELECT, it is cancelled after 120 seconds, and at most 1,000 rows come back.
+- **Running SQL.** A model's query runs through the existing Spark session. It must be a single SELECT, it is cancelled after 120 seconds, and at most 1,000 rows come back. After a timeout the harness kills the JVM and builds a new session, because cancelling does not always stop a query's tasks, and tasks left running block the queries after them (decision 0015).
 - **Scoring.** Selection and SQL are scored separately. Selection: were the owner's tables all included, were the reference query's tables all included, and how many extra tables came with them. SQL: did the query run, and does its answer match the reference answer. The matching rule is in decision 0014.
 - **Output.** `selection/results/<run_id>.json` and `.md`. Nothing but comments is written to the warehouse.
 - **Limit.** With 12 tables the whole schema fits in a prompt, so this shows the method and the look-alike decision (`silver.trips` against `gold.daily_trips`), not selection at scale.
 
 Make targets: `catalog-check`, `catalog-comments`, `catalog-export`, `selection-reference`, `selection-run [MODELS=]`. CI runs the unit and integration tests with the model calls replaced, and needs no model.
+
+### 7.13 Lifecycle narratives and the staged harness (`narratives/`, `src/pipeline/staged/`, Phase 9)
+
+Phase 8 found that the models had the right tables and still lacked meaning. Phase 9 tests two answers to that: prose about how the data comes to be, and dividing the work so each model call sees only what its step needs. It reuses the Phase 8 catalog, client, SQL runner and strict matching rule.
+
+- **Narratives.** `narratives/index.yaml` lists four lifecycles (`trip`, `zone-entry`, `expectation`, `load-and-checks`), each with a title, a one-line description, its tables and a file of about a page. A narrative says how one process writes its rows, in the warehouse's table and column names. Every table belongs to at least one lifecycle.
+- **Three stages, each one model call with a context of its own.** A selector reads the index lines and the request and answers `LIFECYCLE: id`. An interpreter reads that lifecycle's narrative and the request and writes a plan with five labelled parts: `TABLES`, `FILTERS`, `MEASURE`, `GRAIN`, `DEFINITIONS`. A builder reads the plan and the described schema of the plan's tables and writes one SQL query. The builder sees neither the request nor the narrative. A test fails if a stage's prompt holds another stage's information.
+- **Four arms:** `full` (Phase 8's full-schema call, unchanged), `full_narratives` (the full schema and every narrative in one call), `staged`, and `staged_hand` (the owner's lifecycle in place of the selector).
+- **Requests.** The 12 from Phase 8 plus 6 held-out requests written after the narratives were frozen. Each has `expected_lifecycle` and `acceptable_table_sets`.
+- **Predictions first.** `selection/predictions.yaml` holds `match` or `no_match` for every request, arm and model, committed before the run. `make staged-check` and the run itself refuse to go on while any input is missing.
+- **Scoring.** The strict match is the headline. A looser measure, values present, is reported beside it. Selection is scored as the lifecycle chosen and as whether the plan's tables can answer the request. A broken output format is counted, not repaired. Results are split by seen and held-out requests and compared with the predictions.
+- **Output.** `selection/results/staged-<run_id>.json` and `.md`, with every stage's prompt, answer and hand-off.
+- **Result.** In decision 0015. In short: the narratives added two matches of 18 on the larger model in one call, staging matched as many as the plain full schema but different requests, and the small model failed in every arm.
+
+Make targets: `staged-check`, `staged-run [MODELS=]`, `staged-report RUN_ID=`.
 
 ## 8. Engineering conventions
 
@@ -632,6 +649,23 @@ See 7.12. Added after Phase 7 was planned, as evidence for a second essay on mak
 - [ ] The summary reports failures, format breaks and discarded output as they happened
 - [x] The owner has confirmed the change of scope in section 12 (2026-11-12)
 
+### Phase 9: Lifecycle narratives (added November 12, 2026)
+
+See 7.13. The owner approved the plan before the build and the inputs before the run.
+
+**Do:**
+- Write a narrative per lifecycle, by an author who has not seen the requests or results, and check each against the warehouse.
+- Build the three stages, the four arms, both measures and the prediction comparison, with tests that need no model, including one that fails if a stage sees another stage's information.
+- Add held-out requests after the narratives are frozen. Commit lifecycle picks, acceptable table sets and predictions before the run.
+- Run a timed pilot, then both models across all four arms, and write up the results.
+
+**Done when:**
+- [x] `make staged-check` reports that the inputs are complete
+- [x] The predictions are committed before the first results file (`e14928f`)
+- [x] Both models have run all 18 requests through all four arms, and the results are committed (run `20261113T054409Z`)
+- [x] The summary splits seen from held-out requests and reports failures and format breaks as they happened
+- [x] Decision 0015 compares the run with the predictions
+
 ## 11. Anki cards (final phase)
 
 Cards are written once, at the end, into the owner's existing ledger. **The ledger is outside the repo and must never be committed to it.**
@@ -674,7 +708,7 @@ Cards are written once, at the end, into the owner's existing ledger. **The ledg
 ## 12. Out of scope
 
 - An LLM feature inside the pipeline, such as generated narratives of verdicts. It is easy to make look good and hard to make reliable, and this project's credibility rests on its numbers. The Phase 8 selection harness (7.12) is a separate evaluation beside the pipeline: no number on the status page comes from a model. The owner confirmed this on 2026-11-12.
-- Selection at scale, reuse of saved precedents by the selector, hosted models, and agent frameworks. Phase 8 stops at a toy on 12 tables.
+- Selection at scale, reuse of saved precedents by the selector, hosted models, and agent frameworks. Phases 8 and 9 stop at a toy on 12 tables.
 - A second industry dataset (health care or finance). That is the next project, reusing the registry and scoring code.
 - Traffic speeds, vehicle miles traveled, and bus speeds datasets.
 - A hosted server. The pipeline runs on the laptop, and only the static page is public.
