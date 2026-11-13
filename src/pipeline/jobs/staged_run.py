@@ -24,7 +24,7 @@ from pipeline.jobs import selection_reference
 from pipeline.selection import ollama
 from pipeline.selection import request_file as base_requests
 from pipeline.selection.catalog import load_descriptions, read_tables, render_schema
-from pipeline.selection.sql import MAX_ROWS, TIME_LIMIT_SECONDS, execute
+from pipeline.selection.sql import MAX_ROWS, TIME_LIMIT_SECONDS, Warehouse, execute
 from pipeline.session import build_session
 from pipeline.staged import narratives, predictions, request_file
 from pipeline.staged.evaluate import summarize, summarize_predictions
@@ -88,6 +88,7 @@ def run(
     arms: tuple[str, ...] = ARMS,
     only: list[str] | None = None,
     progress=None,
+    execute_sql=None,
 ) -> tuple[list[dict], list[dict]]:
     """Every model x request x arm. Returns (records, reference answers as JSON)."""
     tables = read_tables(spark)
@@ -114,7 +115,7 @@ def run(
         tables,
         references,
         generate,
-        lambda sql: execute(spark, sql),
+        execute_sql or (lambda sql: execute(spark, sql)),
         arms,
         progress,
     )
@@ -170,10 +171,20 @@ def main() -> None:
     if too_long:
         spark.stop()
         sys.exit(f"the run may not start: {too_long}")
+    # The session is replaced after a query that hits the time limit: see `Warehouse`.
+    warehouse = Warehouse(spark, lambda: build_session("staged_run"))
     records, references = run(
-        spark, inputs, args.models, ollama.generate, tuple(args.arms), args.only, progress=show
+        spark,
+        inputs,
+        args.models,
+        ollama.generate,
+        tuple(args.arms),
+        args.only,
+        progress=show,
+        execute_sql=warehouse.execute,
     )
-    spark.stop()
+    warehouse.spark.stop()
+    print(f"the session was replaced {warehouse.restarts} times, once after each timeout")
 
     for record in records:
         record["run_id"] = run_id

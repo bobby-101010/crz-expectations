@@ -7,10 +7,12 @@ limit, and only a capped number of rows is brought back.
 import re
 import threading
 import uuid
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import date, datetime
 from decimal import Decimal
 
+from pyspark import SparkContext
 from pyspark.sql import SparkSession
 
 TIME_LIMIT_SECONDS = 120
@@ -113,3 +115,39 @@ def execute(
 def use_warehouse(spark: SparkSession) -> None:
     """Make `gold.daily_trips` resolve without the catalog name in front."""
     spark.catalog.setCurrentCatalog(CATALOG)
+
+
+def replace_jvm(spark: SparkSession, build: Callable[[], SparkSession]) -> SparkSession:
+    """Stop the session, kill the JVM behind it and build a new session in a new JVM."""
+    gateway = SparkContext._gateway
+    spark.stop()
+    gateway.shutdown()
+    gateway.proc.kill()
+    gateway.proc.wait()
+    SparkContext._gateway = None
+    SparkContext._jvm = None
+    fresh = build()
+    use_warehouse(fresh)
+    return fresh
+
+
+class Warehouse:
+    """The session the models' queries run in. It is replaced after every timeout.
+
+    Cancelling a query does not stop its tasks when they are inside a long generated
+    loop, such as a join with no condition. They run on and keep their task slots, and
+    once the slots are gone every later query waits until it times out too. Killing the
+    JVM is the only thing that ends them, so a timeout costs one new session.
+    """
+
+    def __init__(self, spark: SparkSession, build: Callable[[], SparkSession]):
+        self.spark = spark
+        self.restarts = 0
+        self._build = build
+
+    def execute(self, sql: str, time_limit: float = TIME_LIMIT_SECONDS) -> QueryResult:
+        result = execute(self.spark, sql, time_limit=time_limit)
+        if result.status == TIMEOUT:
+            self.spark = replace_jvm(self.spark, self._build)
+            self.restarts += 1
+        return result

@@ -23,7 +23,7 @@ from pipeline.selection.evaluate import render_summary, summarize
 from pipeline.selection.report import render_report
 from pipeline.selection.request_file import Request
 from pipeline.selection.runner import ARMS, Generate, run_all
-from pipeline.selection.sql import MAX_ROWS, TIME_LIMIT_SECONDS, execute
+from pipeline.selection.sql import MAX_ROWS, TIME_LIMIT_SECONDS, Warehouse, execute
 from pipeline.session import build_session
 
 MODELS = ["llama3.2:3b", "qwen2.5:14b"]
@@ -37,6 +37,7 @@ def run(
     generate: Generate,
     arms: tuple[str, ...] = ARMS,
     progress=None,
+    execute_sql=None,
 ) -> tuple[list[dict], dict]:
     """Every model x request x arm. Returns (records, reference answers as JSON)."""
     waiting = request_file.without_expected_tables(requests)
@@ -59,7 +60,7 @@ def run(
         tables,
         references,
         generate,
-        lambda sql: execute(spark, sql),
+        execute_sql or (lambda sql: execute(spark, sql)),
         arms,
         progress,
     )
@@ -103,10 +104,18 @@ def main() -> None:
     run_id = ("pilot-" if pilot else "") + started.strftime("%Y%m%dT%H%M%SZ")
 
     spark = build_session("selection_run")
+    # The session is replaced after a query that hits the time limit: see `Warehouse`.
+    warehouse = Warehouse(spark, lambda: build_session("selection_run"))
     records, references = run(
-        spark, requests, args.models, ollama.generate, tuple(args.arms), progress=show
+        spark,
+        requests,
+        args.models,
+        ollama.generate,
+        tuple(args.arms),
+        progress=show,
+        execute_sql=warehouse.execute,
     )
-    spark.stop()
+    warehouse.spark.stop()
 
     for record in records:
         record["run_id"] = run_id
