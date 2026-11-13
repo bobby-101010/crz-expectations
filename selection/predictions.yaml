@@ -1,0 +1,117 @@
+# Predictions for the Phase 9 staged run, written before the run.
+#
+# Drafted on 2026-11-12 by the coordinating Claude session, which had seen the Phase 8
+# results, the narratives and all eighteen requests. They are an AI's predictions,
+# labeled as such. The owner approved them as drafted on 2026-11-12, without changes.
+#
+# A value is whether the answer will match under the strict rule.
+#
+# Reasoning behind the draft:
+# - `full` repeats the Phase 8 prompt at temperature 0, so the twelve seen requests are
+#   predicted to repeat their Phase 8 outcomes.
+# - `full_narratives` on qwen2.5:14b is predicted to fix the requests that failed on
+#   meaning in Phase 8 (inside the zone, the normal range, summing a 10-minute block).
+#   On llama3.2:3b the longer prompt is predicted to help nothing.
+# - `staged` and `staged_hand` are predicted alike, on the view that choosing a lifecycle
+#   from four lines is easy. They are predicted to lose requests where an ordering or
+#   limit must survive the written plan, and both requests that need tables from two
+#   lifecycles (ride-hail-trips-on-holidays-2025, ride-hail-load-vs-warehouse-2025).
+# - Requests whose answer is a share are predicted not to match in any arm, because a
+#   model may return a percentage where the reference holds a fraction.
+
+predicted_on: 2026-11-12
+author: ai_coordinator
+approved_by: owner
+approved_on: 2026-11-12
+
+predictions:
+  yellow-trips-one-day:
+    full: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+    full_narratives: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+    staged: match
+    staged_hand: match
+  uber-lyft-trips-2025:
+    full: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+    full_narratives: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+    staged: no_match
+    staged_hand: no_match
+  busiest-hour-yellow-from-zone:
+    full: no_match
+    full_narratives: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+    staged: no_match
+    staged_hand: no_match
+  fee-trips-across-midnight:
+    full: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+    full_narratives: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+    staged: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+    staged_hand: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+  entries-by-vehicle-class-june-2025:
+    full: no_match
+    full_narratives: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+    staged: match
+    staged_hand: match
+  busiest-ten-minutes-lincoln-tunnel:
+    full: {"llama3.2:3b": match, "qwen2.5:14b": no_match}
+    full_narratives: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+    staged: no_match
+    staged_hand: no_match
+  entries-outside-normal-sept-2026:
+    full: no_match
+    full_narratives: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+    staged: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+    staged_hand: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+  zones-in-toll-zone-by-borough:
+    full: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+    full_narratives: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+    staged: no_match
+    staged_hand: no_match
+  ride-hail-trips-on-holidays-2025:
+    full: no_match
+    full_narratives: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+    staged: no_match
+    staged_hand: no_match
+  largest-driver-latest-run:
+    full: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+    full_narratives: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+    staged: no_match
+    staged_hand: no_match
+  checks-not-passing-now:
+    full: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+    full_narratives: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+    staged: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+    staged_hand: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+  rows-dropped-yellow-2025-01:
+    full: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+    full_narratives: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+    staged: match
+    staged_hand: match
+  ride-hail-zone-touch-share-by-operator:
+    full: no_match
+    full_narratives: no_match
+    staged: no_match
+    staged_hand: no_match
+  excluded-roadway-share-by-crossing:
+    full: no_match
+    full_narratives: no_match
+    staged: no_match
+    staged_hand: no_match
+  crossing-days-above-normal:
+    full: no_match
+    full_narratives: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+    staged: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+    staged_hand: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+  yellow-reversal-records-first-week-june:
+    full: no_match
+    full_narratives: no_match
+    staged: no_match
+    staged_hand: no_match
+  latest-run-outcome-counts:
+    full: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+    full_narratives: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+    staged: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+    staged_hand: {"llama3.2:3b": no_match, "qwen2.5:14b": match}
+  ride-hail-load-vs-warehouse-2025:
+    full: no_match
+    full_narratives: no_match
+    staged: no_match
+    staged_hand: no_match

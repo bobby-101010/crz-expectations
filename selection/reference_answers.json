@@ -193,8 +193,20 @@
     ],
     "rows": [
       [
-        "2025-05-26",
-        521575
+        "2025-11-11",
+        620742
+      ],
+      [
+        "2025-11-04",
+        595305
+      ],
+      [
+        "2025-11-27",
+        661557
+      ],
+      [
+        "2025-07-04",
+        573009
       ],
       [
         "2025-01-20",
@@ -203,6 +215,18 @@
       [
         "2025-01-01",
         663563
+      ],
+      [
+        "2025-05-26",
+        521575
+      ],
+      [
+        "2025-09-01",
+        528509
+      ],
+      [
+        "2025-06-19",
+        666986
       ],
       [
         "2025-02-12",
@@ -219,30 +243,6 @@
       [
         "2025-10-13",
         591112
-      ],
-      [
-        "2025-11-11",
-        620742
-      ],
-      [
-        "2025-11-04",
-        595305
-      ],
-      [
-        "2025-11-27",
-        661557
-      ],
-      [
-        "2025-06-19",
-        666986
-      ],
-      [
-        "2025-09-01",
-        528509
-      ],
-      [
-        "2025-07-04",
-        573009
       ],
       [
         "2025-12-25",
@@ -293,6 +293,304 @@
     "rows": [
       [
         22
+      ]
+    ]
+  },
+  {
+    "id": "ride-hail-zone-touch-share-by-operator",
+    "request": "In June 2025, what share of Uber trips and what share of Lyft trips started or ended inside the congestion toll zone?",
+    "status": "ok",
+    "error": null,
+    "columns": [
+      "operator_code",
+      "zone_touch_share"
+    ],
+    "rows": [
+      [
+        "HV0005",
+        0.3310414886167327
+      ],
+      [
+        "HV0003",
+        0.31719407728792964
+      ]
+    ]
+  },
+  {
+    "id": "excluded-roadway-share-by-crossing",
+    "request": "For July 2025, at each crossing point, how many vehicles entered the central business district but stayed on roads that are exempt from the toll, and what share of all vehicles entering at that crossing was that?",
+    "status": "ok",
+    "error": null,
+    "columns": [
+      "detection_group",
+      "excluded_entries",
+      "excluded_share"
+    ],
+    "rows": [
+      [
+        "West 60th St",
+        0,
+        0.0
+      ],
+      [
+        "Lincoln Tunnel",
+        0,
+        0.0
+      ],
+      [
+        "Queens Midtown Tunnel",
+        0,
+        0.0
+      ],
+      [
+        "Hugh L. Carey Tunnel",
+        321427,
+        0.33480549268208337
+      ],
+      [
+        "Holland Tunnel",
+        0,
+        0.0
+      ],
+      [
+        "Manhattan Bridge",
+        0,
+        0.0
+      ],
+      [
+        "East 60th St",
+        0,
+        0.0
+      ],
+      [
+        "Williamsburg Bridge",
+        0,
+        0.0
+      ],
+      [
+        "Queensboro Bridge",
+        0,
+        0.0
+      ],
+      [
+        "West Side Highway at 60th St",
+        164985,
+        0.10803570610044698
+      ],
+      [
+        "FDR Drive at 60th St",
+        907944,
+        0.3688806422819356
+      ],
+      [
+        "Brooklyn Bridge",
+        599745,
+        0.42298176596624015
+      ]
+    ]
+  },
+  {
+    "id": "crossing-days-above-normal",
+    "request": "For each crossing point into the congestion zone, on how many days in March 2026 was the number of vehicles entering there above the top of the normal range for that crossing on that day?",
+    "status": "ok",
+    "error": null,
+    "columns": [
+      "detection_group",
+      "days_above_normal"
+    ],
+    "rows": [
+      [
+        "West 60th St",
+        8
+      ],
+      [
+        "Lincoln Tunnel",
+        17
+      ],
+      [
+        "Holland Tunnel",
+        22
+      ],
+      [
+        "Queens Midtown Tunnel",
+        13
+      ],
+      [
+        "Manhattan Bridge",
+        13
+      ],
+      [
+        "Hugh L. Carey Tunnel",
+        12
+      ],
+      [
+        "Williamsburg Bridge",
+        14
+      ],
+      [
+        "Queensboro Bridge",
+        14
+      ],
+      [
+        "East 60th St",
+        10
+      ],
+      [
+        "West Side Highway at 60th St",
+        12
+      ],
+      [
+        "FDR Drive at 60th St",
+        10
+      ],
+      [
+        "Brooklyn Bridge",
+        17
+      ]
+    ]
+  },
+  {
+    "id": "yellow-reversal-records-first-week-june",
+    "request": "For each day from June 1 to June 7, 2025, how many yellow taxi trip records were reversals that cancel an earlier trip, and what share of that day's yellow taxi records were they?",
+    "status": "ok",
+    "error": null,
+    "columns": [
+      "pickup_date",
+      "reversal_records",
+      "reversal_share"
+    ],
+    "rows": [
+      [
+        "2025-06-05",
+        1762,
+        0.00993571670237961
+      ],
+      [
+        "2025-06-04",
+        1615,
+        0.010183620450475446
+      ],
+      [
+        "2025-06-06",
+        1731,
+        0.010579649911989047
+      ],
+      [
+        "2025-06-03",
+        1422,
+        0.010097567210600315
+      ],
+      [
+        "2025-06-07",
+        1871,
+        0.011421350783806222
+      ],
+      [
+        "2025-06-01",
+        1527,
+        0.011583626653720112
+      ],
+      [
+        "2025-06-02",
+        1338,
+        0.01165109414049234
+      ]
+    ]
+  },
+  {
+    "id": "latest-run-outcome-counts",
+    "request": "As of the most recent scoring run, how many expectations ended up with each outcome?",
+    "status": "ok",
+    "error": null,
+    "columns": [
+      "verdict",
+      "expectations"
+    ],
+    "rows": [
+      [
+        "not_scoreable",
+        1
+      ],
+      [
+        "pending",
+        7
+      ],
+      [
+        "held",
+        5
+      ]
+    ]
+  },
+  {
+    "id": "ride-hail-load-vs-warehouse-2025",
+    "request": "For each month of 2025, how many ride-hail rows did the most recent load of that month keep, and how does that compare with the number of ride-hail trips the warehouse's daily counts show for the month?",
+    "status": "ok",
+    "error": null,
+    "columns": [
+      "source_month",
+      "rows_kept",
+      "daily_table_trips"
+    ],
+    "rows": [
+      [
+        "2025-04",
+        19753983,
+        19753983
+      ],
+      [
+        "2025-07",
+        19653012,
+        19653012
+      ],
+      [
+        "2025-01",
+        20405666,
+        20405666
+      ],
+      [
+        "2025-05",
+        21091193,
+        21091193
+      ],
+      [
+        "2025-09",
+        19434641,
+        19434641
+      ],
+      [
+        "2025-10",
+        21308701,
+        21308701
+      ],
+      [
+        "2025-06",
+        19868009,
+        19868009
+      ],
+      [
+        "2025-08",
+        19271461,
+        19271461
+      ],
+      [
+        "2025-03",
+        20536879,
+        20536879
+      ],
+      [
+        "2025-02",
+        19339461,
+        19339461
+      ],
+      [
+        "2025-11",
+        20818240,
+        20818240
+      ],
+      [
+        "2025-12",
+        22108438,
+        22108438
       ]
     ]
   }

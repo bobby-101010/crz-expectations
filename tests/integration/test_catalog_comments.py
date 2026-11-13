@@ -111,3 +111,68 @@ def test_the_run_refuses_to_start_without_the_owners_tables(all_tables):
     with pytest.raises(ValueError, match="expected_tables is empty"):
         selection_run.run(all_tables, [request], ["stand-in"], lambda *_: None)
     assert selection_reference.run(all_tables, [request])["draft"].rows == [[1]]
+
+
+def test_the_staged_arms_run_end_to_end_with_a_stand_in_model(all_tables):
+    from pipeline.jobs import staged_run
+    from pipeline.staged import interpreter, lifecycle_selector
+    from pipeline.staged.runner import ARMS
+
+    catalog_comments.run(all_tables)
+    inputs = staged_run.Inputs(
+        requests=[
+            {
+                "id": "yellow-one-day",
+                "request": "How many yellow taxi trips were picked up on January 5, 2025?",
+                "reference_sql": "SELECT trips FROM gold.daily_trips "
+                "WHERE service = 'yellow' AND trip_date = DATE '2025-01-05'",
+                "expected_tables": ["gold.daily_trips"],
+                "expected_lifecycle": "taxi-trips",
+                "acceptable_table_sets": [["gold.daily_trips"], ["silver.trips"]],
+            }
+        ],
+        index=[
+            {
+                "id": "taxi-trips",
+                "title": "Taxi trips",
+                "one_line": "How a trip is recorded.",
+                "tables": ["silver.trips", "gold.daily_trips"],
+            }
+        ],
+        texts={"taxi-trips": "A trip is counted per day in gold.daily_trips.trips."},
+        predictions={
+            "predicted_on": "2026-11-13",
+            "predictions": {"yellow-one-day": dict.fromkeys(ARMS, "match")},
+        },
+    )
+
+    def stand_in(model, system, prompt):
+        if system == lifecycle_selector.SYSTEM:
+            return Reply("LIFECYCLE: taxi-trips", 1, 1, 0.1)
+        if system == interpreter.SYSTEM:
+            plan = (
+                "TABLES: gold.daily_trips\nFILTERS: service = 'yellow', trip_date 2025-01-05\n"
+                "MEASURE: trips\nGRAIN: one row\nDEFINITIONS: none"
+            )
+            return Reply(plan, 1, 1, 0.1)
+        sql = (
+            "SELECT trips FROM gold.daily_trips "
+            "WHERE service = 'yellow' AND trip_date = DATE '2025-01-05'"
+        )
+        return Reply(f"```sql\n{sql}\n```", 1, 1, 0.1)
+
+    records, references = staged_run.run(all_tables, inputs, ["stand-in"], stand_in)
+
+    assert references[0]["rows"] == [[2]]
+    assert [(r["arm"], r["sql_status"], r["answer_matched"]) for r in records] == [
+        (arm, "ok", True) for arm in ARMS
+    ]
+    staged = records[2]
+    assert (staged["lifecycle_correct"], staged["answerable"]) == (True, True)
+    assert "| trips | bigint |" in staged["stages"][2]["prompt"]
+    assert "## gold.daily_trips" in staged["stages"][2]["prompt"]
+    assert "## silver.trips" not in staged["stages"][2]["prompt"]
+
+    incomplete = staged_run.Inputs(inputs.requests, inputs.index, inputs.texts, {})
+    with pytest.raises(ValueError, match="predictions.yaml is missing or empty"):
+        staged_run.run(all_tables, incomplete, ["stand-in"], stand_in)

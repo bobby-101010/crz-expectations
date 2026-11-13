@@ -515,7 +515,7 @@ def test_the_real_requests_file_is_well_formed():
 
     assert request_file.problems(raw, WAREHOUSE_TABLES) == []
     requests = request_file.parse(raw)
-    assert 10 <= len(requests) <= 14
+    assert len(requests) >= 12
     used = {t for r in requests for t in tables_in_sql(r.reference_sql, WAREHOUSE_TABLES)}
     assert used == set(WAREHOUSE_TABLES)
     assert all(rejection(r.reference_sql) is None for r in requests)
@@ -577,3 +577,29 @@ def test_report_shows_outcomes_selection_and_every_failure():
         in report
     )
     assert "`small` (`aaaaaaaaaaaa`)" in report
+
+
+def test_the_session_is_replaced_after_a_timeout_and_only_then(monkeypatch):
+    # A cancelled query can leave tasks running that hold every task slot, so the
+    # queries after it would time out too. The real replacement kills the JVM, which
+    # the shared test session cannot survive, so it is stood in for here.
+    from pipeline.selection import sql as sql_module
+
+    statuses = {"slow": "timeout", "fast": "ok"}
+    ran_in = []
+
+    def fake_execute(session, sql, time_limit):
+        ran_in.append((session, sql))
+        return QueryResult(statuses[sql])
+
+    monkeypatch.setattr(sql_module, "execute", fake_execute)
+    monkeypatch.setattr(sql_module, "replace_jvm", lambda session, build: build())
+    built = iter(["second", "third"])
+    warehouse = sql_module.Warehouse("first", lambda: next(built))
+
+    assert warehouse.execute("fast").status == "ok"
+    assert warehouse.execute("slow").status == "timeout"
+    assert warehouse.execute("fast").status == "ok"
+
+    assert ran_in == [("first", "fast"), ("first", "slow"), ("second", "fast")]
+    assert warehouse.restarts == 1
