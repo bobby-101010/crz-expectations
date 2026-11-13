@@ -32,7 +32,7 @@ Phase 9 tests two things. First, a lifecycle narrative: about a page of prose on
 
 ## Who wrote the inputs
 
-- **Narratives.** Written by a session working from a copy of the repository without the requests or any results. A separate read-only check then compared them with the warehouse, and its corrections were applied. The owner approved them as written.
+- **Narratives.** Written by a session working from a copy of the repository that held no selection requests, reference answers, results or harness code. The copy did hold the decision records, including 0014, which describes the Phase 8 failures. A separate read-only check then compared them with the warehouse, and its corrections were applied. The owner approved them as written.
 - **Lifecycle picks, acceptable table sets and predictions.** Drafted by the coordinating Claude session, which had seen the Phase 8 results, the narratives and all eighteen requests. The owner approved them as drafted. The predictions file says so (`author: ai_coordinator`). The report's heading "Against the owner's predictions" means these: predictions an AI drafted and the owner approved.
 - **Held-out requests.** Six, written after the narratives were frozen. Four of their reference queries were trimmed by the coordinating session and carry `reference_trimmed: true`.
 
@@ -48,7 +48,7 @@ Phase 9 tests two things. First, a lifecycle narrative: about a page of prose on
 - The interpreter never sees the schema. A table or column the narrative does not name cannot reach the plan.
 - A handful of lifecycles and twelve tables remain a toy. The index fits in a few lines.
 - One run per model at temperature 0, and about eighteen requests.
-- The seen requests were visible to whoever wrote the narratives. Only the held-out requests test whether a narrative carries meaning beyond the questions it was written beside.
+- The session that wrote the narratives did not have the seen requests, but it could read decision 0014, which describes what went wrong on them. Only the held-out requests test whether a narrative carries meaning beyond the Phase 8 failures.
 
 ## What the run showed
 
